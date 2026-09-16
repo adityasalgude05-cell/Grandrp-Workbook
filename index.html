@@ -376,6 +376,64 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
 @keyframes voicepulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
 .voice-row select{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-size:12px}
 .voice-hint{font-size:11.5px;color:var(--muted)}
+
+/* --- Appearance controls (Professional-style theme section) --- */
+:root{--uiFont:var(--fontMain);--textScale:1}
+body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
+.appearance-pane{max-height:60vh;overflow:auto;padding:2px 4px 2px 2px}
+.theme-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.theme-row:first-child{border-top:0}
+.theme-label{display:flex;flex-direction:column;gap:3px}
+.theme-label b{font-size:calc(12.5px * var(--textScale));color:var(--text)}
+.theme-label small{font-size:calc(10.5px * var(--textScale));color:var(--muted)}
+.theme-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:2px 0 4px}
+.theme-preset{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:8px 7px;border-radius:9px;cursor:pointer;font-size:calc(10.5px * var(--textScale));font-weight:800;transition:border-color .15s,color .15s,background .15s}
+.theme-preset:hover,.theme-preset.active{border-color:var(--accent);color:var(--accent);background:var(--accentSoft)}
+.theme-color{width:46px;height:32px;border:1px solid var(--line);border-radius:8px;background:transparent;padding:2px;cursor:pointer;flex-shrink:0}
+.theme-select{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:8px 10px;border-radius:8px;font-size:calc(11.5px * var(--textScale));cursor:pointer;flex-shrink:0}
+.theme-reset{width:100%;margin-top:14px;padding:10px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;font-weight:700;font-size:calc(11.5px * var(--textScale))}
+.theme-reset:hover{color:var(--accent);border-color:var(--accent)}
+
+/* Text size scaling */
+.sidebar{font-size:calc(13px * var(--textScale))}
+.nav-title{font-size:calc(10px * var(--textScale))}
+.nav button{font-size:calc(13px * var(--textScale))}
+.search input{font-size:calc(13.5px * var(--textScale))}
+.iconbtn{font-size:calc(14px * var(--textScale))}
+.hero h1{font-size:calc(30px * var(--textScale))}
+.hero p{font-size:calc(14px * var(--textScale))}
+.stat b{font-size:calc(22px * var(--textScale))}
+.stat span{font-size:calc(11px * var(--textScale))}
+.card-head h2,.card-head h3{font-size:calc(17px * var(--textScale))}
+.section-title{font-size:calc(24px * var(--textScale))}
+.section-sub{font-size:calc(13px * var(--textScale))}
+.article h3{font-size:calc(16px * var(--textScale))}
+.rule summary{font-size:calc(13px * var(--textScale))}
+.rule .desc{font-size:calc(13px * var(--textScale))}
+.badge{font-size:calc(9px * var(--textScale))}
+.notice{font-size:calc(12px * var(--textScale))}
+.step h3{font-size:calc(14px * var(--textScale))}
+.step p,.step li{font-size:calc(13px * var(--textScale))}
+.eventcard h3{font-size:calc(15px * var(--textScale))}
+.eventcard li{font-size:calc(12px * var(--textScale))}
+.table th{font-size:calc(10px * var(--textScale))}
+.table td{font-size:calc(12px * var(--textScale))}
+.btn{font-size:calc(12.5px * var(--textScale))}
+[data-text-size="small"]{--textScale:.92}
+[data-text-size="large"]{--textScale:1.08}
+[data-text-size="xl"]{--textScale:1.18}
+
+/* Interface density */
+[data-density="compact"] .content{padding:18px 22px 26px}
+[data-density="compact"] .hero{padding:20px}
+[data-density="compact"] .card-head{padding:13px 16px}
+[data-density="compact"] .card-body{padding:14px}
+[data-density="compact"] .stat{padding:13px}
+[data-density="compact"] .nav button{padding:7px 11px;margin:1px 0}
+[data-density="compact"] .nav-title{padding:9px 10px 5px}
+[data-density="compact"] .grid{gap:10px}
+[data-density="compact"] .step{padding:13px 14px 13px 52px}
+@media(max-width:650px){.hero h1{font-size:calc(24px * var(--textScale))}.appearance-pane{max-height:56vh}.theme-presets{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -521,9 +579,28 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
   <div class="style-tabs">
    <button class="style-tab active" id="tabColors" data-tab="colors">🎨 Colors</button>
    <button class="style-tab" id="tabStyle" data-tab="style">✒ Design & Font</button>
+   <button class="style-tab" id="tabAppearance" data-tab="appearance">⚙ Appearance</button>
   </div>
   <div class="theme-grid" id="themeGrid"></div>
   <div class="style-grid" id="styleGrid" style="display:none"></div>
+  <div class="appearance-pane" id="appearancePane" style="display:none">
+    <div class="theme-row"><div class="theme-label"><b>Accent colour</b><small>Overrides the colour theme accent</small></div><input id="accentPicker" class="theme-color" type="color" value="#f2b705" aria-label="Choose accent colour"></div>
+    <div class="theme-presets" id="themePresets">
+      <button class="theme-preset" data-accent="#f2b705" type="button">Gold</button>
+      <button class="theme-preset" data-accent="#6f8cff" type="button">Slate</button>
+      <button class="theme-preset" data-accent="#3f9f8f" type="button">Sage</button>
+      <button class="theme-preset" data-accent="#c28b3c" type="button">Sand</button>
+      <button class="theme-preset" data-accent="#b66bd4" type="button">Plum</button>
+      <button class="theme-preset" data-accent="#ff4d5e" type="button">Crimson</button>
+      <button class="theme-preset" data-accent="#22d3ee" type="button">Cyan</button>
+      <button class="theme-preset" data-accent="#22e08a" type="button">Emerald</button>
+    </div>
+    <div class="theme-row"><div class="theme-label"><b>Mode</b><small>Choose light, dark, or follow your system</small></div><select id="appearanceMode" class="theme-select"><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></div>
+    <div class="theme-row"><div class="theme-label"><b>Interface density</b><small>Adjust spacing across cards and navigation</small></div><select id="densityMode" class="theme-select"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select></div>
+    <div class="theme-row"><div class="theme-label"><b>Text size</b><small>Make labels, paragraphs and controls easier to read</small></div><select id="textSizeMode" class="theme-select"><option value="small">Small</option><option value="default" selected>Default</option><option value="large">Large</option><option value="xl">Extra Large</option></select></div>
+    <div class="theme-row"><div class="theme-label"><b>Font</b><small>Choose the interface typeface</small></div><select id="fontMode" class="theme-select"><option value="auto" selected>Auto (design style)</option><option value="inter">Inter</option><option value="poppins">Poppins</option><option value="grotesk">Space Grotesk</option><option value="system">System Sans</option><option value="serif">Serif</option><option value="mono">JetBrains Mono</option></select></div>
+    <button class="theme-reset" id="themeReset" type="button">Reset appearance</button>
+  </div>
 </div></div>
 <button id="toTop" class="totop" title="Back to top">↑</button>
 <div id="toastHost" class="toasthost"></div>
@@ -3960,7 +4037,12 @@ function applyDark(on){
  document.getElementById('themeBtn').textContent=on?'☀':'☾';
  try{localStorage.setItem('grwiki_dark',on?'1':'0')}catch(e){}
 }
-document.getElementById('themeBtn').addEventListener('click',()=>applyDark(document.documentElement.dataset.dark==='0'));
+document.getElementById('themeBtn').addEventListener('click',()=>{
+ const goDark=document.documentElement.dataset.dark==='0';
+ applyDark(goDark);
+ const sel=document.getElementById('appearanceMode');
+ if(sel){sel.value=goDark?'dark':'light'; if(typeof saveAppearance==='function')saveAppearance();}
+});
 (function initTheme(){
  let saved=null; try{saved=localStorage.getItem('grwiki_dark')}catch(e){}
  applyDark(saved!=='0');
@@ -4024,19 +4106,116 @@ function renderStyleGrid(){
  grid.innerHTML=designStyles.map(s=>`<button class="style-swatch${s.key===active?' active':''}" data-style-key="${s.key}" title="${esc(s.name)}"><span class="preview" style="font-family:${s.fontFamily}">${esc(s.preview)}</span><span>${esc(s.name)}</span></button>`).join('');
  grid.querySelectorAll('.style-swatch').forEach(el=>el.addEventListener('click',()=>applyDesignStyle(el.dataset.styleKey)));
 }
-document.getElementById('tabColors').addEventListener('click',()=>{
- document.getElementById('tabColors').classList.add('active');document.getElementById('tabStyle').classList.remove('active');
- document.getElementById('themeGrid').style.display='';document.getElementById('styleGrid').style.display='none';
-});
-document.getElementById('tabStyle').addEventListener('click',()=>{
- document.getElementById('tabStyle').classList.add('active');document.getElementById('tabColors').classList.remove('active');
- document.getElementById('styleGrid').style.display='';document.getElementById('themeGrid').style.display='none';
- renderStyleGrid();
-});
+function switchThemeTab(which){
+ const map={colors:['tabColors','themeGrid'],style:['tabStyle','styleGrid'],appearance:['tabAppearance','appearancePane']};
+ Object.keys(map).forEach(k=>{
+  const [btn,pane]=map[k];
+  document.getElementById(btn).classList.toggle('active',k===which);
+  document.getElementById(pane).style.display=(k===which)?'':'none';
+ });
+ if(which==='style')renderStyleGrid();
+}
+document.getElementById('tabColors').addEventListener('click',()=>switchThemeTab('colors'));
+document.getElementById('tabStyle').addEventListener('click',()=>switchThemeTab('style'));
+document.getElementById('tabAppearance').addEventListener('click',()=>switchThemeTab('appearance'));
 (function initDesignStyle(){
  let saved='classic'; try{saved=localStorage.getItem('grwiki_style')||'classic'}catch(e){}
  document.documentElement.dataset.style=saved==='classic'?'':saved;
 })();
+
+/* ---------- Professional appearance controls (accent / mode / density / text size / font) ---------- */
+const accentPicker=document.getElementById('accentPicker');
+const appearanceMode=document.getElementById('appearanceMode');
+const densityMode=document.getElementById('densityMode');
+const textSizeMode=document.getElementById('textSizeMode');
+const fontMode=document.getElementById('fontMode');
+const themePresets=document.querySelectorAll('.theme-preset');
+const APPEARANCE_KEY='grwiki_appearance_v1';
+const DEFAULT_APPEARANCE={accent:'',mode:'dark',density:'comfortable',textSize:'default',font:'auto'};
+
+function hexToRgba(hex,alpha){
+ const h=(hex||'').replace('#','');
+ if(h.length<6)return 'rgba(0,0,0,'+alpha+')';
+ const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+ return `rgba(${r},${g},${b},${alpha})`;
+}
+function applyAccent(accent){
+ const root=document.documentElement.style;
+ if(!accent){
+  root.removeProperty('--accent');root.removeProperty('--accent2');
+  root.removeProperty('--accentSoft');root.removeProperty('--accentFaint');
+  root.removeProperty('--glow');root.removeProperty('--glowStrong');root.removeProperty('--heroBorder');
+ }else{
+  root.setProperty('--accent',accent);
+  root.setProperty('--accent2',accent);
+  root.setProperty('--accentSoft',hexToRgba(accent,.12));
+  root.setProperty('--accentFaint',hexToRgba(accent,.08));
+  root.setProperty('--glow',hexToRgba(accent,.18));
+  root.setProperty('--glowStrong',hexToRgba(accent,.35));
+  root.setProperty('--heroBorder',hexToRgba(accent,.15));
+  if(accentPicker)accentPicker.value=accent;
+ }
+ themePresets.forEach(btn=>btn.classList.toggle('active',!!accent&&btn.dataset.accent.toLowerCase()===accent.toLowerCase()));
+}
+function applyAppearanceMode(mode){
+ const light = mode==='system' ? window.matchMedia('(prefers-color-scheme: light)').matches : mode==='light';
+ applyDark(!light);
+ if(appearanceMode)appearanceMode.value=mode;
+}
+function applyDensity(mode){
+ document.documentElement.dataset.density=mode;
+ if(densityMode)densityMode.value=mode;
+}
+function applyTextSize(mode){
+ document.documentElement.dataset.textSize=mode;
+ document.documentElement.setAttribute('data-text-size',mode);
+ if(textSizeMode)textSizeMode.value=mode;
+}
+function applyFont(mode){
+ const fonts={
+  inter:"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif",
+  poppins:"'Poppins',system-ui,sans-serif",
+  grotesk:"'Space Grotesk',system-ui,sans-serif",
+  system:"system-ui,-apple-system,'Segoe UI',Arial,sans-serif",
+  serif:"Georgia,'Times New Roman',serif",
+  mono:"'JetBrains Mono',ui-monospace,Consolas,monospace"
+ };
+ if(mode==='auto')document.documentElement.style.removeProperty('--uiFont');
+ else document.documentElement.style.setProperty('--uiFont',fonts[mode]||fonts.inter);
+ document.documentElement.dataset.font=mode;
+ if(fontMode)fontMode.value=mode;
+}
+function saveAppearance(){
+ const state={accent:document.documentElement.dataset.customAccent||'',mode:appearanceMode.value,density:densityMode.value,textSize:textSizeMode.value,font:fontMode.value};
+ try{localStorage.setItem(APPEARANCE_KEY,JSON.stringify(state))}catch(e){}
+}
+function setAccent(accent){
+ if(accent)document.documentElement.dataset.customAccent=accent;
+ else delete document.documentElement.dataset.customAccent;
+ applyAccent(accent);
+}
+function loadAppearance(){
+ let state={...DEFAULT_APPEARANCE};
+ try{Object.assign(state,JSON.parse(localStorage.getItem(APPEARANCE_KEY)||'{}'))}catch(e){}
+ setAccent(state.accent);applyAppearanceMode(state.mode);applyDensity(state.density);applyTextSize(state.textSize);applyFont(state.font);
+}
+if(accentPicker){
+ accentPicker.addEventListener('input',()=>{setAccent(accentPicker.value);saveAppearance()});
+ themePresets.forEach(btn=>btn.addEventListener('click',()=>{setAccent(btn.dataset.accent);saveAppearance()}));
+ appearanceMode.addEventListener('change',()=>{applyAppearanceMode(appearanceMode.value);saveAppearance()});
+ densityMode.addEventListener('change',()=>{applyDensity(densityMode.value);saveAppearance()});
+ textSizeMode.addEventListener('change',()=>{applyTextSize(textSizeMode.value);saveAppearance()});
+ fontMode.addEventListener('change',()=>{applyFont(fontMode.value);saveAppearance()});
+ document.getElementById('themeReset').addEventListener('click',()=>{
+  setAccent(DEFAULT_APPEARANCE.accent);applyAppearanceMode(DEFAULT_APPEARANCE.mode);applyDensity(DEFAULT_APPEARANCE.density);
+  applyTextSize(DEFAULT_APPEARANCE.textSize);applyFont(DEFAULT_APPEARANCE.font);saveAppearance();
+  if(typeof toast==='function')toast('Appearance reset');
+ });
+ window.matchMedia('(prefers-color-scheme: light)').addEventListener?.('change',()=>{
+  try{const st=JSON.parse(localStorage.getItem(APPEARANCE_KEY)||'{}');if(st.mode==='system')applyAppearanceMode('system')}catch(e){}
+ });
+ loadAppearance();
+}
 
 /* ---------- Print & help ---------- */
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
