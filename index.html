@@ -551,6 +551,103 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 .mp-step .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
 .mp-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.7}
 
+/* ---------- RGB Play Effects ---------- */
+@keyframes rgbHue{to{filter:hue-rotate(360deg)}}
+@keyframes rgbSweep{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@keyframes rgbGlow{
+ 0%{box-shadow:0 0 0 1px rgba(255,0,92,.55),0 16px 46px -14px rgba(255,0,92,.6)}
+ 20%{box-shadow:0 0 0 1px rgba(255,196,0,.55),0 16px 46px -14px rgba(255,196,0,.6)}
+ 40%{box-shadow:0 0 0 1px rgba(0,255,133,.55),0 16px 46px -14px rgba(0,255,133,.6)}
+ 60%{box-shadow:0 0 0 1px rgba(0,196,255,.55),0 16px 46px -14px rgba(0,196,255,.6)}
+ 80%{box-shadow:0 0 0 1px rgba(176,0,255,.55),0 16px 46px -14px rgba(176,0,255,.6)}
+ 100%{box-shadow:0 0 0 1px rgba(255,0,92,.55),0 16px 46px -14px rgba(255,0,92,.6)}
+}
+@keyframes rgbBorder{
+ 0%{border-color:rgba(255,0,92,.75)}20%{border-color:rgba(255,196,0,.75)}40%{border-color:rgba(0,255,133,.75)}
+ 60%{border-color:rgba(0,196,255,.75)}80%{border-color:rgba(176,0,255,.75)}100%{border-color:rgba(255,0,92,.75)}
+}
+html[data-rgb="1"] .mp-card.mp-playing,html[data-rgb="1"] .mp-dock.mp-playing{animation:rgbGlow 5s linear infinite,rgbBorder 5s linear infinite}
+html[data-rgb="1"] .mp-card.mp-playing::after,html[data-rgb="1"] .mp-dock.mp-playing .mp-dock-head{
+  background:linear-gradient(90deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff,#ff005c);background-size:300% 100%;animation:rgbSweep 3.4s linear infinite}
+html[data-rgb="1"] .mp-card.mp-playing::after{height:3px;opacity:1}
+html[data-rgb="1"] .mp-dock.mp-playing .mp-dock-head b,html[data-rgb="1"] .mp-dock.mp-playing .mp-dock-head .mp-mini{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+html[data-rgb="1"] .mp-eq.on i{background:linear-gradient(180deg,#00c4ff,#b000ff,#ff005c);animation:mpEq 1s ease-in-out infinite,rgbHue 3s linear infinite}
+html[data-rgb="1"] .mp-art.spin{animation:mpSpin 7s linear infinite,rgbHue 4s linear infinite}
+html[data-rgb="1"] .mp-playing .mp-seek,html[data-rgb="1"] .mp-card.mp-playing .mp-btn.play{animation:rgbHue 4s linear infinite}
+html[data-rgb="1"] .mp-card.mp-playing .mp-srcbadge{animation:rgbHue 4s linear infinite}
+
+/* fake spectrum bars, only while playing */
+.mp-viz{display:none;align-items:flex-end;gap:3px;height:34px;margin-top:14px;padding:0 2px;overflow:hidden}
+.mp-card.mp-playing .mp-viz{display:flex}
+.mp-viz i{flex:1;min-width:2px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--accent),var(--accent2));height:18%;transform-origin:bottom;animation:mpVizBar .9s ease-in-out infinite alternate;opacity:.85}
+html[data-rgb="1"] .mp-viz i{background:linear-gradient(180deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff);background-size:100% 300%;animation:mpVizBar .9s ease-in-out infinite alternate,rgbSweepV 3s linear infinite}
+@keyframes rgbSweepV{0%{background-position:50% 0%}100%{background-position:50% 300%}}
+@keyframes mpVizBar{from{height:12%}to{height:100%}}
+
+/* ---------- Music Center page ---------- */
+.mh-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.mh-bar input[type=text],.mh-bar input{flex:1;min-width:180px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none}
+.mh-bar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+.mh-bar select{padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:12px;outline:none;cursor:pointer}
+.mh-count{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mh-list{display:flex;flex-direction:column;gap:8px}
+.mh-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line);border-radius:13px;background:var(--panel2);transition:border-color .16s,transform .16s,box-shadow .16s}
+.mh-item:hover{border-color:var(--accent);transform:translateX(3px);box-shadow:0 10px 24px -14px var(--glowStrong)}
+.mh-item.on{border-color:var(--accent);background:var(--accentSoft)}
+html[data-rgb="1"] .mh-item.on{animation:rgbBorder 5s linear infinite}
+.mh-ic{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;font-size:17px;background:linear-gradient(135deg,var(--logoA),var(--logoB));color:var(--onAccent)}
+.mh-main{flex:1;min-width:0}
+.mh-main b{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-main small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mh-tag{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid var(--line);color:var(--accent);background:var(--panel);flex-shrink:0}
+.mh-acts{display:flex;gap:6px;flex-shrink:0}
+.mh-acts button{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:12px;transition:border-color .15s,color .15s,background .15s,transform .15s}
+.mh-acts button:hover{border-color:var(--accent);color:var(--accent);background:var(--accentSoft);transform:translateY(-2px)}
+.mh-acts button.fav.on{color:var(--warn);border-color:var(--warn)}
+.mh-acts button.del:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.12)}
+.mh-chips{display:flex;gap:9px;flex-wrap:wrap}
+.mh-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--textSoft);font-size:12px;cursor:pointer;max-width:270px;transition:border-color .15s,color .15s,transform .15s}
+.mh-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+html[data-rgb="1"] .mh-chip:hover{animation:rgbBorder 4s linear infinite}
+.mh-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.mh-stat{border:1px solid var(--line);border-radius:13px;padding:14px;background:var(--panel2);text-align:center}
+.mh-stat b{display:block;font-size:20px;font-weight:900;color:var(--accent)}
+.mh-stat span{display:block;font-size:10.5px;color:var(--muted);margin-top:4px}
+.mh-src{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.mh-srcrow{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--textSoft)}
+.mh-srcrow .bar{flex:1;height:7px;border-radius:99px;background:var(--line);overflow:hidden}
+.mh-srcrow .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--logoA),var(--accent2))}
+html[data-rgb="1"] .mh-srcrow .bar i{background:linear-gradient(90deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff);background-size:300% 100%;animation:rgbSweep 3.4s linear infinite}
+.mh-srcrow .n{min-width:26px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.fx-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.fx-row:last-child{border-bottom:0}
+.fx-row .lbl{flex:1;min-width:180px}
+.fx-row .lbl b{display:block;font-size:12.5px}
+.fx-row .lbl small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.55}
+.fx-tog{width:46px;height:26px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);position:relative;cursor:pointer;flex-shrink:0;transition:background .18s,border-color .18s}
+.fx-tog i{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:left .2s,background .2s}
+.fx-tog.on{background:var(--accentSoft);border-color:var(--accent)}
+.fx-tog.on i{left:22px;background:var(--accent)}
+html[data-rgb="1"] .fx-tog.on i{background:linear-gradient(135deg,#ff005c,#00c4ff)}
+.rgbhero h1{background:linear-gradient(90deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff,#ff005c);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rgbSweep 5s linear infinite}
+html[data-rgb="0"] .rgbhero h1{background:none;color:var(--text);animation:none;-webkit-text-fill-color:currentColor}
+
+/* ---------- Sidebar customize ---------- */
+.navtools{display:flex;gap:6px;margin:10px 0 2px}
+.navtools button{flex:1;border:1px dashed var(--line);background:transparent;color:var(--sidebarMuted);font-size:10.5px;font-weight:700;padding:7px 8px;border-radius:9px;cursor:pointer;transition:color .15s,border-color .15s}
+.navtools button:hover{color:var(--accent);border-color:var(--accent)}
+.nav.editing button[data-page],.nav.editing .nav-title{cursor:grab;border:1px dashed var(--line);border-radius:9px;margin:3px 0}
+.nav.editing button[data-page]:active{cursor:grabbing}
+.nav.editing .nav-title{display:flex;align-items:center;padding:8px 10px}
+.nav .navctl{margin-left:auto;display:none;gap:3px;align-items:center}
+.nav.editing .navctl{display:inline-flex}
+.nav .navctl b{font-size:10px;line-height:1;padding:4px 5px;border-radius:6px;background:var(--panel2);color:var(--sidebarText);cursor:pointer}
+.nav .navctl b:hover{background:var(--accent);color:var(--onAccent)}
+.nav .navdrag{opacity:.45;outline:1px solid var(--accent)}
+.nav-off{display:none!important}
+.nav.editing .nav-off{display:flex!important;opacity:.38}
+
 /* ---------- Personal Vault ---------- */
 .vault-note-banner{display:flex;gap:12px;align-items:flex-start;background:var(--accentSoft);border:1px solid var(--heroBorder);border-radius:14px;padding:14px 16px;margin-bottom:18px;font-size:12px;color:var(--textSoft);line-height:1.6}
 .vault-note-banner .ic{font-size:20px;flex-shrink:0}
@@ -634,6 +731,10 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 <div class="app">
 <aside class="sidebar" id="sidebar">
   <div class="brand"><div class="logo"><svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="currentColor" opacity=".16"/><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9.4 L17.35 12.74 L20.95 12.99 L18.19 15.31 L19.06 18.81 L16 16.9 L12.94 18.81 L13.81 15.31 L11.05 12.99 L14.65 12.74 Z" fill="currentColor"/><path d="M10.6 21.6h10.8M12.3 24.1h7.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".85"/></svg></div><div><strong>Grand RP Wiki</strong><small>Police / State Handbook</small></div></div>
+  <div class="navtools">
+    <button id="navCustBtn" onclick="navToggleEdit()">⇅ Customize menu</button>
+    <button id="navResetBtn" onclick="navReset()" style="display:none;flex:0 0 auto">Reset</button>
+  </div>
   <div class="nav" id="nav">
     <div class="nav-title">Overview</div>
     <button data-page="dashboard" class="active"><span class="ico">⌂</span>Dashboard</button>
@@ -664,6 +765,9 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
     <button data-page="calculator"><span class="ico">＋</span>Fine Calculator</button>
     <button data-page="codes"><span class="ico">10</span>Radio Codes &amp; Phonetics</button>
     <button data-page="bookmarks"><span class="ico">★</span>Bookmarks<span class="navcount" id="favCount"></span></button>
+
+    <div class="nav-title">Media</div>
+    <button data-page="music"><span class="ico">🎧</span>Music Center</button>
 
     <div class="nav-title">Reference</div>
     <button data-page="terms"><span class="ico">?</span>Roleplay Terms</button>
@@ -816,11 +920,63 @@ function playStatic(dur = 0.5, vol = 0.05) {
     noise.start();
 }
 
+/* ---------- FX settings (RGB + gunshot) ---------- */
+const FX_KEY='grwiki_fx_v1';
+const FX={rgb:true,gun:true,vol:0.25};
+try{const _f=JSON.parse(localStorage.getItem(FX_KEY)||'{}');if(typeof _f.rgb==='boolean')FX.rgb=_f.rgb;if(typeof _f.gun==='boolean')FX.gun=_f.gun;if(typeof _f.vol==='number')FX.vol=_f.vol;}catch(e){}
+document.documentElement.dataset.rgb=FX.rgb?'1':'0';
+
+/* Gunshot click SFX — noise crack + low thump + tail */
+let _gunLast=0;
+function playGunshot(vol){
+    if(vol==null){ if(!FX.gun) return; vol=FX.vol; }
+    if(vol<=0) return;
+    const now0=performance.now();
+    if(now0-_gunLast<45) return;           /* rapid clicks se bachao */
+    _gunLast=now0;
+    try{
+        if(audioCtx.state==='suspended') audioCtx.resume();
+        const t=audioCtx.currentTime, dur=0.26;
+        /* white-noise crack through a falling low-pass */
+        const len=Math.floor(audioCtx.sampleRate*dur);
+        const buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<len;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.2); }
+        const noise=audioCtx.createBufferSource(); noise.buffer=buf;
+        const lp=audioCtx.createBiquadFilter(); lp.type='lowpass';
+        lp.frequency.setValueAtTime(7000+Math.random()*1500,t);
+        lp.frequency.exponentialRampToValueAtTime(320,t+0.20);
+        lp.Q.value=0.8;
+        const ng=audioCtx.createGain();
+        ng.gain.setValueAtTime(vol,t);
+        ng.gain.exponentialRampToValueAtTime(0.0008,t+dur);
+        noise.connect(lp); lp.connect(ng); ng.connect(audioCtx.destination);
+        noise.start(t); noise.stop(t+dur);
+        /* barrel thump */
+        const osc=audioCtx.createOscillator(); osc.type='sine';
+        osc.frequency.setValueAtTime(175+Math.random()*25,t);
+        osc.frequency.exponentialRampToValueAtTime(42,t+0.13);
+        const og=audioCtx.createGain();
+        og.gain.setValueAtTime(vol*1.15,t);
+        og.gain.exponentialRampToValueAtTime(0.0008,t+0.17);
+        osc.connect(og); og.connect(audioCtx.destination);
+        osc.start(t); osc.stop(t+0.18);
+        /* metallic click transient */
+        const cl=audioCtx.createOscillator(); cl.type='square';
+        cl.frequency.setValueAtTime(2100,t);
+        const cg=audioCtx.createGain();
+        cg.gain.setValueAtTime(vol*0.22,t);
+        cg.gain.exponentialRampToValueAtTime(0.0008,t+0.035);
+        cl.connect(cg); cg.connect(audioCtx.destination);
+        cl.start(t); cl.stop(t+0.04);
+    }catch(e){}
+}
+
 /* Global Click Sound */
 document.addEventListener('click', (e) => {
     const clickable = e.target.closest('button, a, summary, .calc-item, .chip, .tz-item, .result, select, input[type="checkbox"], label');
     if (clickable) {
-        playBeep(900, 0.03, 0.015, 'sine');
+        playGunshot();
     }
 });
 
@@ -1472,7 +1628,7 @@ function table(rows,cols,opts){
 }
 
 function dashboard(){
- const pageLabels={general:'General Rules',state:'State Rules',green:'Green Zone',ghetto:'Ghetto Rules','traffic-stop':'10-51 Traffic Stop',arrest:'10-15 Arrest',penal:'Penal Code',traffic:'Traffic Code',events:'Event Rules',map:'Territory Map',terms:'RP Terms',calculator:'Fine Calculator',codes:'Radio Codes',bookmarks:'Bookmarks',bodycam:'Bodycam Commands',vehicle:'Vehicle Ticket Log',notepad:'Dispatch Notepad', deptradio:'Department Radio', arrestlog:'Arrest Logs', ucevidence:'UC Evidence Logs', imguploader:'Image Uploader (ImgBB)', hostage:'Hostage Negotiation', profile:'Personnel Record', vault:'Personal Vault'};
+ const pageLabels={general:'General Rules',state:'State Rules',green:'Green Zone',ghetto:'Ghetto Rules','traffic-stop':'10-51 Traffic Stop',arrest:'10-15 Arrest',penal:'Penal Code',traffic:'Traffic Code',events:'Event Rules',map:'Territory Map',terms:'RP Terms',calculator:'Fine Calculator',codes:'Radio Codes',bookmarks:'Bookmarks',bodycam:'Bodycam Commands',vehicle:'Vehicle Ticket Log',notepad:'Dispatch Notepad', deptradio:'Department Radio', arrestlog:'Arrest Logs', ucevidence:'UC Evidence Logs', imguploader:'Image Uploader (ImgBB)', hostage:'Hostage Negotiation', profile:'Personnel Record', vault:'Personal Vault', music:'Music Center'};
  return `<div class="hero"><h1>Welcome back, Officer ${activeUser ? dbUsers.find(u=>u.id===activeUser)?.name || '' : ''}</h1><p>Badge #${activeUser||''} — Quick-access handbook for state rules, penal code, traffic code, traffic stops, arrests, events, bodycam procedure and roleplay terminology.</p><div class="tip-ticker" id="tipTicker"></div></div>
  <div class="clockcard">
   <div class="cc-item"><h4>🇬🇧 In-Game Time — London</h4><b id="dashClockLondon">--:--:--</b><small id="dashDateLondon">—</small></div>
@@ -1485,7 +1641,7 @@ function dashboard(){
  <div class="grid"><div class="stat"><b>${penal.length}</b><span>Penal Code entries</span></div><div class="stat"><b>${todayDutyMinutes()}</b><span>Minutes on duty today</span></div><div class="stat"><b>100%</b><span>Ready</span></div></div>
  ${recentPages.length?`<div class="card"><div class="card-head"><h2>Recently Viewed</h2></div><div class="card-body"><div class="chips">${recentPages.map(p=>`<button class="chip" onclick="go('${p}')">${esc(pageLabels[p]||p)}</button>`).join("")}</div></div></div>`:''}
  <div class="card"><div class="card-head"><h2>Quick Access</h2></div><div class="card-body"><div class="eventgrid">
- ${[['Department Radio','Dynamic inter-department comms generator','deptradio'],['Dispatch Notepad','Auto-saving scratchpad for active pursuits','notepad'],['Bodycam Commands','On/off-duty, drone, PDA & evidence scripts','bodycam'],['Vehicle Ticket Log','Upload plate photo, log and output to Discord','vehicle'],['Arrest Logs','Fill arrest details, select charges, send to Discord','arrestlog'],['UC Evidence Logs','Fill UC evidence report, select charges, send to Discord','ucevidence'],['Image Uploader (ImgBB)','Upload any photo, get a shareable link instantly','imguploader'],['Hostage Negotiation','Tactical steps for high-risk hostage situations','hostage'],['Personnel Record','Build your own officer profile with photo & Discord','profile'],['Fine Calculator','Build a citation in seconds','calculator'],['Penal Code','Complete PC table by article','penal'],['10-15 Arrest','Step-by-step DOC process','arrest'],['Radio Codes','Radio codes + phonetics','codes']].map(x=>`<div class="eventcard" style="cursor:pointer" onclick="go('${x[2]}')"><h3>${x[0]}</h3><p style="font-size:12px;color:var(--muted);margin:0">${x[1]}</p></div>`).join("")}
+ ${[['Music Center','Play history, favourites & one-tap replay','music'],['Department Radio','Dynamic inter-department comms generator','deptradio'],['Dispatch Notepad','Auto-saving scratchpad for active pursuits','notepad'],['Bodycam Commands','On/off-duty, drone, PDA & evidence scripts','bodycam'],['Vehicle Ticket Log','Upload plate photo, log and output to Discord','vehicle'],['Arrest Logs','Fill arrest details, select charges, send to Discord','arrestlog'],['UC Evidence Logs','Fill UC evidence report, select charges, send to Discord','ucevidence'],['Image Uploader (ImgBB)','Upload any photo, get a shareable link instantly','imguploader'],['Hostage Negotiation','Tactical steps for high-risk hostage situations','hostage'],['Personnel Record','Build your own officer profile with photo & Discord','profile'],['Fine Calculator','Build a citation in seconds','calculator'],['Penal Code','Complete PC table by article','penal'],['10-15 Arrest','Step-by-step DOC process','arrest'],['Radio Codes','Radio codes + phonetics','codes']].map(x=>`<div class="eventcard" style="cursor:pointer" onclick="go('${x[2]}')"><h3>${x[0]}</h3><p style="font-size:12px;color:var(--muted);margin:0">${x[1]}</p></div>`).join("")}
  </div></div></div>`;
 }
 
@@ -4383,7 +4539,7 @@ function bookmarksPage(){
  }).join("")}</div></div>`;
 }
 
-const pageFns={dashboard,penal:penalPage,traffic:trafficPage,arrest:procedurePage,'traffic-stop':trafficStopPage,events:eventsPage,map:mapPage,terms:termsPage,calculator:calculatorPage,codes:codesPage,bookmarks:bookmarksPage,bodycam:bodycamPage,deptradio:deptRadioPage,vehicle:vehiclePage,notepad:notepadPage,arrestlog:arrestLogPage,ucevidence:ucEvidencePage,imguploader:imguploaderPage,hostage:hostageNegotiationPage,profile:profilePage,vault:vaultPage};
+const pageFns={dashboard,penal:penalPage,traffic:trafficPage,arrest:procedurePage,'traffic-stop':trafficStopPage,events:eventsPage,map:mapPage,terms:termsPage,calculator:calculatorPage,codes:codesPage,bookmarks:bookmarksPage,bodycam:bodycamPage,deptradio:deptRadioPage,vehicle:vehiclePage,notepad:notepadPage,arrestlog:arrestLogPage,ucevidence:ucEvidencePage,imguploader:imguploaderPage,hostage:hostageNegotiationPage,profile:profilePage,vault:vaultPage,music:musicPage};
 let currentPageName=null;
 function render(page){
  clearDutyInterval();
@@ -4398,7 +4554,7 @@ function render(page){
  }
  const c=document.getElementById('content');
  const fn=pageFns[page];
- let h=fn?fn():(rules[page]?rulesPage(page):dashboard());
+ let h; try{ h=fn?fn():(rules[page]?rulesPage(page):dashboard()); }catch(err){ console.warn('page render failed',err); h=dashboard(); }
  c.innerHTML=h; window.scrollTo({top:0,behavior:'smooth'});
  c.classList.remove('page-enter'); void c.offsetWidth; c.classList.add('page-enter');
  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
@@ -4412,12 +4568,13 @@ function render(page){
  if(page==='ucevidence')warmUpVehicleOcrWorker().catch(()=>{});
  if(page==='imguploader')initImguploaderPage();
  if(page==='vault')initVaultPage();
+ if(page==='music'){ try{initMusicPage()}catch(e){} }
  if(page==='dashboard'){updateClocks();startTicker()}
  try{mpSyncUI()}catch(e){}
  if(page==='bodycam'&&dutyState&&dutyState.on)startDutyInterval();
 }
 function go(page){render(page)}
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{ if(navEditing||!b.dataset.page) return; go(b.dataset.page); }));
 document.getElementById('dutyBtn').addEventListener('click',toggleDuty);
 renderDutyBtn(); if(dutyState&&dutyState.on)startDutyInterval();
 document.getElementById('mobileMenu').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
@@ -4997,7 +5154,7 @@ document.getElementById('searchInput').addEventListener('input',e=>{if(e.target.
 updateFavCount();
 vaultUpdateNavCount();
 let startPage='dashboard';
-try{const lp=localStorage.getItem('grwiki_lastpage'); if(lp&&(pageFns[lp]||rules[lp]))startPage=lp}catch(e){}
+try{const lp=localStorage.getItem('grwiki_lastpage'); if(lp&&lp!=='music'&&(pageFns[lp]||rules[lp]))startPage=lp}catch(e){}
 render(startPage);
 
 /* =========================================================
@@ -5136,6 +5293,7 @@ function mpCardHTML(){
         '<div class="mp-empty-icons">\uD83C\uDFB5 \u2022 \u25B6 \u2022 \uD83D\uDFE2 \u2022 \u2601 \u2022 \uD83D\uDCFB</div>'+
       '</div>'+
       '<button class="mp-bigbtn" onclick="mpOpenPicker()">\u25B6 Play music</button>'+
+      (MH.length?'<button class="mp-bigbtn" style="background:var(--panel2);color:var(--accent);box-shadow:none;border:1px solid var(--line)" onclick="go(\'music\')">\uD83D\uDD52 History ('+MH.length+')</button>':'')+
       '</div></div>';
   }
   const q=MP.queue.length>1?'<div class="mp-queue" id="mpQueue"></div>':'';
@@ -5157,8 +5315,10 @@ function mpCardHTML(){
         '<button class="mp-btn stop" onclick="mpStop()" title="Stop">\u25A0</button>'+
         openLink+
         '<button class="mp-btn" onclick="mpOpenPicker()" title="Change source / add music">\u002B</button>'+
+        '<button class="mp-btn" onclick="go(\'music\')" title="History &amp; library">\uD83D\uDD52</button>'+
       '</div>'+
     '</div>'+
+    '<div class="mp-viz">'+mpVizBars()+'</div>'+
     '<div class="mp-progrow"><span class="mp-time" id="mpCardCur">--:--</span>'+
       '<input type="range" class="mp-seek" id="mpCardSeek" min="0" max="1000" value="0" oninput="mpSeek(this.value/1000);mpPaintSeek(this)">'+
       '<span class="mp-time" id="mpCardDur">--:--</span>'+
@@ -5209,7 +5369,7 @@ function mpSyncUI(){
     const vc=slot.querySelector('#mpCardVol'); if(vc)mpPaintSeek(vc);
   }
   const dock=document.getElementById('mpDock');
-  if(dock) dock.classList.toggle('show', !!MP.src);
+  if(dock) dock.classList.toggle('show', !!MP.src && (currentPageName==='dashboard'||currentPageName==='music'));
 
   const playIcon = MP.loading?'\u22EF':(MP.playing?'\u23F8':'\u25B6');
   const title = MP.loading?'Loading\u2026':(MP.title||'\u2014');
@@ -5251,6 +5411,7 @@ function mpSyncUI(){
       qc.innerHTML=MP.queue.map((t,i)=>'<div class="mp-qitem'+(i===MP.idx?' on':'')+'" onclick="mpGoTo('+i+')"><span class="n">'+(i+1)+'</span><span>'+esc(t.title)+'</span>'+(i===MP.idx?'<span class="qeq mp-eq'+(MP.playing?' on':'')+'"><i></i><i></i><i></i></span>':'')+'</div>').join('');
     }
   }
+  try{ mhTouch(); }catch(e){}
   mpMediaSession();
 }
 function mpStartTick(){
@@ -5616,6 +5777,305 @@ function mpVol(v){
   mpSave();
 }
 
+
+/* =========================================================
+   Music History  (jo bhi play hua uska record)
+   ========================================================= */
+const MH_KEY='grwiki_music_history_v1';
+let MH=[];
+try{ MH=JSON.parse(localStorage.getItem(MH_KEY)||'[]'); if(!Array.isArray(MH))MH=[]; }catch(e){ MH=[]; }
+let mhSeq=0;
+function mhNewId(){ return 'm'+(Date.now().toString(36))+(mhSeq++).toString(36); }
+MH.forEach(x=>{ if(!x.id) x.id=mhNewId(); });
+let mhQuery='', mhFilter='all', mhSort='recent', mhLastKey='';
+
+function mhSave(){ try{ localStorage.setItem(MH_KEY,JSON.stringify(MH.slice(0,300))); }catch(e){} }
+
+function mhCurrentRef(){
+  if(!MP.src) return null;
+  const t=MP.queue[MP.idx]||{};
+  let url=t.url||'';
+  if(MP.src==='youtube'&&mpYT&&mpYT.getVideoData){
+    try{ const d=mpYT.getVideoData()||{}; if(d.video_id) url='https://www.youtube.com/watch?v='+d.video_id; }catch(e){}
+  }
+  const title=(MP.title||'').trim();
+  if(!title||title==='Loading\u2026'||title==='\u2014') return null;
+  return {src:MP.src,url:url,title:title,sub:(MP.sub||'').replace(/\s\u00b7\s\d+\/\d+$/,'')};
+}
+
+/* called from mpSyncUI — records a track the moment it actually starts */
+function mhTouch(){
+  if(!MP.playing) return;
+  const r=mhCurrentRef(); if(!r) return;
+  const k=r.src+'|'+(r.url||r.title);
+  if(k===mhLastKey) return;
+  mhLastKey=k;
+  const now=Date.now();
+  let it=MH.find(x=>x.k===k);
+  if(it){ it.last=now; it.count=(it.count||1)+1; it.title=r.title; it.sub=r.sub; }
+  else{ it={id:mhNewId(),k:k,src:r.src,url:r.url,title:r.title,sub:r.sub,first:now,last:now,count:1,fav:false}; MH.push(it); }
+  MH.sort((a,b)=>b.last-a.last);
+  if(MH.length>300) MH=MH.slice(0,300);
+  mhSave();
+  if(currentPageName==='music') mhRefresh();
+}
+
+function mhAgo(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60) return 'abhi';
+  if(s<3600) return Math.floor(s/60)+' min pehle';
+  if(s<86400) return Math.floor(s/3600)+' ghante pehle';
+  if(s<604800) return Math.floor(s/86400)+' din pehle';
+  return new Date(ts).toLocaleDateString();
+}
+
+function mhGet(id){ return MH.find(x=>x.id===id); }
+function mhCopy(id){
+  const it=mhGet(id); if(!it||!it.url) return;
+  if(navigator.clipboard) navigator.clipboard.writeText(it.url).then(()=>toast('Link copy ho gaya'),()=>{});
+  else toast(it.url);
+}
+function mhPlay(id){
+  const it=mhGet(id); if(!it) return;
+  if(it.src==='local'||!it.url){
+    toast('Local file dubara select karna padega \u2014 browser file ka rasta yaad nahi rakh sakta');
+    mpChoose('local'); return;
+  }
+  toast('\u25B6 '+it.title);
+  if(it.src==='youtube') mpLoadYouTube(it.url);
+  else if(it.src==='spotify') mpLoadSpotify(it.url);
+  else if(it.src==='soundcloud') mpLoadSoundCloud(it.url);
+  else mpLoadRadio(it.url);
+}
+function mhFav(id){ const it=mhGet(id); if(!it)return; it.fav=!it.fav; mhSave(); mhRefresh(); }
+function mhDel(id){ MH=MH.filter(x=>x.id!==id); mhSave(); mhRefresh(); }
+function mhClear(){
+  if(!MH.length) return;
+  if(!confirm('Poori music history delete kar de? Favourites bhi chale jayenge.')) return;
+  MH=[]; mhLastKey=''; mhSave(); mhRefresh(); toast('History clear ho gayi');
+}
+function mhPlayFavs(){
+  const list=MH.filter(x=>x.fav&&x.url&&(x.src==='youtube'));
+  if(list.length){ mpLoadYouTube(list.map(x=>x.url).join('\n')); return; }
+  const r=MH.filter(x=>x.fav&&x.url&&(x.src==='radio'));
+  if(r.length){ mpLoadRadio(r.map(x=>x.url).join('\n')); return; }
+  toast('Queue banane ke liye YouTube ya Radio favourites chahiye');
+}
+
+function mhFiltered(){
+  let list=MH.slice();
+  if(mhFilter==='fav') list=list.filter(x=>x.fav);
+  else if(mhFilter!=='all') list=list.filter(x=>x.src===mhFilter);
+  const q=mhQuery.trim().toLowerCase();
+  if(q) list=list.filter(x=>(x.title+' '+(x.sub||'')).toLowerCase().includes(q));
+  if(mhSort==='most') list.sort((a,b)=>(b.count||0)-(a.count||0));
+  else if(mhSort==='az') list.sort((a,b)=>a.title.localeCompare(b.title));
+  else list.sort((a,b)=>b.last-a.last);
+  return list;
+}
+
+function mhListHTML(){
+  const list=mhFiltered();
+  if(!list.length){
+    return '<div class="empty" style="padding:26px;text-align:center;color:var(--muted);font-size:12.5px">'+
+      (MH.length?'Is filter me kuch nahi mila.':'Abhi tak kuch play nahi hua. Upar se koi source choose karo \u2014 uske baad har track apne aap yahan save hota rahega.')+'</div>';
+  }
+  const curKey=(function(){ const r=mhCurrentRef(); return r?r.src+'|'+(r.url||r.title):''; })();
+  return '<div class="mh-list">'+list.map(it=>{
+    const on=it.k===curKey;
+    return '<div class="mh-item'+(on?' on':'')+'">'+
+      '<div class="mh-ic">'+(MP_ICONS[it.src]||'\uD83C\uDFB5')+'</div>'+
+      '<div class="mh-main"><b>'+esc(it.title)+'</b><small>'+esc(it.sub||MP_NAMES[it.src]||'')+' \u00b7 '+mhAgo(it.last)+' \u00b7 '+(it.count||1)+'x play</small></div>'+
+      '<span class="mh-tag">'+esc(MP_NAMES[it.src]||it.src)+'</span>'+
+      '<div class="mh-acts">'+
+        '<button onclick="mhPlay(\''+it.id+'\')" title="Dobara play karo">\u25B6</button>'+
+        '<button class="fav'+(it.fav?' on':'')+'" onclick="mhFav(\''+it.id+'\')" title="Favourite">'+(it.fav?'\u2605':'\u2606')+'</button>'+
+        (it.url?'<button onclick="mhCopy(\''+it.id+'\')" title="Link copy">\u29C9</button>':'')+
+        '<button class="del" onclick="mhDel(\''+it.id+'\')" title="Remove">\u2715</button>'+
+      '</div></div>';
+  }).join('')+'</div>';
+}
+
+function mhQuickHTML(){
+  const recent=MH.filter(x=>x.url&&x.src!=='local').slice(0,8);
+  if(!recent.length) return '';
+  return '<div class="card"><div class="card-head"><h2>\u26A1 Quick Replay</h2></div><div class="card-body"><div class="mh-chips">'+
+    recent.map(it=>'<button class="mh-chip" onclick="mhPlay(\''+it.id+'\')">'+(MP_ICONS[it.src]||'\uD83C\uDFB5')+'<span>'+esc(it.title)+'</span></button>').join('')+
+    '</div><p class="mp-hint">Link dobara paste karne ki zarurat nahi \u2014 bas tap karo aur wahi track fir se chalu.</p></div></div>';
+}
+
+function mhStatsHTML(){
+  const plays=MH.reduce((a,b)=>a+(b.count||1),0);
+  const top=MH.slice().sort((a,b)=>(b.count||0)-(a.count||0))[0];
+  const bySrc={};
+  MH.forEach(x=>{ bySrc[x.src]=(bySrc[x.src]||0)+(x.count||1); });
+  const max=Math.max(1,...Object.values(bySrc));
+  const rows=Object.keys(bySrc).sort((a,b)=>bySrc[b]-bySrc[a]).map(s=>
+    '<div class="mh-srcrow"><span style="min-width:96px">'+(MP_ICONS[s]||'')+' '+esc(MP_NAMES[s]||s)+'</span>'+
+    '<span class="bar"><i style="width:'+Math.round(bySrc[s]/max*100)+'%"></i></span><span class="n">'+bySrc[s]+'</span></div>').join('');
+  return '<div class="card"><div class="card-head"><h2>\uD83D\uDCCA Listening Stats</h2></div><div class="card-body">'+
+   '<div class="mh-stats">'+
+    '<div class="mh-stat"><b>'+MH.length+'</b><span>Tracks saved</span></div>'+
+    '<div class="mh-stat"><b>'+plays+'</b><span>Total plays</span></div>'+
+    '<div class="mh-stat"><b>'+MH.filter(x=>x.fav).length+'</b><span>Favourites</span></div>'+
+    '<div class="mh-stat"><b>'+(top?(top.count||1)+'x':'\u2014')+'</b><span>'+(top?esc(top.title.slice(0,26)):'Most played')+'</span></div>'+
+   '</div>'+(rows?'<div class="mh-src">'+rows+'</div>':'')+'</div></div>';
+}
+
+function mhRefresh(){
+  const l=document.getElementById('mhList'); if(l) l.innerHTML=mhListHTML();
+  const c=document.getElementById('mhCount'); if(c) c.textContent=MH.length+' tracks';
+  const q=document.getElementById('mhQuickWrap'); if(q) q.innerHTML=mhQuickHTML();
+  const s=document.getElementById('mhStatsWrap'); if(s) s.innerHTML=mhStatsHTML();
+}
+
+/* ---------- the Music page ---------- */
+function musicPage(){
+  const opt=(v,t)=>'<option value="'+v+'"'+(mhFilter===v?' selected':'')+'>'+t+'</option>';
+  const sopt=(v,t)=>'<option value="'+v+'"'+(mhSort===v?' selected':'')+'>'+t+'</option>';
+  return '<div class="hero rgbhero"><h1>\uD83C\uDFA7 Music Center</h1>'+
+   '<p>Sab kuch ek jagah \u2014 kya baj raha hai, kya baj chuka hai, aur ek click me dobara play. Link baar baar paste karne ki zarurat khatam.</p></div>'+
+   '<div id="mpSlot"></div>'+
+   '<div id="mhQuickWrap">'+mhQuickHTML()+'</div>'+
+   '<div class="card"><div class="card-head"><h2>\uD83D\uDD52 Play History</h2><span class="mh-count" id="mhCount"></span></div><div class="card-body">'+
+     '<div class="mh-bar">'+
+       '<input id="mhSearch" type="text" placeholder="Search title ya artist..." value="'+esc(mhQuery)+'" oninput="mhQuery=this.value;mhRefresh()">'+
+       '<select onchange="mhFilter=this.value;mhRefresh()">'+opt('all','All sources')+opt('fav','\u2605 Favourites')+opt('youtube','YouTube')+opt('spotify','Spotify')+opt('soundcloud','SoundCloud')+opt('radio','Radio / URL')+opt('local','My Files')+'</select>'+
+       '<select onchange="mhSort=this.value;mhRefresh()">'+sopt('recent','Recent first')+sopt('most','Most played')+sopt('az','A \u2192 Z')+'</select>'+
+       '<button class="btn secondary" onclick="mhPlayFavs()">\u2605 Play favourites</button>'+
+       '<button class="btn secondary" onclick="mhClear()">Clear all</button>'+
+     '</div>'+
+     '<div id="mhList"></div>'+
+   '</div></div>'+
+   '<div id="mhStatsWrap">'+mhStatsHTML()+'</div>'+
+   '<div class="card"><div class="card-head"><h2>\u2699 Effects &amp; Sound</h2></div><div class="card-body">'+
+     '<div class="fx-row"><div class="lbl"><b>RGB play effects</b><small>Play ke waqt card, bars aur glow rainbow me cycle karte hain.</small></div>'+
+       '<button class="fx-tog'+(FX.rgb?' on':'')+'" id="fxRgb" onclick="fxSet(\'rgb\',!FX.rgb)"><i></i></button></div>'+
+     '<div class="fx-row"><div class="lbl"><b>Gunfire click sound</b><small>Har button click par halka gunshot SFX.</small></div>'+
+       '<button class="fx-tog'+(FX.gun?' on':'')+'" id="fxGun" onclick="fxSet(\'gun\',!FX.gun)"><i></i></button></div>'+
+     '<div class="fx-row"><div class="lbl"><b>Click sound volume</b><small>Gunshot kitna loud ho.</small></div>'+
+       '<input type="range" class="mp-vol" min="0" max="100" value="'+Math.round(FX.vol*100)+'" oninput="fxSet(\'vol\',this.value/100);mpPaintSeek(this)" onchange="playGunshot()"></div>'+
+     '<div class="fx-row"><div class="lbl"><b>Mini player</b><small>Ab widget sirf Dashboard aur is page par dikhta hai \u2014 baaki pages saaf rehte hain, gaana chalta rehta hai.</small></div>'+
+       '<button class="btn secondary" onclick="go(\'dashboard\')">Dashboard kholo</button></div>'+
+   '</div></div>';
+}
+function initMusicPage(){
+  try{ mpSyncUI(); }catch(e){}
+  mhRefresh();
+  document.querySelectorAll('#content .mp-vol').forEach(mpPaintSeek);
+}
+
+/* =========================================================
+   FX settings (RGB + gunshot click)
+   ========================================================= */
+function fxSet(k,v){
+  FX[k]=v;
+  try{ localStorage.setItem(FX_KEY,JSON.stringify(FX)); }catch(e){}
+  fxApply();
+  const b=document.getElementById(k==='rgb'?'fxRgb':'fxGun');
+  if(b) b.classList.toggle('on',!!v);
+  if(k==='gun'&&v) playGunshot();
+}
+function fxApply(){ document.documentElement.dataset.rgb=FX.rgb?'1':'0'; }
+fxApply();
+
+/* =========================================================
+   Sidebar customize — drag / reorder / hide
+   ========================================================= */
+const NAV_KEY='grwiki_nav_v1';
+let navEditing=false, navDragEl=null;
+function navEl(){ return document.getElementById('nav'); }
+function navRows(){ return [...navEl().children].filter(el=>el.dataset&&el.dataset.nk); }
+function navAssignKeys(){
+  let ti=0;
+  [...navEl().children].forEach(el=>{
+    if(el.dataset.nk) return;
+    if(el.classList.contains('nav-title')) el.dataset.nk='t'+(++ti)+':'+el.textContent.trim().slice(0,18);
+    else if(el.dataset.page) el.dataset.nk='p:'+el.dataset.page;
+    else el.dataset.nk='a:'+el.textContent.trim().slice(0,12);
+  });
+}
+function navState(){ try{ return JSON.parse(localStorage.getItem(NAV_KEY)||'{}'); }catch(e){ return {}; } }
+function navSave(){
+  const st={order:navRows().map(el=>el.dataset.nk),hidden:navRows().filter(el=>el.classList.contains('nav-off')).map(el=>el.dataset.nk)};
+  try{ localStorage.setItem(NAV_KEY,JSON.stringify(st)); }catch(e){}
+}
+function navApply(){
+  const nav=navEl(), st=navState();
+  if(st.order&&st.order.length){
+    const map={}; navRows().forEach(el=>{ map[el.dataset.nk]=el; });
+    st.order.forEach(k=>{ if(map[k]){ nav.appendChild(map[k]); delete map[k]; } });
+    Object.keys(map).forEach(k=>nav.appendChild(map[k]));
+  }
+  const hid=new Set(st.hidden||[]);
+  navRows().forEach(el=>el.classList.toggle('nav-off',hid.has(el.dataset.nk)));
+}
+function navToggleEdit(){
+  navEditing=!navEditing;
+  navEl().classList.toggle('editing',navEditing);
+  const b=document.getElementById('navCustBtn'); if(b) b.textContent=navEditing?'\u2713 Done':'\u21C5 Customize menu';
+  const r=document.getElementById('navResetBtn'); if(r) r.style.display=navEditing?'':'none';
+  navRows().forEach(el=>{
+    el.draggable=navEditing;
+    const old=el.querySelector('.navctl'); if(old) old.remove();
+    if(!navEditing) return;
+    const s=document.createElement('span');
+    s.className='navctl';
+    s.innerHTML='<b data-a="up" title="Upar">\u25B2</b><b data-a="down" title="Niche">\u25BC</b><b data-a="eye" title="Hide / show">'+(el.classList.contains('nav-off')?'\u2716':'\uD83D\uDC41')+'</b>';
+    s.addEventListener('click',ev=>{
+      ev.stopPropagation(); ev.preventDefault();
+      const a=ev.target.dataset.a; if(!a) return;
+      if(a==='up') navMove(el,-1); else if(a==='down') navMove(el,1); else navHide(el);
+    });
+    el.appendChild(s);
+  });
+  if(!navEditing) navSave();
+  else toast('Drag karo ya \u25B2\u25BC se order badlo. \uD83D\uDC41 se item hide/show.');
+}
+function navMove(el,dir){
+  const nav=el.parentNode;
+  if(dir<0){ const p=el.previousElementSibling; if(p&&p.dataset.nk) nav.insertBefore(el,p); }
+  else{ const n=el.nextElementSibling; if(n&&n.dataset.nk) nav.insertBefore(n,el); }
+  navSave();
+}
+function navHide(el){
+  el.classList.toggle('nav-off');
+  const b=el.querySelector('.navctl b[data-a="eye"]');
+  if(b) b.textContent=el.classList.contains('nav-off')?'\u2716':'\uD83D\uDC41';
+  navSave();
+}
+function navReset(){
+  try{ localStorage.removeItem(NAV_KEY); }catch(e){}
+  toast('Menu default order par wapas');
+  setTimeout(()=>location.reload(),400);
+}
+(function navInit(){
+  navAssignKeys(); navApply();
+  const nav=navEl();
+  nav.addEventListener('dragstart',e=>{
+    const r=e.target.closest&&e.target.closest('[data-nk]');
+    if(!navEditing||!r) return;
+    navDragEl=r; r.classList.add('navdrag');
+    e.dataTransfer.effectAllowed='move';
+    try{ e.dataTransfer.setData('text/plain','nav'); }catch(err){}
+  });
+  nav.addEventListener('dragend',()=>{
+    if(navDragEl){ navDragEl.classList.remove('navdrag'); navDragEl=null; navSave(); }
+  });
+  nav.addEventListener('dragover',e=>{
+    if(!navEditing||!navDragEl) return;
+    e.preventDefault();
+    const rows=navRows().filter(r=>r!==navDragEl);
+    let after=null;
+    rows.forEach(r=>{ const b=r.getBoundingClientRect(); if(e.clientY>b.top+b.height/2) after=r; });
+    if(after) nav.insertBefore(navDragEl,after.nextSibling);
+    else nav.insertBefore(navDragEl,nav.firstElementChild);
+  });
+  nav.addEventListener('drop',e=>{ if(navEditing) e.preventDefault(); });
+})();
+
+function mpVizBars(){ let o=''; for(let i=0;i<30;i++){ o+='<i style="animation-delay:'+(i*0.07%0.9).toFixed(2)+'s;animation-duration:'+(0.55+(i%5)*0.16).toFixed(2)+'s"></i>'; } return o; }
+
 /* ---------- boot ---------- */
 (function mpInit(){
   mpBuildDock();
@@ -5624,6 +6084,7 @@ function mpVol(v){
     if(typeof st.vol==='number') MP.vol=st.vol;
   }catch(e){}
   mpSyncUI();
+  try{ if(localStorage.getItem('grwiki_lastpage')==='music') render('music'); }catch(e){}
 })();
 
 </script>
