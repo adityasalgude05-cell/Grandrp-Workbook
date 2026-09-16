@@ -551,6 +551,33 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 .mp-step .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
 .mp-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.7}
 
+/* ---------- Personal Vault ---------- */
+.vault-note-banner{display:flex;gap:12px;align-items:flex-start;background:var(--accentSoft);border:1px solid var(--heroBorder);border-radius:14px;padding:14px 16px;margin-bottom:18px;font-size:12px;color:var(--textSoft);line-height:1.6}
+.vault-note-banner .ic{font-size:20px;flex-shrink:0}
+.vault-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
+.vault-form .full{grid-column:1/-1}
+.vault-form label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700}
+.vault-form input[type=text],.vault-form textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none;font-family:inherit;transition:border-color .15s,box-shadow .15s}
+.vault-form input[type=text]:focus,.vault-form textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+.vault-form textarea{resize:vertical;min-height:44px}
+.vault-actionsrow{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.vault-or{display:flex;align-items:center;gap:10px;margin:18px 0;color:var(--muted);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.vault-or::before,.vault-or::after{content:'';flex:1;height:1px;background:var(--line)}
+.vault-count-tag{margin-left:6px;font-size:10px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);padding:1px 7px;border-radius:999px}
+.vault-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:18px}
+.vault-card{border:1px solid var(--line);border-radius:15px;background:var(--panel2);overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,transform .2s,box-shadow .2s}
+.vault-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 14px 30px -10px var(--glow)}
+.vault-thumb-wrap{display:block;width:100%;aspect-ratio:16/10;background:var(--panel);overflow:hidden;position:relative}
+.vault-thumb{width:100%;height:100%;object-fit:cover;display:block}
+.vault-thumb-ic{width:100%;height:100%;display:grid;place-items:center;font-size:30px;color:var(--muted);background:linear-gradient(135deg,var(--panel),var(--panel2))}
+.vault-info{padding:13px 14px 15px;display:flex;flex-direction:column;gap:6px;flex:1}
+.vault-title{font-size:13px;color:var(--text);line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.vault-note{font-size:11px;color:var(--muted);line-height:1.5;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.vault-meta{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:auto;padding-top:2px}
+.vault-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.vault-actions .btn{padding:7px 11px;font-size:11px;text-decoration:none;display:inline-flex;align-items:center}
+.vault-quota{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.6}
+
 /* Fixed mini dock */
 .mp-dock{position:fixed;left:18px;bottom:18px;z-index:44;width:330px;max-width:calc(100vw - 36px);background:linear-gradient(160deg,var(--panel),var(--panel2) 70%);border:1px solid var(--line);border-radius:18px;box-shadow:0 22px 52px rgba(0,0,0,.55);overflow:hidden;transform:translateY(160%) scale(.96);transition:transform .32s cubic-bezier(.25,1.3,.4,1),border-color .3s,box-shadow .3s;backdrop-filter:blur(16px)}
 .mp-dock.show{transform:none}
@@ -626,6 +653,7 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 
     <div class="nav-title">Officer Tools</div>
     <button data-page="profile"><span class="ico">👤</span>Personnel Record</button>
+    <button data-page="vault"><span class="ico">🗄</span>Personal Vault<span class="navcount" id="vaultCount"></span></button>
     <button data-page="bodycam"><span class="ico">●</span>Bodycam Commands</button>
     <button data-page="deptradio"><span class="ico">📻</span>Department Radio</button>
     <button data-page="vehicle"><span class="ico">🚗</span>Vehicle Ticket Log</button>
@@ -1444,7 +1472,7 @@ function table(rows,cols,opts){
 }
 
 function dashboard(){
- const pageLabels={general:'General Rules',state:'State Rules',green:'Green Zone',ghetto:'Ghetto Rules','traffic-stop':'10-51 Traffic Stop',arrest:'10-15 Arrest',penal:'Penal Code',traffic:'Traffic Code',events:'Event Rules',map:'Territory Map',terms:'RP Terms',calculator:'Fine Calculator',codes:'Radio Codes',bookmarks:'Bookmarks',bodycam:'Bodycam Commands',vehicle:'Vehicle Ticket Log',notepad:'Dispatch Notepad', deptradio:'Department Radio', arrestlog:'Arrest Logs', ucevidence:'UC Evidence Logs', imguploader:'Image Uploader (ImgBB)', hostage:'Hostage Negotiation', profile:'Personnel Record'};
+ const pageLabels={general:'General Rules',state:'State Rules',green:'Green Zone',ghetto:'Ghetto Rules','traffic-stop':'10-51 Traffic Stop',arrest:'10-15 Arrest',penal:'Penal Code',traffic:'Traffic Code',events:'Event Rules',map:'Territory Map',terms:'RP Terms',calculator:'Fine Calculator',codes:'Radio Codes',bookmarks:'Bookmarks',bodycam:'Bodycam Commands',vehicle:'Vehicle Ticket Log',notepad:'Dispatch Notepad', deptradio:'Department Radio', arrestlog:'Arrest Logs', ucevidence:'UC Evidence Logs', imguploader:'Image Uploader (ImgBB)', hostage:'Hostage Negotiation', profile:'Personnel Record', vault:'Personal Vault'};
  return `<div class="hero"><h1>Welcome back, Officer ${activeUser ? dbUsers.find(u=>u.id===activeUser)?.name || '' : ''}</h1><p>Badge #${activeUser||''} — Quick-access handbook for state rules, penal code, traffic code, traffic stops, arrests, events, bodycam procedure and roleplay terminology.</p><div class="tip-ticker" id="tipTicker"></div></div>
  <div class="clockcard">
   <div class="cc-item"><h4>🇬🇧 In-Game Time — London</h4><b id="dashClockLondon">--:--:--</b><small id="dashDateLondon">—</small></div>
@@ -2552,6 +2580,237 @@ function handleVehicleExtraPhotos(fileList){
   reader.onload=e=>uploadVehiclePhotoToImgbbList(e.target.result,file.name);
   reader.readAsDataURL(file);
  });
+}
+
+
+/* ---------- Personal Vault (videos / photos / documents — per officer, never auto-deleted) ---------- */
+let vaultActiveTab='video';
+function vaultOfficerKey(){ return 'grwiki_vault_'+(activeUser||'guest'); }
+function loadVault(){ try{return JSON.parse(localStorage.getItem(vaultOfficerKey())||'[]')}catch(e){return []} }
+function saveVaultArr(v){
+ try{ localStorage.setItem(vaultOfficerKey(), JSON.stringify(v)); return true; }
+ catch(e){ toast('Could not save — your browser storage is full. Try removing an old item or use a link instead of an upload.'); return false; }
+}
+function vaultItemsOfType(t){ return loadVault().filter(x=>x.type===t); }
+function vaultUpdateNavCount(){
+ const el=document.getElementById('vaultCount');
+ if(el){ const n=loadVault().length; el.textContent=n?n:''; }
+}
+
+function vaultPage(){
+ vaultActiveTab='video';
+ return `<h1 class="section-title">Personal Vault</h1>
+ <p class="section-sub">Save videos, photos and documents you want to keep for good — private to your badge (#${esc(activeUser||'Guest')}), stored right in this browser and never auto-deleted.</p>
+ <div class="vault-note-banner"><span class="ic">🔒</span><div><b>Stays saved permanently.</b> Nothing here expires or gets cleared automatically — items stay until you personally remove them. This lives in this browser's storage, so use <b>Officer Profile → Export Backup</b> occasionally to keep a safe copy you can restore on any device.</div></div>
+
+ <div class="card"><div class="card-body">
+  <div class="style-tabs" style="margin-bottom:20px">
+   <button class="style-tab active" id="vTabvideo" onclick="vaultSwitchTab('video')">🎬 Videos<span class="vault-count-tag" id="vCountvideo">0</span></button>
+   <button class="style-tab" id="vTabphoto" onclick="vaultSwitchTab('photo')">🖼 Photos<span class="vault-count-tag" id="vCountphoto">0</span></button>
+   <button class="style-tab" id="vTabdocument" onclick="vaultSwitchTab('document')">📄 Documents<span class="vault-count-tag" id="vCountdocument">0</span></button>
+  </div>
+
+  <div id="vaultPanelvideo">
+   <div class="vault-form">
+    <div><label>Title</label><input type="text" id="vvideoTitle" placeholder="e.g. Bank robbery bodycam clip"></div>
+    <div><label>Video link</label><input type="text" id="vvideoUrl" placeholder="YouTube, Streamable, Drive, etc."></div>
+    <div class="full"><label>Note (optional)</label><textarea id="vvideoNote" rows="2" placeholder="Any context you want to remember..."></textarea></div>
+    <div class="vault-actionsrow"><button class="btn" onclick="vaultAddLink('video')">💾 Save to vault</button></div>
+   </div>
+   <div id="vaultList-video"></div>
+  </div>
+
+  <div id="vaultPanelphoto" style="display:none">
+   <div class="vault-form">
+    <div><label>Title</label><input type="text" id="vphotoTitle" placeholder="e.g. Suspect ID photo"></div>
+    <div><label>Photo link (optional)</label><input type="text" id="vphotoUrl" placeholder="Paste an ImgBB / image link"></div>
+    <div class="full"><label>Note (optional)</label><textarea id="vphotoNote" rows="2" placeholder="Any context you want to remember..."></textarea></div>
+    <div class="vault-actionsrow"><button class="btn" onclick="vaultAddLink('photo')">💾 Save link to vault</button></div>
+   </div>
+   <div class="vault-or">or upload a photo directly</div>
+   <div class="uploadbox" id="vPhotoUploadBox" onclick="document.getElementById('vPhotoFileInput').click()">
+    <span class="up-ico">📤</span><b>Click to upload, or drag a photo here</b><small>Stored right in this browser — kept automatically shrunk so more photos fit.</small>
+   </div>
+   <input type="file" id="vPhotoFileInput" accept="image/*" multiple style="display:none">
+   <div id="vaultList-photo"></div>
+  </div>
+
+  <div id="vaultPaneldocument" style="display:none">
+   <div class="vault-form">
+    <div><label>Title</label><input type="text" id="vdocumentTitle" placeholder="e.g. Department SOP PDF"></div>
+    <div><label>Document link</label><input type="text" id="vdocumentUrl" placeholder="Drive, Discord attachment, etc."></div>
+    <div class="full"><label>Note (optional)</label><textarea id="vdocumentNote" rows="2" placeholder="Any context you want to remember..."></textarea></div>
+    <div class="vault-actionsrow"><button class="btn" onclick="vaultAddLink('document')">💾 Save link to vault</button></div>
+   </div>
+   <div class="vault-or">or upload a small file directly</div>
+   <div class="uploadbox" id="vDocUploadBox" onclick="document.getElementById('vDocFileInput').click()">
+    <span class="up-ico">📤</span><b>Click to upload, or drag a file here</b><small>Best for small files (under ~1.5MB) — for anything larger, save a link instead.</small>
+   </div>
+   <input type="file" id="vDocFileInput" multiple style="display:none">
+   <div id="vaultList-document"></div>
+  </div>
+
+ </div></div>`;
+}
+
+function vaultSwitchTab(t){
+ vaultActiveTab=t;
+ ['video','photo','document'].forEach(k=>{
+  const btn=document.getElementById('vTab'+k); if(btn)btn.classList.toggle('active',k===t);
+  const panel=document.getElementById('vaultPanel'+k); if(panel)panel.style.display=(k===t)?'':'none';
+ });
+}
+
+function vaultAddLink(type){
+ const titleEl=document.getElementById('v'+type+'Title');
+ const urlEl=document.getElementById('v'+type+'Url');
+ const noteEl=document.getElementById('v'+type+'Note');
+ const title=(titleEl.value||'').trim();
+ let url=(urlEl.value||'').trim();
+ if(type!=='photo'&&(!title||!url)){ toast('Add a title and a link'); return; }
+ if(type==='photo'&&!url){ toast('Add a link, or upload a photo below instead'); return; }
+ if(url && !/^https?:\/\//i.test(url)) url='https://'+url;
+ const note=(noteEl?noteEl.value:'').trim();
+ const v=loadVault();
+ v.unshift({id:'v'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), type, title:title||'Untitled', url, note, addedAt:new Date().toLocaleString()});
+ if(!saveVaultArr(v)) return;
+ titleEl.value=''; urlEl.value=''; if(noteEl)noteEl.value='';
+ vaultRefreshList(type);
+ toast('Saved to your vault');
+}
+
+function vaultCompressImage(file,maxDim,quality){
+ return new Promise((resolve,reject)=>{
+  const img=new Image();
+  const reader=new FileReader();
+  reader.onload=e=>{ img.onload=()=>{
+   let w=img.width,h=img.height;
+   if(w>maxDim||h>maxDim){ const r=Math.min(maxDim/w,maxDim/h); w=Math.round(w*r); h=Math.round(h*r); }
+   const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+   const ctx=cv.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+   resolve(cv.toDataURL('image/jpeg',quality));
+  }; img.onerror=()=>reject(new Error('Could not read that image')); img.src=e.target.result; };
+  reader.onerror=()=>reject(new Error('Could not read that file'));
+  reader.readAsDataURL(file);
+ });
+}
+
+async function vaultHandlePhotoFiles(files){
+ const imgs=[...files].filter(f=>f.type.startsWith('image/'));
+ if(!imgs.length){ toast('Please choose image files'); return; }
+ for(const file of imgs){
+  try{
+   const dataUrl=await vaultCompressImage(file,900,0.74);
+   const v=loadVault();
+   v.unshift({id:'v'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), type:'photo', title:file.name.replace(/\.[^.]+$/,''), data:dataUrl, fileName:file.name, note:'', addedAt:new Date().toLocaleString()});
+   if(!saveVaultArr(v)) return;
+  }catch(e){ toast('Could not add '+file.name); }
+ }
+ vaultRefreshList('photo');
+ toast('Photo saved to your vault');
+}
+
+function vaultHandleDocFiles(files){
+ [...files].forEach(file=>{
+  if(file.size>4*1024*1024){ toast(file.name+' is too large to store directly — save a link instead'); return; }
+  if(file.size>1.5*1024*1024){ toast(file.name+' is large — this may fill up storage quickly'); }
+  const reader=new FileReader();
+  reader.onload=e=>{
+   const v=loadVault();
+   v.unshift({id:'v'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), type:'document', title:file.name.replace(/\.[^.]+$/,''), data:e.target.result, fileName:file.name, fileType:file.type, note:'', addedAt:new Date().toLocaleString()});
+   if(!saveVaultArr(v)) return;
+   vaultRefreshList('document');
+   toast('File saved to your vault');
+  };
+  reader.onerror=()=>toast('Could not read '+file.name);
+  reader.readAsDataURL(file);
+ });
+}
+
+function vaultDocIcon(name){
+ const ext=(name||'').split('.').pop().toLowerCase();
+ if(['pdf'].includes(ext))return '📕';
+ if(['doc','docx'].includes(ext))return '📘';
+ if(['xls','xlsx','csv'].includes(ext))return '📗';
+ if(['zip','rar','7z'].includes(ext))return '🗜';
+ if(['png','jpg','jpeg','gif','webp'].includes(ext))return '🖼';
+ if(['txt','md'].includes(ext))return '📃';
+ return '📄';
+}
+
+function vaultCardHTML(it){
+ let thumb;
+ if(it.type==='photo'&&it.data){
+  thumb=`<img class="vault-thumb" src="${it.data}" loading="lazy" alt="">`;
+ }else if(it.type==='video'){
+  const ytId=typeof mpYtId==='function'?mpYtId(it.url||''):null;
+  thumb=ytId?`<img class="vault-thumb" src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" loading="lazy" alt="">`:`<div class="vault-thumb-ic">🎬</div>`;
+ }else if(it.type==='document'){
+  thumb=`<div class="vault-thumb-ic">${vaultDocIcon(it.fileName||it.title)}</div>`;
+ }else{
+  thumb=`<div class="vault-thumb-ic">🔗</div>`;
+ }
+ const openHref=it.data||it.url||'#';
+ const isDownload=!!it.data;
+ const dlAttr=isDownload?` download="${esc(it.fileName||it.title)}"`:'';
+ const copyBtn=it.url?`<button class="btn ghost" onclick="copyText('${esc(it.url).replace(/'/g,"\\'")}','Link copied')">⧉ Copy</button>`:'';
+ return `<div class="vault-card">
+  <a class="vault-thumb-wrap" href="${esc(openHref)}" target="_blank" rel="noopener"${dlAttr}>${thumb}</a>
+  <div class="vault-info">
+   <b class="vault-title" title="${esc(it.title)}">${esc(it.title)}</b>
+   ${it.note?`<div class="vault-note">${esc(it.note)}</div>`:''}
+   <div class="vault-meta">Saved ${esc(it.addedAt||'')}</div>
+   <div class="vault-actions">
+    <a class="btn ghost" href="${esc(openHref)}" target="_blank" rel="noopener"${dlAttr}>${isDownload?'⬇ Download':'↗ Open'}</a>
+    ${copyBtn}
+    <button class="btn ghost" onclick="vaultDelete('${it.id}')">Remove</button>
+   </div>
+  </div>
+ </div>`;
+}
+
+function vaultRenderList(type){
+ const items=vaultItemsOfType(type);
+ if(!items.length){
+  const hint=type==='video'?'video':type==='photo'?'photo':'document';
+  return `<div class="empty">Nothing saved yet — add your first ${hint} above. It'll stay here for good.</div>`;
+ }
+ return `<div class="vault-grid">${items.map(vaultCardHTML).join('')}</div>`;
+}
+
+function vaultRefreshList(type){
+ const list=document.getElementById('vaultList-'+type);
+ if(list)list.innerHTML=vaultRenderList(type);
+ const cnt=document.getElementById('vCount'+type); if(cnt)cnt.textContent=vaultItemsOfType(type).length;
+ vaultUpdateNavCount();
+}
+
+function vaultDelete(id){
+ let v=loadVault();
+ const removed=v.find(x=>x.id===id);
+ v=v.filter(x=>x.id!==id);
+ saveVaultArr(v);
+ if(removed)vaultRefreshList(removed.type);
+ toast('Removed from vault');
+}
+
+function initVaultPage(){
+ ['video','photo','document'].forEach(t=>vaultRefreshList(t));
+ vaultSwitchTab('video');
+ const pInput=document.getElementById('vPhotoFileInput'), pBox=document.getElementById('vPhotoUploadBox');
+ if(pInput&&pBox){
+  pInput.addEventListener('change',e=>{ if(e.target.files.length)vaultHandlePhotoFiles(e.target.files); e.target.value=''; });
+  ['dragover','dragenter'].forEach(ev=>pBox.addEventListener(ev,e=>{e.preventDefault();pBox.classList.add('drag')}));
+  ['dragleave','drop'].forEach(ev=>pBox.addEventListener(ev,e=>{e.preventDefault();pBox.classList.remove('drag')}));
+  pBox.addEventListener('drop',e=>{e.preventDefault();pBox.classList.remove('drag'); if(e.dataTransfer.files.length)vaultHandlePhotoFiles(e.dataTransfer.files); });
+ }
+ const dInput=document.getElementById('vDocFileInput'), dBox=document.getElementById('vDocUploadBox');
+ if(dInput&&dBox){
+  dInput.addEventListener('change',e=>{ if(e.target.files.length)vaultHandleDocFiles(e.target.files); e.target.value=''; });
+  ['dragover','dragenter'].forEach(ev=>dBox.addEventListener(ev,e=>{e.preventDefault();dBox.classList.add('drag')}));
+  ['dragleave','drop'].forEach(ev=>dBox.addEventListener(ev,e=>{e.preventDefault();dBox.classList.remove('drag')}));
+  dBox.addEventListener('drop',e=>{e.preventDefault();dBox.classList.remove('drag'); if(e.dataTransfer.files.length)vaultHandleDocFiles(e.dataTransfer.files); });
+ }
 }
 
 /* ---------- Standalone Image Uploader page ----------
@@ -4124,7 +4383,7 @@ function bookmarksPage(){
  }).join("")}</div></div>`;
 }
 
-const pageFns={dashboard,penal:penalPage,traffic:trafficPage,arrest:procedurePage,'traffic-stop':trafficStopPage,events:eventsPage,map:mapPage,terms:termsPage,calculator:calculatorPage,codes:codesPage,bookmarks:bookmarksPage,bodycam:bodycamPage,deptradio:deptRadioPage,vehicle:vehiclePage,notepad:notepadPage,arrestlog:arrestLogPage,ucevidence:ucEvidencePage,imguploader:imguploaderPage,hostage:hostageNegotiationPage,profile:profilePage};
+const pageFns={dashboard,penal:penalPage,traffic:trafficPage,arrest:procedurePage,'traffic-stop':trafficStopPage,events:eventsPage,map:mapPage,terms:termsPage,calculator:calculatorPage,codes:codesPage,bookmarks:bookmarksPage,bodycam:bodycamPage,deptradio:deptRadioPage,vehicle:vehiclePage,notepad:notepadPage,arrestlog:arrestLogPage,ucevidence:ucEvidencePage,imguploader:imguploaderPage,hostage:hostageNegotiationPage,profile:profilePage,vault:vaultPage};
 let currentPageName=null;
 function render(page){
  clearDutyInterval();
@@ -4152,6 +4411,7 @@ function render(page){
  if(page==='vehicle')initVehiclePage();
  if(page==='ucevidence')warmUpVehicleOcrWorker().catch(()=>{});
  if(page==='imguploader')initImguploaderPage();
+ if(page==='vault')initVaultPage();
  if(page==='dashboard'){updateClocks();startTicker()}
  try{mpSyncUI()}catch(e){}
  if(page==='bodycam'&&dutyState&&dutyState.on)startDutyInterval();
@@ -4375,6 +4635,10 @@ document.getElementById('profileBtn').addEventListener('click',()=>{fillProfileM
 profileModal.addEventListener('click',e=>{if(e.target===profileModal)profileModal.classList.remove('show')});
 
 function exportBackup(){
+ const vaults={};
+ try{
+  Object.keys(localStorage).filter(k=>k.startsWith('grwiki_vault_')).forEach(k=>{ vaults[k]=JSON.parse(localStorage.getItem(k)||'[]'); });
+ }catch(e){}
  const data={
   exportedAt:new Date().toISOString(),
   profile:loadProfile(),
@@ -4391,7 +4655,8 @@ function exportBackup(){
   arrestLogs:loadArrestLogs(),
   ucLogs:loadUcLogs(),
   webhookArrest:loadArrestWebhook(),
-  webhookUc:loadUcWebhook()
+  webhookUc:loadUcWebhook(),
+  vaults:vaults
  };
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob);
@@ -4420,6 +4685,10 @@ document.getElementById('importInput').addEventListener('change',e=>{
    if(data.ucLogs){ucLogs=data.ucLogs; saveUcLogs()}
    if(data.webhookArrest!==undefined)localStorage.setItem('grwiki_webhook_arrest',data.webhookArrest);
    if(data.webhookUc!==undefined)localStorage.setItem('grwiki_webhook_uc',data.webhookUc);
+   if(data.vaults&&typeof data.vaults==='object'){
+    Object.keys(data.vaults).forEach(k=>{ if(k.startsWith('grwiki_vault_'))localStorage.setItem(k, JSON.stringify(data.vaults[k])); });
+    vaultUpdateNavCount();
+   }
    toast('Backup restored');
    profileModal.classList.remove('show');
    applyDark(localStorage.getItem('grwiki_dark')!=='0');
@@ -4726,6 +4995,7 @@ modalSearch.addEventListener('input',e=>doSearch(e.target.value));
 document.getElementById('searchInput').addEventListener('input',e=>{if(e.target.value){modal.classList.add('show');modalSearch.value=e.target.value;doSearch(e.target.value)}});
 
 updateFavCount();
+vaultUpdateNavCount();
 let startPage='dashboard';
 try{const lp=localStorage.getItem('grwiki_lastpage'); if(lp&&(pageFns[lp]||rules[lp]))startPage=lp}catch(e){}
 render(startPage);
