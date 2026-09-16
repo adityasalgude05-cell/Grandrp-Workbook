@@ -67,6 +67,21 @@
 [data-style="glass"] .card,[data-style="glass"] .stat,[data-style="glass"] .eventcard,[data-style="glass"] .modalbox,[data-style="glass"] .themebox{background:var(--panelGlass);backdrop-filter:blur(14px);box-shadow:var(--cardShadow),0 0 24px var(--glow)}
 [data-style="serif"]{--fontMain:Georgia,'Times New Roman',serif;--radius:6px;--radiusSm:5px;--radiusLg:8px;--navCase:none;--navSpacing:normal;--cardShadow:0 10px 26px rgba(0,0,0,.35)}
 
+/* --- Page entry animation, varies per design style --- */
+:root{--pageAnim:entryClassic;--pageAnimDur:.4s}
+[data-style="sharp"]{--pageAnim:entrySharp;--pageAnimDur:.32s}
+[data-style="soft"]{--pageAnim:entrySoft;--pageAnimDur:.55s}
+[data-style="minimal"]{--pageAnim:entryMinimal;--pageAnimDur:.2s}
+[data-style="glass"]{--pageAnim:entryGlass;--pageAnimDur:.45s}
+[data-style="serif"]{--pageAnim:entrySerif;--pageAnimDur:.6s}
+.content.page-enter{animation:var(--pageAnim) var(--pageAnimDur) both}
+@keyframes entryClassic{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes entrySharp{from{opacity:0;clip-path:inset(0 100% 0 0);transform:translateX(-6px)}to{opacity:1;clip-path:inset(0 0 0 0);transform:translateX(0)}}
+@keyframes entrySoft{0%{opacity:0;transform:scale(.9) translateY(18px)}65%{opacity:1;transform:scale(1.015) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes entryMinimal{from{opacity:0}to{opacity:1}}
+@keyframes entryGlass{from{opacity:0;filter:blur(10px);transform:scale(1.01)}to{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes entrySerif{from{opacity:0;letter-spacing:2px;transform:translateY(6px)}to{opacity:1;letter-spacing:normal;transform:translateY(0)}}
+
 .style-tabs{display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--line)}
 .style-tab{border:0;background:transparent;color:var(--muted);padding:8px 4px;font-weight:700;font-size:13px;cursor:pointer;border-bottom:2px solid transparent}
 .style-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
@@ -3919,6 +3934,7 @@ function render(page){
  const fn=pageFns[page];
  let h=fn?fn():(rules[page]?rulesPage(page):dashboard());
  c.innerHTML=h; window.scrollTo({top:0,behavior:'smooth'});
+ c.classList.remove('page-enter'); void c.offsetWidth; c.classList.add('page-enter');
  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
  document.getElementById('sidebar').classList.remove('open');
  try{
@@ -3998,6 +4014,8 @@ function applyDesignStyle(key){
  document.documentElement.dataset.style=key==='classic'?'':key;
  try{localStorage.setItem('grwiki_style',key)}catch(e){}
  renderStyleGrid();
+ const c=document.getElementById('content');
+ if(c){c.classList.remove('page-enter'); void c.offsetWidth; c.classList.add('page-enter')}
 }
 function renderStyleGrid(){
  const active=document.documentElement.dataset.style||'classic';
