@@ -1682,6 +1682,8 @@ const trafficStop = [
 ];
 
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+/* Escapes text so it's safe to embed inside a single-quoted JS string that itself sits inside a double-quoted onclick="" attribute. Stops copy buttons from silently breaking if the text ever contains a ' " or \ */
+function jsAttr(s){return esc(String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'"))}
 
 /* ---------- Toasts ---------- */
 function toast(msg){
@@ -1693,15 +1695,42 @@ function toast(msg){
 /* ---------- Clipboard ---------- */
 function copyText(text,label){
  const done=()=>toast((label||'Copied')+' ✓');
+ const fail=()=>toast('Copy fail ho gaya — text select karke manually copy karo');
  try{ playCopySfx(); }catch(e){}
- if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done))}
- else fallbackCopy(text,done);
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+   navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done,fail));
+ }else{
+   fallbackCopy(text,done,fail);
+ }
 }
-function fallbackCopy(text,cb){
- const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
- document.body.appendChild(ta); ta.select();
- try{document.execCommand('copy')}catch(e){}
- ta.remove(); cb&&cb();
+function fallbackCopy(text,cb,failCb){
+ const ta=document.createElement('textarea');
+ ta.value=text;
+ ta.setAttribute('readonly','');
+ ta.contentEditable='true';
+ ta.style.position='fixed';
+ ta.style.top='0';
+ ta.style.left='0';
+ ta.style.width='2em';
+ ta.style.height='2em';
+ ta.style.padding='0';
+ ta.style.border='none';
+ ta.style.outline='none';
+ ta.style.boxShadow='none';
+ ta.style.background='transparent';
+ ta.style.opacity='0';
+ ta.style.fontSize='16px'; /* stops iOS auto-zoom on focus */
+ document.body.appendChild(ta);
+ const sel=window.getSelection();
+ const originalRange=sel&&sel.rangeCount>0?sel.getRangeAt(0):null;
+ ta.focus();
+ ta.select();
+ try{ ta.setSelectionRange(0,text.length); }catch(e){} /* needed on iOS */
+ let ok=false;
+ try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+ document.body.removeChild(ta);
+ if(originalRange&&sel){ sel.removeAllRanges(); sel.addRange(originalRange); }
+ if(ok){ cb&&cb(); } else { failCb?failCb():(cb&&cb()); }
 }
 /* ---------- Favorites (persisted) ---------- */
 function loadFav(){try{return JSON.parse(localStorage.getItem('grwiki_favs_v2')||'[]')}catch(e){return []}}
@@ -1717,7 +1746,7 @@ function toggleFav(id,label){
 }
 function cssEsc(s){return String(s).replace(/["\\]/g,'\\$&')}
 function updateFavCount(){const el=document.getElementById('favCount'); if(el)el.textContent=favs.length?favs.length:''}
-function starBtn(id,label){return `<button class="starbtn ${isFav(id)?'on':''}" data-id="${esc(id)}" title="Bookmark" onclick="event.preventDefault();event.stopPropagation();toggleFav('${id.replace(/'/g,"\\'")}','${(label||'').replace(/'/g,"\\'")}')">${isFav(id)?'★':'☆'}</button>`;
+function starBtn(id,label){return `<button class="starbtn ${isFav(id)?'on':''}" data-id="${esc(id)}" title="Bookmark" onclick="event.preventDefault();event.stopPropagation();toggleFav('${jsAttr(id)}','${jsAttr(label||'')}')">${isFav(id)?'★':'☆'}</button>`;
 }
 
 /* ---------- Fine calculator state ---------- */
@@ -1754,7 +1783,7 @@ function rulesPage(key){
  const d=rules[key]; let out=`<h1 class="section-title">${esc(d.title)}</h1><p class="section-sub">${esc(d.sub)}</p>`;
  d.groups.forEach(g=>{out+=`<div class="card"><div class="card-head"><h2>${esc(g[0])}</h2><span class="badge">${g[1].length} rules</span></div><div class="card-body">`;
  g[1].forEach(x=>{const id=`rule-${key}-${x[0]}`; const plain=`${x[0]} — ${x[1]}${x[2]?' — Penalty: '+x[2]:''}`;
- out+=`<details class="rule"><summary><span>${esc(x[0])}</span><span style="font-weight:500;flex:1">${esc(x[1])}</span>${x[2]?`<span class="badge">${esc(x[2])}</span>`:""}<span class="rowflex"><button class="copybtn" title="Copy" onclick="event.preventDefault();event.stopPropagation();copyText('${plain.replace(/'/g,"\\'")}','Rule copied')">⧉</button>${starBtn(id,plain)}</span></summary>${x[2]?`<div class="desc"><b>Penalty:</b> ${esc(x[2])}</div>`:""}</details>`});
+ out+=`<details class="rule"><summary><span>${esc(x[0])}</span><span style="font-weight:500;flex:1">${esc(x[1])}</span>${x[2]?`<span class="badge">${esc(x[2])}</span>`:""}<span class="rowflex"><button class="copybtn" title="Copy" onclick="event.preventDefault();event.stopPropagation();copyText('${jsAttr(plain)}','Rule copied')">⧉</button>${starBtn(id,plain)}</span></summary>${x[2]?`<div class="desc"><b>Penalty:</b> ${esc(x[2])}</div>`:""}</details>`});
  out+=`</div></div>`}); return out;
 }
 function table(rows,cols,opts){
@@ -1765,7 +1794,7 @@ function table(rows,cols,opts){
   if(!opts.actions) return `<tr>${cells}</tr>`;
   const id=opts.idPrefix+i;
   const plain=r.filter(Boolean).join(' — ');
-  return `<tr><td class="code">${esc(r[0]||'-')}</td>${r.slice(1).map((v,ci)=>`<td class="${ci===1?'money':''}">${esc(v||'-')}</td>`).join("")}<td class="actioncol"><button class="copybtn" title="Copy" onclick="copyText('${plain.replace(/'/g,"\\'")}','Code copied')">⧉</button></td><td class="actioncol">${starBtn(id,plain)}</td></tr>`;
+  return `<tr><td class="code">${esc(r[0]||'-')}</td>${r.slice(1).map((v,ci)=>`<td class="${ci===1?'money':''}">${esc(v||'-')}</td>`).join("")}<td class="actioncol"><button class="copybtn" title="Copy" onclick="copyText('${jsAttr(plain)}','Code copied')">⧉</button></td><td class="actioncol">${starBtn(id,plain)}</td></tr>`;
  }).join("");
  return `<div class="tablewrap"><table class="table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
@@ -4678,7 +4707,7 @@ function bookmarksPage(){
  }
  return `<h1 class="section-title">Bookmarks</h1><p class="section-sub">${favs.length} saved item${favs.length===1?'':'s'}.</p>
  <div class="card"><div class="card-body">${favs.map(f=>{
-  return `<details class="rule" open><summary><span style="font-weight:500;flex:1">${esc(f.label)}</span><span class="rowflex"><button class="copybtn" title="Copy" onclick="event.preventDefault();event.stopPropagation();copyText('${f.label.replace(/'/g,"\\'")}','Copied')">⧉</button>${starBtn(f.id,f.label)}</span></summary></details>`;
+  return `<details class="rule" open><summary><span style="font-weight:500;flex:1">${esc(f.label)}</span><span class="rowflex"><button class="copybtn" title="Copy" onclick="event.preventDefault();event.stopPropagation();copyText('${jsAttr(f.label)}','Copied')">⧉</button>${starBtn(f.id,f.label)}</span></summary></details>`;
  }).join("")}</div></div>`;
 }
 
