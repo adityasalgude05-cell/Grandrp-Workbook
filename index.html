@@ -92,6 +92,9 @@
 .style-swatch .preview{font-size:15px;font-weight:800;margin-bottom:6px}
 .style-swatch span{font-size:11px;color:var(--textSoft);display:block}
 @media(max-width:480px){.style-grid{grid-template-columns:repeat(2,1fr)}}
+.logomark{width:66%;height:66%;display:block;color:var(--onAccent)}
+.auth-logo .logomark{width:60%;height:60%}
+.logo{overflow:hidden}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--fontMain);background:var(--bg);color:var(--text);transition:background .25s,color .25s}
 button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
@@ -248,7 +251,20 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
 .tz-dropdown-container { position:relative; cursor:pointer; user-select:none; }
 .tz-dropdown-container:hover { border-color: var(--accent); background: var(--accentSoft); }
 .tz-dropdown-container .cz span { color: var(--accent); font-weight:700; }
-.tz-menu { position:absolute; top:calc(100% + 8px); right:0; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,0.6); min-width:220px; z-index:100; display:none; flex-direction:column; overflow:hidden; }
+.tz-menu { position:absolute; top:calc(100% + 8px); left:0; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,0.6); width:330px; max-width:calc(100vw - 32px); z-index:100; display:none; flex-direction:column; overflow:hidden; cursor:default; }
+.tz-search { padding:10px; border-bottom:1px solid var(--line); background:var(--panel2); }
+.tz-search input { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--panel); color:var(--text); font-size:12px; outline:none; }
+.tz-search input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accentSoft); }
+.tz-list { max-height:340px; overflow-y:auto; overscroll-behavior:contain; }
+.tz-list::-webkit-scrollbar { width:8px } .tz-list::-webkit-scrollbar-thumb { background:var(--line); border-radius:8px }
+.tz-country { padding:7px 14px 5px; font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); background:var(--panel2); position:sticky; top:0; z-index:1; border-bottom:1px solid var(--line); }
+.tz-item.active { background:var(--accentSoft); color:var(--accent); }
+.tz-item .tz-name { display:flex; flex-direction:column; gap:1px; text-align:left; min-width:0 }
+.tz-item .tz-name small { font-size:9.5px; color:var(--muted); letter-spacing:.03em }
+.tz-item:hover .tz-name small { color:var(--accent) }
+.tz-flag { margin-right:8px; font-size:14px; line-height:1 }
+.tz-empty { display:none; padding:18px 16px; font-size:12px; color:var(--muted); text-align:center }
+.tz-empty.show { display:block }
 .tz-menu.show { display:flex; animation: fadein 0.15s ease; }
 .tz-item { padding:12px 16px; font-size:12px; color:var(--text); cursor:pointer; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
 .tz-item:last-child { border-bottom:0; }
@@ -256,7 +272,7 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
 .tz-item-time { font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--textSoft); }
 .tz-item:hover .tz-item-time { color:var(--accent); }
 
-@media print{.sidebar,.topbar,.totop,.toasthost,.mobilebtn,.footer,.starbtn,.copybtn,.fabmain,.fabstack,.bootsplash,.calc-filters,.btn{display:none!important}.main{margin-left:0!important;width:100%!important}.content{padding:0!important;max-width:100%!important}.card{box-shadow:none;border:1px solid #999}body{background:#fff!important;color:#111!important}}
+@media print{.sidebar,.topbar,.totop,.toasthost,.mobilebtn,.footer,.starbtn,.copybtn,.fabmain,.fabstack,.bootsplash,.calc-filters,.btn,.mp-dock,.mp-card{display:none!important}.main{margin-left:0!important;width:100%!important}.content{padding:0!important;max-width:100%!important}.card{box-shadow:none;border:1px solid #999}body{background:#fff!important;color:#111!important}}
 
 /* --- bodycam, duty clock, command palette --- */
 .navtag{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--danger));color:var(--onAccent);font-size:9px;font-weight:800;border-radius:999px;padding:2px 6px;letter-spacing:.04em}
@@ -434,6 +450,80 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 [data-density="compact"] .grid{gap:10px}
 [data-density="compact"] .step{padding:13px 14px 13px 52px}
 @media(max-width:650px){.hero h1{font-size:calc(24px * var(--textScale))}.appearance-pane{max-height:56vh}.theme-presets{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- Universal Music Player ---------- */
+.mp-card{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden}
+.mp-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 92% 10%,var(--accentFaint),transparent 55%);pointer-events:none}
+.mp-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;position:relative}
+.mp-head h4{margin:0;font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);display:flex;align-items:center;gap:7px}
+.mp-srcbadge{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--accent)}
+.mp-body{display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative}
+.mp-art{width:58px;height:58px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,var(--logoA),var(--logoB));color:var(--onAccent);box-shadow:0 8px 22px var(--glow)}
+.mp-art.spin{animation:mpSpin 8s linear infinite;border-radius:50%}
+@keyframes mpSpin{to{transform:rotate(360deg)}}
+.mp-meta{flex:1;min-width:0}
+.mp-title{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.mp-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-ctrls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.mp-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:13px;transition:border-color .15s,color .15s,background .15s,transform .12s}
+.mp-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accentSoft)}
+.mp-btn:active:not(:disabled){transform:scale(.92)}
+.mp-btn:disabled{opacity:.34;cursor:not-allowed}
+.mp-btn.play{width:46px;height:46px;font-size:16px;border:0;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);box-shadow:0 8px 20px var(--glow)}
+.mp-btn.stop:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.12)}
+.mp-progrow{display:flex;align-items:center;gap:10px;margin-top:14px;position:relative}
+.mp-time{font-size:10px;font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--muted);min-width:38px;text-align:center}
+.mp-seek{flex:1;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
+.mp-seek::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 3px var(--accentSoft)}
+.mp-seek::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:var(--accent);cursor:pointer}
+.mp-vol{width:82px;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
+.mp-vol::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--accent);cursor:pointer}
+.mp-vol::-moz-range-thumb{width:11px;height:11px;border:0;border-radius:50%;background:var(--accent);cursor:pointer}
+.mp-empty{display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative}
+.mp-empty p{margin:0;font-size:12px;color:var(--muted);flex:1;min-width:190px;line-height:1.6}
+.mp-bigbtn{border:0;border-radius:999px;padding:12px 22px;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);box-shadow:0 10px 24px var(--glow);display:inline-flex;align-items:center;gap:9px;transition:transform .15s}
+.mp-bigbtn:hover{transform:translateY(-2px)}
+.mp-queue{margin-top:14px;max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:11px;position:relative}
+.mp-qitem{display:flex;gap:10px;align-items:center;padding:8px 12px;font-size:11.5px;color:var(--textSoft);cursor:pointer;border-bottom:1px solid var(--line)}
+.mp-qitem:last-child{border-bottom:0}
+.mp-qitem:hover{background:var(--hoverBg);color:var(--accent)}
+.mp-qitem.on{background:var(--accentSoft);color:var(--accent);font-weight:700}
+.mp-qitem .n{width:18px;text-align:right;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;flex-shrink:0}
+.mp-qitem span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Source picker */
+.mp-sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:4px}
+.mp-source{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;color:var(--text);transition:border-color .15s,background .15s,transform .15s}
+.mp-source:hover{border-color:var(--accent);background:var(--accentSoft);transform:translateY(-2px)}
+.mp-source .ic{font-size:26px;display:block;margin-bottom:8px}
+.mp-source b{display:block;font-size:12.5px;margin-bottom:3px}
+.mp-source small{display:block;font-size:10px;color:var(--muted);line-height:1.5}
+.mp-step{margin-top:6px}
+.mp-step label{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}
+.mp-step input[type=text]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none}
+.mp-step input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+.mp-step .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.mp-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.6}
+
+/* Fixed mini dock */
+.mp-dock{position:fixed;left:18px;bottom:18px;z-index:44;width:330px;max-width:calc(100vw - 36px);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 48px rgba(0,0,0,.55);overflow:hidden;transform:translateY(160%);transition:transform .28s cubic-bezier(.3,1.2,.5,1);backdrop-filter:blur(14px)}
+.mp-dock.show{transform:none}
+.mp-dock-head{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.mp-dock-head b{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);flex:1}
+.mp-mini{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:6px}
+.mp-mini:hover{color:var(--accent);background:var(--hoverBg)}
+.mp-dock-body{padding:12px}
+.mp-embed{border-radius:12px;overflow:hidden;margin-bottom:11px;background:#000;line-height:0}
+.mp-embed iframe{border:0;display:block;width:100%}
+.mp-dock.collapsed .mp-dock-body,.mp-dock.collapsed .mp-embed{display:none}
+.mp-dock .mp-title{font-size:12.5px}
+.mp-dock .mp-sub{font-size:10px}
+.mp-dock .mp-btn{width:32px;height:32px;font-size:11px}
+.mp-dock .mp-btn.play{width:38px;height:38px;font-size:13px}
+.mp-dock .mp-art{width:40px;height:40px;font-size:18px;border-radius:11px}
+.mp-dock .mp-progrow{margin-top:10px}
+@media(max-width:650px){.mp-dock{left:10px;right:10px;width:auto;bottom:84px}.mp-ctrls{width:100%;justify-content:center;margin-top:6px}}
+
 </style>
 </head>
 <body>
@@ -447,7 +537,7 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 <!-- AUTHENTICATION OVERLAY -->
 <div id="authOverlay">
   <div class="auth-box">
-    <div class="auth-logo">GR</div>
+    <div class="auth-logo"><svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="currentColor" opacity=".16"/><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9.4 L17.35 12.74 L20.95 12.99 L18.19 15.31 L19.06 18.81 L16 16.9 L12.94 18.81 L13.81 15.31 L11.05 12.99 L14.65 12.74 Z" fill="currentColor"/><path d="M10.6 21.6h10.8M12.3 24.1h7.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".85"/></svg></div>
     <h2 id="authTitle">Officer Login</h2>
     <p id="authSub">Access the Grand RP Police Wiki</p>
 
@@ -470,7 +560,7 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 
 <div class="app">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="logo">GR</div><div><strong>Grand RP Wiki</strong><small>Police / State Handbook</small></div></div>
+  <div class="brand"><div class="logo"><svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="currentColor" opacity=".16"/><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9.4 L17.35 12.74 L20.95 12.99 L18.19 15.31 L19.06 18.81 L16 16.9 L12.94 18.81 L13.81 15.31 L11.05 12.99 L14.65 12.74 Z" fill="currentColor"/><path d="M10.6 21.6h10.8M12.3 24.1h7.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".85"/></svg></div><div><strong>Grand RP Wiki</strong><small>Police / State Handbook</small></div></div>
   <div class="nav" id="nav">
     <div class="nav-title">Overview</div>
     <button data-page="dashboard" class="active"><span class="ico">⌂</span>Dashboard</button>
@@ -509,7 +599,6 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 <main class="main">
 <header class="topbar">
   <button class="iconbtn mobilebtn" id="mobileMenu">☰</button>
-  <div class="search"><span>⌕</span><input id="searchInput" placeholder="Search rules, PC, TC, or type > for commands..." autocomplete="off"><span class="kbd">Ctrl K</span></div>
 
   <div class="clockbox tz-dropdown-container" id="topClock">
    <div class="cz"><b id="clockLondon">--:--:--</b><span>🇬🇧 In-Game (London)</span></div>
@@ -517,21 +606,15 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
    <div class="cz" onclick="toggleTzMenu()">
      <b id="clockLocal">--:--:--</b>
      <span id="tzLabel">🇮🇳 India (IST) ▾</span>
-     <div class="tz-menu" id="tzMenu">
-       <div class="tz-item" onclick="setTz('Asia/Kabul', '🇦🇫 Kabul (AFT)')"><span>UTC+04:30 — Kabul</span><span class="tz-item-time" id="tz_AFT">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Karachi', '🇵🇰 Karachi (PKT)')"><span>UTC+05:00 — Karachi / PKT</span><span class="tz-item-time" id="tz_PKT">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Kolkata', '🇮🇳 India (IST)')"><span>UTC+05:30 — India (IST)</span><span class="tz-item-time" id="tz_IST">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Kathmandu', '🇳🇵 Nepal (NPT)')"><span>UTC+05:45 — Nepal</span><span class="tz-item-time" id="tz_NPT">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Dhaka', '🇧🇩 Dhaka (BST)')"><span>UTC+06:00 — Dhaka / BST</span><span class="tz-item-time" id="tz_BST">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Yangon', '🇲🇲 Myanmar (MMT)')"><span>UTC+06:30 — Myanmar</span><span class="tz-item-time" id="tz_MMT">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Bangkok', '🇹🇭 Bangkok (ICT)')"><span>UTC+07:00 — Bangkok / ICT</span><span class="tz-item-time" id="tz_ICT">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Singapore', '🇸🇬 Singapore (SGT)')"><span>UTC+08:00 — Singapore / SGT</span><span class="tz-item-time" id="tz_SGT">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Asia/Tokyo', '🇯🇵 Tokyo (JST)')"><span>UTC+09:00 — Tokyo / JST</span><span class="tz-item-time" id="tz_JST">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Australia/Sydney', '🇦🇺 Sydney (AEST)')"><span>UTC+10:00 — Sydney / AEST</span><span class="tz-item-time" id="tz_AEST">--:--</span></div>
-       <div class="tz-item" onclick="setTz('Pacific/Auckland', '🇳🇿 Auckland (NZST)')"><span>UTC+12:00 — Auckland / NZST</span><span class="tz-item-time" id="tz_NZST">--:--</span></div>
+     <div class="tz-menu" id="tzMenu" onclick="event.stopPropagation()">
+       <div class="tz-search"><input id="tzSearch" type="text" placeholder="Search country, city or UTC offset..." autocomplete="off"></div>
+       <div class="tz-list" id="tzList"></div>
+       <div class="tz-empty" id="tzEmpty">No timezone matched.</div>
      </div>
    </div>
   </div>
+
+  <div class="search"><span>⌕</span><input id="searchInput" placeholder="Search rules, PC, TC, or type > for commands..." autocomplete="off"><span class="kbd">Ctrl K</span></div>
 
   <div class="top-actions">
    <button class="dutybtn" id="dutyBtn" title="Toggle duty status"><span class="dutydot"></span><span id="dutyLabel">Off Duty</span></button>
@@ -1324,6 +1407,7 @@ function dashboard(){
   <div class="cc-divider"></div>
   <div class="cc-item"><h4>Server Cycle</h4><b id="dashCycle">—</b><small>Grand RP runs on real-world London (UK) time</small></div>
  </div>
+ <div id="mpSlot"></div>
  <div class="grid"><div class="stat"><b>${penal.length}</b><span>Penal Code entries</span></div><div class="stat"><b>${todayDutyMinutes()}</b><span>Minutes on duty today</span></div><div class="stat"><b>100%</b><span>Ready</span></div></div>
  ${recentPages.length?`<div class="card"><div class="card-head"><h2>Recently Viewed</h2></div><div class="card-body"><div class="chips">${recentPages.map(p=>`<button class="chip" onclick="go('${p}')">${esc(pageLabels[p]||p)}</button>`).join("")}</div></div></div>`:''}
  <div class="card"><div class="card-head"><h2>Quick Access</h2></div><div class="card-body"><div class="eventgrid">
@@ -4023,6 +4107,7 @@ function render(page){
  if(page==='ucevidence')warmUpVehicleOcrWorker().catch(()=>{});
  if(page==='imguploader')initImguploaderPage();
  if(page==='dashboard'){updateClocks();startTicker()}
+ try{mpSyncUI()}catch(e){}
  if(page==='bodycam'&&dutyState&&dutyState.on)startDutyInterval();
 }
 function go(page){render(page)}
@@ -4322,7 +4407,17 @@ function setTz(val, label) {
 }
 
 function toggleTzMenu() {
-    document.getElementById('tzMenu').classList.toggle('show');
+    const menu=document.getElementById('tzMenu');
+    const opening=!menu.classList.contains('show');
+    menu.classList.toggle('show');
+    if(opening){
+        const q=document.getElementById('tzSearch');
+        if(q)q.value='';
+        renderTzList('');
+        const act=menu.querySelector('.tz-item.active');
+        if(act)act.scrollIntoView({block:'center'});
+        setTimeout(()=>{if(q)q.focus()},30);
+    }
 }
 
 document.addEventListener('click', e => {
@@ -4334,6 +4429,79 @@ document.addEventListener('click', e => {
 });
 
 function fmtZone(now,zone,opts){return new Intl.DateTimeFormat('en-GB',Object.assign({timeZone:zone,hour12:false},opts)).format(now)}
+
+/* ---------- Full world timezone directory (every country) ---------- */
+const TZ_DIRECTORY = [{"cc":"AF","c":"Afghanistan","z":"Asia/Kabul","n":"Kabul"},{"cc":"AL","c":"Albania","z":"Europe/Tirane","n":"Tirane"},{"cc":"DZ","c":"Algeria","z":"Africa/Algiers","n":"Algiers"},{"cc":"AD","c":"Andorra","z":"Europe/Andorra","n":"Andorra"},{"cc":"AO","c":"Angola","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"AI","c":"Anguilla","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Casey","n":"Casey"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Davis","n":"Davis"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Mawson","n":"Mawson"},{"cc":"AQ","c":"Antarctica","z":"Pacific/Auckland","n":"New Zealand time"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Palmer","n":"Palmer"},{"cc":"AQ","c":"Antarctica","z":"Pacific/Port_Moresby","n":"Papua New Guinea (most areas), Chuuk, Yap, Dumont d’Urville"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Rothera","n":"Rothera"},{"cc":"AQ","c":"Antarctica","z":"Asia/Riyadh","n":"Syowa"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Troll","n":"Troll"},{"cc":"AQ","c":"Antarctica","z":"Antarctica/Vostok","n":"Vostok"},{"cc":"AQ","c":"Antarctica","z":"Asia/Singapore","n":"peninsular Malaysia, Concordia"},{"cc":"AG","c":"Antigua & Barbuda","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Buenos_Aires","n":"Buenos Aires (BA, CF)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Catamarca","n":"Catamarca (CT), Chubut (CH)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Jujuy","n":"Jujuy (JY)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/La_Rioja","n":"La Rioja (LR)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Mendoza","n":"Mendoza (MZ)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Salta","n":"Salta (SA, LP, NQ, RN)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/San_Juan","n":"San Juan (SJ)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/San_Luis","n":"San Luis (SL)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Rio_Gallegos","n":"Santa Cruz (SC)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Ushuaia","n":"Tierra del Fuego (TF)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Tucuman","n":"Tucumán (TM)"},{"cc":"AR","c":"Argentina","z":"America/Argentina/Cordoba","n":"most areas: CB, CC, CN, ER, FM, MN, SE, SF"},{"cc":"AM","c":"Armenia","z":"Asia/Yerevan","n":"Yerevan"},{"cc":"AW","c":"Aruba","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"AU","c":"Australia","z":"Asia/Tokyo","n":"Eyre Bird Observatory"},{"cc":"AU","c":"Australia","z":"Australia/Lord_Howe","n":"Lord Howe Island"},{"cc":"AU","c":"Australia","z":"Antarctica/Macquarie","n":"Macquarie Island"},{"cc":"AU","c":"Australia","z":"Australia/Broken_Hill","n":"New South Wales (Yancowinna)"},{"cc":"AU","c":"Australia","z":"Australia/Sydney","n":"New South Wales (most areas)"},{"cc":"AU","c":"Australia","z":"Australia/Darwin","n":"Northern Territory"},{"cc":"AU","c":"Australia","z":"Australia/Lindeman","n":"Queensland (Whitsunday Islands)"},{"cc":"AU","c":"Australia","z":"Australia/Brisbane","n":"Queensland (most areas)"},{"cc":"AU","c":"Australia","z":"Australia/Adelaide","n":"South Australia"},{"cc":"AU","c":"Australia","z":"Australia/Hobart","n":"Tasmania"},{"cc":"AU","c":"Australia","z":"Australia/Melbourne","n":"Victoria"},{"cc":"AU","c":"Australia","z":"Australia/Eucla","n":"Western Australia (Eucla)"},{"cc":"AU","c":"Australia","z":"Australia/Perth","n":"Western Australia (most areas)"},{"cc":"AT","c":"Austria","z":"Europe/Vienna","n":"Vienna"},{"cc":"AZ","c":"Azerbaijan","z":"Asia/Baku","n":"Baku"},{"cc":"BS","c":"Bahamas","z":"America/Toronto","n":"Eastern - ON & QC (most areas)"},{"cc":"BH","c":"Bahrain","z":"Asia/Qatar","n":"Qatar"},{"cc":"BD","c":"Bangladesh","z":"Asia/Dhaka","n":"Dhaka"},{"cc":"BB","c":"Barbados","z":"America/Barbados","n":"Barbados"},{"cc":"BY","c":"Belarus","z":"Europe/Minsk","n":"Minsk"},{"cc":"BE","c":"Belgium","z":"Europe/Brussels","n":"Brussels"},{"cc":"BZ","c":"Belize","z":"America/Belize","n":"Belize"},{"cc":"BJ","c":"Benin","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"BM","c":"Bermuda","z":"Atlantic/Bermuda","n":"Bermuda"},{"cc":"BT","c":"Bhutan","z":"Asia/Thimphu","n":"Thimphu"},{"cc":"BO","c":"Bolivia","z":"America/La_Paz","n":"La Paz"},{"cc":"BA","c":"Bosnia & Herzegovina","z":"Europe/Belgrade","n":"Belgrade"},{"cc":"BW","c":"Botswana","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"BR","c":"Brazil","z":"America/Rio_Branco","n":"Acre"},{"cc":"BR","c":"Brazil","z":"America/Maceio","n":"Alagoas, Sergipe"},{"cc":"BR","c":"Brazil","z":"America/Manaus","n":"Amazonas (east)"},{"cc":"BR","c":"Brazil","z":"America/Eirunepe","n":"Amazonas (west)"},{"cc":"BR","c":"Brazil","z":"America/Noronha","n":"Atlantic islands"},{"cc":"BR","c":"Brazil","z":"America/Bahia","n":"Bahia"},{"cc":"BR","c":"Brazil","z":"America/Fortaleza","n":"Brazil (northeast: MA, PI, CE, RN, PB)"},{"cc":"BR","c":"Brazil","z":"America/Sao_Paulo","n":"Brazil (southeast: GO, DF, MG, ES, RJ, SP, PR, SC, RS)"},{"cc":"BR","c":"Brazil","z":"America/Cuiaba","n":"Mato Grosso"},{"cc":"BR","c":"Brazil","z":"America/Campo_Grande","n":"Mato Grosso do Sul"},{"cc":"BR","c":"Brazil","z":"America/Belem","n":"Pará (east), Amapá"},{"cc":"BR","c":"Brazil","z":"America/Santarem","n":"Pará (west)"},{"cc":"BR","c":"Brazil","z":"America/Recife","n":"Pernambuco"},{"cc":"BR","c":"Brazil","z":"America/Porto_Velho","n":"Rondônia"},{"cc":"BR","c":"Brazil","z":"America/Boa_Vista","n":"Roraima"},{"cc":"BR","c":"Brazil","z":"America/Araguaina","n":"Tocantins"},{"cc":"GB","c":"Britain (UK)","z":"Europe/London","n":"London"},{"cc":"IO","c":"British Indian Ocean Territory","z":"Indian/Chagos","n":"Chagos"},{"cc":"BN","c":"Brunei","z":"Asia/Kuching","n":"Sabah, Sarawak"},{"cc":"BG","c":"Bulgaria","z":"Europe/Sofia","n":"Sofia"},{"cc":"BF","c":"Burkina Faso","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"BI","c":"Burundi","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"KH","c":"Cambodia","z":"Asia/Bangkok","n":"north Vietnam"},{"cc":"CM","c":"Cameroon","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"CA","c":"Canada","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"CA","c":"Canada","z":"America/Goose_Bay","n":"Atlantic - Labrador (most areas)"},{"cc":"CA","c":"Canada","z":"America/Glace_Bay","n":"Atlantic - NS (Cape Breton)"},{"cc":"CA","c":"Canada","z":"America/Halifax","n":"Atlantic - NS (most areas), PE"},{"cc":"CA","c":"Canada","z":"America/Moncton","n":"Atlantic - New Brunswick"},{"cc":"CA","c":"Canada","z":"America/Swift_Current","n":"CST - SK (midwest)"},{"cc":"CA","c":"Canada","z":"America/Regina","n":"CST - SK (most areas)"},{"cc":"CA","c":"Canada","z":"America/Resolute","n":"Central - NU (Resolute)"},{"cc":"CA","c":"Canada","z":"America/Rankin_Inlet","n":"Central - NU (central)"},{"cc":"CA","c":"Canada","z":"America/Winnipeg","n":"Central - ON (west), Manitoba"},{"cc":"CA","c":"Canada","z":"America/Panama","n":"EST - ON (Atikokan), NU (Coral H)"},{"cc":"CA","c":"Canada","z":"America/Iqaluit","n":"Eastern - NU (most areas)"},{"cc":"CA","c":"Canada","z":"America/Toronto","n":"Eastern - ON & QC (most areas)"},{"cc":"CA","c":"Canada","z":"America/Phoenix","n":"MST - AZ (most areas), Creston BC"},{"cc":"CA","c":"Canada","z":"America/Dawson_Creek","n":"MST - BC (Dawson Cr, Ft St John)"},{"cc":"CA","c":"Canada","z":"America/Fort_Nelson","n":"MST - BC (Ft Nelson)"},{"cc":"CA","c":"Canada","z":"America/Whitehorse","n":"MST - Yukon (east)"},{"cc":"CA","c":"Canada","z":"America/Dawson","n":"MST - Yukon (west)"},{"cc":"CA","c":"Canada","z":"America/Edmonton","n":"Mountain - AB, BC(E), NT(E), SK(W)"},{"cc":"CA","c":"Canada","z":"America/Inuvik","n":"Mountain - NT (west)"},{"cc":"CA","c":"Canada","z":"America/Cambridge_Bay","n":"Mountain - NU (west)"},{"cc":"CA","c":"Canada","z":"America/St_Johns","n":"Newfoundland, Labrador (SE)"},{"cc":"CA","c":"Canada","z":"America/Vancouver","n":"Pacific - BC (most areas)"},{"cc":"CV","c":"Cape Verde","z":"Atlantic/Cape_Verde","n":"Cape Verde"},{"cc":"BQ","c":"Caribbean NL","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"KY","c":"Cayman Islands","z":"America/Panama","n":"EST - ON (Atikokan), NU (Coral H)"},{"cc":"CF","c":"Central African Rep.","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"TD","c":"Chad","z":"Africa/Ndjamena","n":"Ndjamena"},{"cc":"CL","c":"Chile","z":"America/Coyhaique","n":"Aysén Region"},{"cc":"CL","c":"Chile","z":"Pacific/Easter","n":"Easter Island"},{"cc":"CL","c":"Chile","z":"America/Punta_Arenas","n":"Magallanes Region"},{"cc":"CL","c":"Chile","z":"America/Santiago","n":"most of Chile"},{"cc":"CN","c":"China","z":"Asia/Shanghai","n":"Beijing Time"},{"cc":"CN","c":"China","z":"Asia/Urumqi","n":"Xinjiang Time"},{"cc":"CX","c":"Christmas Island","z":"Asia/Bangkok","n":"north Vietnam"},{"cc":"CC","c":"Cocos (Keeling) Islands","z":"Asia/Yangon","n":"Yangon"},{"cc":"CO","c":"Colombia","z":"America/Bogota","n":"Bogota"},{"cc":"KM","c":"Comoros","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"CD","c":"Congo (Dem. Rep.)","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"CD","c":"Congo (Dem. Rep.)","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"CG","c":"Congo (Rep.)","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"CK","c":"Cook Islands","z":"Pacific/Rarotonga","n":"Rarotonga"},{"cc":"CR","c":"Costa Rica","z":"America/Costa_Rica","n":"Costa Rica"},{"cc":"HR","c":"Croatia","z":"Europe/Belgrade","n":"Belgrade"},{"cc":"CU","c":"Cuba","z":"America/Havana","n":"Havana"},{"cc":"CW","c":"Curaçao","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"CY","c":"Cyprus","z":"Asia/Famagusta","n":"Northern Cyprus"},{"cc":"CY","c":"Cyprus","z":"Asia/Nicosia","n":"most of Cyprus"},{"cc":"CZ","c":"Czech Republic","z":"Europe/Prague","n":"Prague"},{"cc":"CI","c":"Côte d’Ivoire","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"DK","c":"Denmark","z":"Europe/Berlin","n":"most of Germany"},{"cc":"DJ","c":"Djibouti","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"DM","c":"Dominica","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"DO","c":"Dominican Republic","z":"America/Santo_Domingo","n":"Santo Domingo"},{"cc":"TL","c":"East Timor","z":"Asia/Dili","n":"Dili"},{"cc":"EC","c":"Ecuador","z":"America/Guayaquil","n":"Ecuador (mainland)"},{"cc":"EC","c":"Ecuador","z":"Pacific/Galapagos","n":"Galápagos Islands"},{"cc":"EG","c":"Egypt","z":"Africa/Cairo","n":"Cairo"},{"cc":"SV","c":"El Salvador","z":"America/El_Salvador","n":"El Salvador"},{"cc":"GQ","c":"Equatorial Guinea","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"ER","c":"Eritrea","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"EE","c":"Estonia","z":"Europe/Tallinn","n":"Tallinn"},{"cc":"SZ","c":"Eswatini (Swaziland)","z":"Africa/Johannesburg","n":"Johannesburg"},{"cc":"ET","c":"Ethiopia","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"FK","c":"Falkland Islands","z":"Atlantic/Stanley","n":"Stanley"},{"cc":"FO","c":"Faroe Islands","z":"Atlantic/Faroe","n":"Faroe"},{"cc":"FJ","c":"Fiji","z":"Pacific/Fiji","n":"Fiji"},{"cc":"FI","c":"Finland","z":"Europe/Helsinki","n":"Helsinki"},{"cc":"FR","c":"France","z":"Europe/Paris","n":"Paris"},{"cc":"GF","c":"French Guiana","z":"America/Cayenne","n":"Cayenne"},{"cc":"PF","c":"French Polynesia","z":"Pacific/Gambier","n":"Gambier Islands"},{"cc":"PF","c":"French Polynesia","z":"Pacific/Marquesas","n":"Marquesas Islands"},{"cc":"PF","c":"French Polynesia","z":"Pacific/Tahiti","n":"Society Islands"},{"cc":"TF","c":"French S. Terr.","z":"Asia/Dubai","n":"Crozet"},{"cc":"TF","c":"French S. Terr.","z":"Indian/Maldives","n":"Kerguelen, St Paul I, Amsterdam I"},{"cc":"GA","c":"Gabon","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"GM","c":"Gambia","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"GE","c":"Georgia","z":"Asia/Tbilisi","n":"Tbilisi"},{"cc":"DE","c":"Germany","z":"Europe/Zurich","n":"Büsingen"},{"cc":"DE","c":"Germany","z":"Europe/Berlin","n":"most of Germany"},{"cc":"GH","c":"Ghana","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"GI","c":"Gibraltar","z":"Europe/Gibraltar","n":"Gibraltar"},{"cc":"GR","c":"Greece","z":"Europe/Athens","n":"Athens"},{"cc":"GL","c":"Greenland","z":"America/Danmarkshavn","n":"National Park (east coast)"},{"cc":"GL","c":"Greenland","z":"America/Scoresbysund","n":"Scoresbysund/Ittoqqortoormiit"},{"cc":"GL","c":"Greenland","z":"America/Thule","n":"Thule/Pituffik"},{"cc":"GL","c":"Greenland","z":"America/Nuuk","n":"most of Greenland"},{"cc":"GD","c":"Grenada","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"GP","c":"Guadeloupe","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"GU","c":"Guam","z":"Pacific/Guam","n":"Guam"},{"cc":"GT","c":"Guatemala","z":"America/Guatemala","n":"Guatemala"},{"cc":"GG","c":"Guernsey","z":"Europe/London","n":"London"},{"cc":"GN","c":"Guinea","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"GW","c":"Guinea-Bissau","z":"Africa/Bissau","n":"Bissau"},{"cc":"GY","c":"Guyana","z":"America/Guyana","n":"Guyana"},{"cc":"HT","c":"Haiti","z":"America/Port-au-Prince","n":"Port-au-Prince"},{"cc":"HN","c":"Honduras","z":"America/Tegucigalpa","n":"Tegucigalpa"},{"cc":"HK","c":"Hong Kong","z":"Asia/Hong_Kong","n":"Hong Kong"},{"cc":"HU","c":"Hungary","z":"Europe/Budapest","n":"Budapest"},{"cc":"IS","c":"Iceland","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"IN","c":"India","z":"Asia/Kolkata","n":"Kolkata"},{"cc":"ID","c":"Indonesia","z":"Asia/Makassar","n":"Borneo (east, south), Sulawesi/Celebes, Bali, Nusa Tengarra, Timor (west)"},{"cc":"ID","c":"Indonesia","z":"Asia/Pontianak","n":"Borneo (west, central)"},{"cc":"ID","c":"Indonesia","z":"Asia/Jakarta","n":"Java, Sumatra"},{"cc":"ID","c":"Indonesia","z":"Asia/Jayapura","n":"New Guinea (West Papua / Irian Jaya), Malukus/Moluccas"},{"cc":"IR","c":"Iran","z":"Asia/Tehran","n":"Tehran"},{"cc":"IQ","c":"Iraq","z":"Asia/Baghdad","n":"Baghdad"},{"cc":"IE","c":"Ireland","z":"Europe/Dublin","n":"Dublin"},{"cc":"IM","c":"Isle of Man","z":"Europe/London","n":"London"},{"cc":"IL","c":"Israel","z":"Asia/Jerusalem","n":"Jerusalem"},{"cc":"IT","c":"Italy","z":"Europe/Rome","n":"Rome"},{"cc":"JM","c":"Jamaica","z":"America/Jamaica","n":"Jamaica"},{"cc":"JP","c":"Japan","z":"Asia/Tokyo","n":"Eyre Bird Observatory"},{"cc":"JE","c":"Jersey","z":"Europe/London","n":"London"},{"cc":"JO","c":"Jordan","z":"Asia/Amman","n":"Amman"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Aqtobe","n":"Aqtöbe/Aktobe"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Atyrau","n":"Atyraū/Atirau/Gur’yev"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Aqtau","n":"Mangghystaū/Mankistau"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Qostanay","n":"Qostanay/Kostanay/Kustanay"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Qyzylorda","n":"Qyzylorda/Kyzylorda/Kzyl-Orda"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Oral","n":"West Kazakhstan"},{"cc":"KZ","c":"Kazakhstan","z":"Asia/Almaty","n":"most of Kazakhstan"},{"cc":"KE","c":"Kenya","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"KI","c":"Kiribati","z":"Pacific/Tarawa","n":"Gilberts, Marshalls, Wake"},{"cc":"KI","c":"Kiribati","z":"Pacific/Kiritimati","n":"Line Islands"},{"cc":"KI","c":"Kiribati","z":"Pacific/Kanton","n":"Phoenix Islands"},{"cc":"KP","c":"Korea (North)","z":"Asia/Pyongyang","n":"Pyongyang"},{"cc":"KR","c":"Korea (South)","z":"Asia/Seoul","n":"Seoul"},{"cc":"KW","c":"Kuwait","z":"Asia/Riyadh","n":"Syowa"},{"cc":"KG","c":"Kyrgyzstan","z":"Asia/Bishkek","n":"Bishkek"},{"cc":"LA","c":"Laos","z":"Asia/Bangkok","n":"north Vietnam"},{"cc":"LV","c":"Latvia","z":"Europe/Riga","n":"Riga"},{"cc":"LB","c":"Lebanon","z":"Asia/Beirut","n":"Beirut"},{"cc":"LS","c":"Lesotho","z":"Africa/Johannesburg","n":"Johannesburg"},{"cc":"LR","c":"Liberia","z":"Africa/Monrovia","n":"Monrovia"},{"cc":"LY","c":"Libya","z":"Africa/Tripoli","n":"Tripoli"},{"cc":"LI","c":"Liechtenstein","z":"Europe/Zurich","n":"Büsingen"},{"cc":"LT","c":"Lithuania","z":"Europe/Vilnius","n":"Vilnius"},{"cc":"LU","c":"Luxembourg","z":"Europe/Brussels","n":"Brussels"},{"cc":"MO","c":"Macau","z":"Asia/Macau","n":"Macau"},{"cc":"MG","c":"Madagascar","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"MW","c":"Malawi","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"MY","c":"Malaysia","z":"Asia/Kuching","n":"Sabah, Sarawak"},{"cc":"MY","c":"Malaysia","z":"Asia/Singapore","n":"peninsular Malaysia, Concordia"},{"cc":"MV","c":"Maldives","z":"Indian/Maldives","n":"Kerguelen, St Paul I, Amsterdam I"},{"cc":"ML","c":"Mali","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"MT","c":"Malta","z":"Europe/Malta","n":"Malta"},{"cc":"MH","c":"Marshall Islands","z":"Pacific/Tarawa","n":"Gilberts, Marshalls, Wake"},{"cc":"MH","c":"Marshall Islands","z":"Pacific/Kwajalein","n":"Kwajalein"},{"cc":"MQ","c":"Martinique","z":"America/Martinique","n":"Martinique"},{"cc":"MR","c":"Mauritania","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"MU","c":"Mauritius","z":"Indian/Mauritius","n":"Mauritius"},{"cc":"YT","c":"Mayotte","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"MX","c":"Mexico","z":"America/Bahia_Banderas","n":"Bahía de Banderas"},{"cc":"MX","c":"Mexico","z":"America/Tijuana","n":"Baja California"},{"cc":"MX","c":"Mexico","z":"America/Mazatlan","n":"Baja California Sur, Nayarit (most areas), Sinaloa"},{"cc":"MX","c":"Mexico","z":"America/Merida","n":"Campeche, Yucatán"},{"cc":"MX","c":"Mexico","z":"America/Mexico_City","n":"Central Mexico"},{"cc":"MX","c":"Mexico","z":"America/Ojinaga","n":"Chihuahua (US border - east)"},{"cc":"MX","c":"Mexico","z":"America/Ciudad_Juarez","n":"Chihuahua (US border - west)"},{"cc":"MX","c":"Mexico","z":"America/Chihuahua","n":"Chihuahua (most areas)"},{"cc":"MX","c":"Mexico","z":"America/Matamoros","n":"Coahuila, Nuevo León, Tamaulipas (US border)"},{"cc":"MX","c":"Mexico","z":"America/Monterrey","n":"Durango; Coahuila, Nuevo León, Tamaulipas (most areas)"},{"cc":"MX","c":"Mexico","z":"America/Cancun","n":"Quintana Roo"},{"cc":"MX","c":"Mexico","z":"America/Hermosillo","n":"Sonora"},{"cc":"FM","c":"Micronesia","z":"Pacific/Kosrae","n":"Kosrae"},{"cc":"FM","c":"Micronesia","z":"Pacific/Port_Moresby","n":"Papua New Guinea (most areas), Chuuk, Yap, Dumont d’Urville"},{"cc":"FM","c":"Micronesia","z":"Pacific/Guadalcanal","n":"Pohnpei"},{"cc":"MD","c":"Moldova","z":"Europe/Chisinau","n":"Chisinau"},{"cc":"MC","c":"Monaco","z":"Europe/Paris","n":"Paris"},{"cc":"MN","c":"Mongolia","z":"Asia/Hovd","n":"Bayan-Ölgii, Hovd, Uvs"},{"cc":"MN","c":"Mongolia","z":"Asia/Ulaanbaatar","n":"most of Mongolia"},{"cc":"ME","c":"Montenegro","z":"Europe/Belgrade","n":"Belgrade"},{"cc":"MS","c":"Montserrat","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"MA","c":"Morocco","z":"Africa/Casablanca","n":"Casablanca"},{"cc":"MZ","c":"Mozambique","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"MM","c":"Myanmar (Burma)","z":"Asia/Yangon","n":"Yangon"},{"cc":"NA","c":"Namibia","z":"Africa/Windhoek","n":"Windhoek"},{"cc":"NR","c":"Nauru","z":"Pacific/Nauru","n":"Nauru"},{"cc":"NP","c":"Nepal","z":"Asia/Kathmandu","n":"Kathmandu"},{"cc":"NL","c":"Netherlands","z":"Europe/Brussels","n":"Brussels"},{"cc":"NC","c":"New Caledonia","z":"Pacific/Noumea","n":"Noumea"},{"cc":"NZ","c":"New Zealand","z":"Pacific/Chatham","n":"Chatham Islands"},{"cc":"NZ","c":"New Zealand","z":"Pacific/Auckland","n":"New Zealand time"},{"cc":"NI","c":"Nicaragua","z":"America/Managua","n":"Managua"},{"cc":"NE","c":"Niger","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"NG","c":"Nigeria","z":"Africa/Lagos","n":"West Africa Time"},{"cc":"NU","c":"Niue","z":"Pacific/Niue","n":"Niue"},{"cc":"NF","c":"Norfolk Island","z":"Pacific/Norfolk","n":"Norfolk"},{"cc":"MK","c":"North Macedonia","z":"Europe/Belgrade","n":"Belgrade"},{"cc":"MP","c":"Northern Mariana Islands","z":"Pacific/Guam","n":"Guam"},{"cc":"NO","c":"Norway","z":"Europe/Berlin","n":"most of Germany"},{"cc":"OM","c":"Oman","z":"Asia/Dubai","n":"Crozet"},{"cc":"PK","c":"Pakistan","z":"Asia/Karachi","n":"Karachi"},{"cc":"PW","c":"Palau","z":"Pacific/Palau","n":"Palau"},{"cc":"PS","c":"Palestine","z":"Asia/Gaza","n":"Gaza Strip"},{"cc":"PS","c":"Palestine","z":"Asia/Hebron","n":"West Bank"},{"cc":"PA","c":"Panama","z":"America/Panama","n":"EST - ON (Atikokan), NU (Coral H)"},{"cc":"PG","c":"Papua New Guinea","z":"Pacific/Bougainville","n":"Bougainville"},{"cc":"PG","c":"Papua New Guinea","z":"Pacific/Port_Moresby","n":"Papua New Guinea (most areas), Chuuk, Yap, Dumont d’Urville"},{"cc":"PY","c":"Paraguay","z":"America/Asuncion","n":"Asuncion"},{"cc":"PE","c":"Peru","z":"America/Lima","n":"Lima"},{"cc":"PH","c":"Philippines","z":"Asia/Manila","n":"Manila"},{"cc":"PN","c":"Pitcairn","z":"Pacific/Pitcairn","n":"Pitcairn"},{"cc":"PL","c":"Poland","z":"Europe/Warsaw","n":"Warsaw"},{"cc":"PT","c":"Portugal","z":"Atlantic/Azores","n":"Azores"},{"cc":"PT","c":"Portugal","z":"Atlantic/Madeira","n":"Madeira Islands"},{"cc":"PT","c":"Portugal","z":"Europe/Lisbon","n":"Portugal (mainland)"},{"cc":"PR","c":"Puerto Rico","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"QA","c":"Qatar","z":"Asia/Qatar","n":"Qatar"},{"cc":"RO","c":"Romania","z":"Europe/Bucharest","n":"Bucharest"},{"cc":"RU","c":"Russia","z":"Europe/Simferopol","n":"Crimea"},{"cc":"RU","c":"Russia","z":"Europe/Kirov","n":"MSK+00 - Kirov"},{"cc":"RU","c":"Russia","z":"Europe/Moscow","n":"MSK+00 - Moscow area"},{"cc":"RU","c":"Russia","z":"Europe/Volgograd","n":"MSK+00 - Volgograd"},{"cc":"RU","c":"Russia","z":"Europe/Astrakhan","n":"MSK+01 - Astrakhan"},{"cc":"RU","c":"Russia","z":"Europe/Samara","n":"MSK+01 - Samara, Udmurtia"},{"cc":"RU","c":"Russia","z":"Europe/Saratov","n":"MSK+01 - Saratov"},{"cc":"RU","c":"Russia","z":"Europe/Ulyanovsk","n":"MSK+01 - Ulyanovsk"},{"cc":"RU","c":"Russia","z":"Asia/Yekaterinburg","n":"MSK+02 - Urals"},{"cc":"RU","c":"Russia","z":"Asia/Omsk","n":"MSK+03 - Omsk"},{"cc":"RU","c":"Russia","z":"Asia/Barnaul","n":"MSK+04 - Altai"},{"cc":"RU","c":"Russia","z":"Asia/Novokuznetsk","n":"MSK+04 - Kemerovo"},{"cc":"RU","c":"Russia","z":"Asia/Krasnoyarsk","n":"MSK+04 - Krasnoyarsk area"},{"cc":"RU","c":"Russia","z":"Asia/Novosibirsk","n":"MSK+04 - Novosibirsk"},{"cc":"RU","c":"Russia","z":"Asia/Tomsk","n":"MSK+04 - Tomsk"},{"cc":"RU","c":"Russia","z":"Asia/Irkutsk","n":"MSK+05 - Irkutsk, Buryatia"},{"cc":"RU","c":"Russia","z":"Asia/Yakutsk","n":"MSK+06 - Lena River"},{"cc":"RU","c":"Russia","z":"Asia/Khandyga","n":"MSK+06 - Tomponsky, Ust-Maysky"},{"cc":"RU","c":"Russia","z":"Asia/Chita","n":"MSK+06 - Zabaykalsky"},{"cc":"RU","c":"Russia","z":"Asia/Vladivostok","n":"MSK+07 - Amur River"},{"cc":"RU","c":"Russia","z":"Asia/Ust-Nera","n":"MSK+07 - Oymyakonsky"},{"cc":"RU","c":"Russia","z":"Asia/Magadan","n":"MSK+08 - Magadan"},{"cc":"RU","c":"Russia","z":"Asia/Srednekolymsk","n":"MSK+08 - Sakha (E), N Kuril Is"},{"cc":"RU","c":"Russia","z":"Asia/Sakhalin","n":"MSK+08 - Sakhalin Island"},{"cc":"RU","c":"Russia","z":"Asia/Anadyr","n":"MSK+09 - Bering Sea"},{"cc":"RU","c":"Russia","z":"Asia/Kamchatka","n":"MSK+09 - Kamchatka"},{"cc":"RU","c":"Russia","z":"Europe/Kaliningrad","n":"MSK-01 - Kaliningrad"},{"cc":"RW","c":"Rwanda","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"RE","c":"Réunion","z":"Asia/Dubai","n":"Crozet"},{"cc":"AS","c":"Samoa (American)","z":"Pacific/Pago_Pago","n":"Midway"},{"cc":"WS","c":"Samoa (western)","z":"Pacific/Apia","n":"Apia"},{"cc":"SM","c":"San Marino","z":"Europe/Rome","n":"Rome"},{"cc":"ST","c":"Sao Tome & Principe","z":"Africa/Sao_Tome","n":"Sao Tome"},{"cc":"SA","c":"Saudi Arabia","z":"Asia/Riyadh","n":"Syowa"},{"cc":"SN","c":"Senegal","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"RS","c":"Serbia","z":"Europe/Belgrade","n":"Belgrade"},{"cc":"SC","c":"Seychelles","z":"Asia/Dubai","n":"Crozet"},{"cc":"SL","c":"Sierra Leone","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"SG","c":"Singapore","z":"Asia/Singapore","n":"peninsular Malaysia, Concordia"},{"cc":"SK","c":"Slovakia","z":"Europe/Prague","n":"Prague"},{"cc":"SI","c":"Slovenia","z":"Europe/Belgrade","n":"Belgrade"},{"cc":"SB","c":"Solomon Islands","z":"Pacific/Guadalcanal","n":"Pohnpei"},{"cc":"SO","c":"Somalia","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"ZA","c":"South Africa","z":"Africa/Johannesburg","n":"Johannesburg"},{"cc":"GS","c":"South Georgia & the South Sandwich Islands","z":"Atlantic/South_Georgia","n":"South Georgia"},{"cc":"SS","c":"South Sudan","z":"Africa/Juba","n":"Juba"},{"cc":"ES","c":"Spain","z":"Atlantic/Canary","n":"Canary Islands"},{"cc":"ES","c":"Spain","z":"Africa/Ceuta","n":"Ceuta, Melilla"},{"cc":"ES","c":"Spain","z":"Europe/Madrid","n":"Spain (mainland)"},{"cc":"LK","c":"Sri Lanka","z":"Asia/Colombo","n":"Colombo"},{"cc":"BL","c":"St Barthelemy","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"SH","c":"St Helena","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"KN","c":"St Kitts & Nevis","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"LC","c":"St Lucia","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"SX","c":"St Maarten (Dutch)","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"MF","c":"St Martin (French)","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"PM","c":"St Pierre & Miquelon","z":"America/Miquelon","n":"Miquelon"},{"cc":"VC","c":"St Vincent","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"SD","c":"Sudan","z":"Africa/Khartoum","n":"Khartoum"},{"cc":"SR","c":"Suriname","z":"America/Paramaribo","n":"Paramaribo"},{"cc":"SJ","c":"Svalbard & Jan Mayen","z":"Europe/Berlin","n":"most of Germany"},{"cc":"SE","c":"Sweden","z":"Europe/Berlin","n":"most of Germany"},{"cc":"CH","c":"Switzerland","z":"Europe/Zurich","n":"Büsingen"},{"cc":"SY","c":"Syria","z":"Asia/Damascus","n":"Damascus"},{"cc":"TW","c":"Taiwan","z":"Asia/Taipei","n":"Taipei"},{"cc":"TJ","c":"Tajikistan","z":"Asia/Dushanbe","n":"Dushanbe"},{"cc":"TZ","c":"Tanzania","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"TH","c":"Thailand","z":"Asia/Bangkok","n":"north Vietnam"},{"cc":"TG","c":"Togo","z":"Africa/Abidjan","n":"Abidjan"},{"cc":"TK","c":"Tokelau","z":"Pacific/Fakaofo","n":"Fakaofo"},{"cc":"TO","c":"Tonga","z":"Pacific/Tongatapu","n":"Tongatapu"},{"cc":"TT","c":"Trinidad & Tobago","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"TN","c":"Tunisia","z":"Africa/Tunis","n":"Tunis"},{"cc":"TR","c":"Turkey","z":"Europe/Istanbul","n":"Istanbul"},{"cc":"TM","c":"Turkmenistan","z":"Asia/Ashgabat","n":"Ashgabat"},{"cc":"TC","c":"Turks & Caicos Is","z":"America/Grand_Turk","n":"Grand Turk"},{"cc":"TV","c":"Tuvalu","z":"Pacific/Tarawa","n":"Gilberts, Marshalls, Wake"},{"cc":"UM","c":"US minor outlying islands","z":"Pacific/Tarawa","n":"Gilberts, Marshalls, Wake"},{"cc":"UM","c":"US minor outlying islands","z":"Pacific/Pago_Pago","n":"Midway"},{"cc":"UG","c":"Uganda","z":"Africa/Nairobi","n":"Nairobi"},{"cc":"UA","c":"Ukraine","z":"Europe/Simferopol","n":"Crimea"},{"cc":"UA","c":"Ukraine","z":"Europe/Kyiv","n":"most of Ukraine"},{"cc":"AE","c":"United Arab Emirates","z":"Asia/Dubai","n":"Crozet"},{"cc":"US","c":"United States","z":"America/Anchorage","n":"Alaska (most areas)"},{"cc":"US","c":"United States","z":"America/Nome","n":"Alaska (west)"},{"cc":"US","c":"United States","z":"America/Metlakatla","n":"Alaska - Annette Island"},{"cc":"US","c":"United States","z":"America/Juneau","n":"Alaska - Juneau area"},{"cc":"US","c":"United States","z":"America/Sitka","n":"Alaska - Sitka area"},{"cc":"US","c":"United States","z":"America/Yakutat","n":"Alaska - Yakutat"},{"cc":"US","c":"United States","z":"America/Adak","n":"Alaska - western Aleutians"},{"cc":"US","c":"United States","z":"America/Chicago","n":"Central (most areas)"},{"cc":"US","c":"United States","z":"America/Indiana/Tell_City","n":"Central - IN (Perry)"},{"cc":"US","c":"United States","z":"America/Indiana/Knox","n":"Central - IN (Starke)"},{"cc":"US","c":"United States","z":"America/Menominee","n":"Central - MI (Wisconsin border)"},{"cc":"US","c":"United States","z":"America/North_Dakota/Beulah","n":"Central - ND (Mercer)"},{"cc":"US","c":"United States","z":"America/North_Dakota/New_Salem","n":"Central - ND (Morton rural)"},{"cc":"US","c":"United States","z":"America/North_Dakota/Center","n":"Central - ND (Oliver)"},{"cc":"US","c":"United States","z":"America/New_York","n":"Eastern (most areas)"},{"cc":"US","c":"United States","z":"America/Indiana/Marengo","n":"Eastern - IN (Crawford)"},{"cc":"US","c":"United States","z":"America/Indiana/Vincennes","n":"Eastern - IN (Da, Du, K, Mn)"},{"cc":"US","c":"United States","z":"America/Indiana/Petersburg","n":"Eastern - IN (Pike)"},{"cc":"US","c":"United States","z":"America/Indiana/Winamac","n":"Eastern - IN (Pulaski)"},{"cc":"US","c":"United States","z":"America/Indiana/Vevay","n":"Eastern - IN (Switzerland)"},{"cc":"US","c":"United States","z":"America/Indiana/Indianapolis","n":"Eastern - IN (most areas)"},{"cc":"US","c":"United States","z":"America/Kentucky/Louisville","n":"Eastern - KY (Louisville area)"},{"cc":"US","c":"United States","z":"America/Kentucky/Monticello","n":"Eastern - KY (Wayne)"},{"cc":"US","c":"United States","z":"America/Detroit","n":"Eastern - MI (most areas)"},{"cc":"US","c":"United States","z":"Pacific/Honolulu","n":"Hawaii"},{"cc":"US","c":"United States","z":"America/Phoenix","n":"MST - AZ (most areas), Creston BC"},{"cc":"US","c":"United States","z":"America/Denver","n":"Mountain (most areas)"},{"cc":"US","c":"United States","z":"America/Boise","n":"Mountain - ID (south), OR (east)"},{"cc":"US","c":"United States","z":"America/Los_Angeles","n":"Pacific"},{"cc":"UY","c":"Uruguay","z":"America/Montevideo","n":"Montevideo"},{"cc":"UZ","c":"Uzbekistan","z":"Asia/Tashkent","n":"Uzbekistan (east)"},{"cc":"UZ","c":"Uzbekistan","z":"Asia/Samarkand","n":"Uzbekistan (west)"},{"cc":"VU","c":"Vanuatu","z":"Pacific/Efate","n":"Efate"},{"cc":"VA","c":"Vatican City","z":"Europe/Rome","n":"Rome"},{"cc":"VE","c":"Venezuela","z":"America/Caracas","n":"Caracas"},{"cc":"VN","c":"Vietnam","z":"Asia/Bangkok","n":"north Vietnam"},{"cc":"VN","c":"Vietnam","z":"Asia/Ho_Chi_Minh","n":"south Vietnam"},{"cc":"VG","c":"Virgin Islands (UK)","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"VI","c":"Virgin Islands (US)","z":"America/Puerto_Rico","n":"AST - QC (Lower North Shore)"},{"cc":"WF","c":"Wallis & Futuna","z":"Pacific/Tarawa","n":"Gilberts, Marshalls, Wake"},{"cc":"EH","c":"Western Sahara","z":"Africa/El_Aaiun","n":"El Aaiun"},{"cc":"YE","c":"Yemen","z":"Asia/Riyadh","n":"Syowa"},{"cc":"ZM","c":"Zambia","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"ZW","c":"Zimbabwe","z":"Africa/Maputo","n":"Central Africa Time"},{"cc":"AX","c":"Åland Islands","z":"Europe/Helsinki","n":"Helsinki"}];
+const _tzFmtCache = {};
+function tzFmt(zone){
+ if(!_tzFmtCache[zone]){
+  try{_tzFmtCache[zone]=new Intl.DateTimeFormat('en-GB',{timeZone:zone,hour12:false,hour:'2-digit',minute:'2-digit'})}
+  catch(e){_tzFmtCache[zone]=null}
+ }
+ return _tzFmtCache[zone];
+}
+function tzFlag(cc){
+ if(!cc||cc.length!==2)return '\uD83C\uDF10';
+ return String.fromCodePoint(...[...cc.toUpperCase()].map(c=>127397+c.charCodeAt(0)));
+}
+const _tzOffCache={};let _tzOffStamp=0;
+function tzOffset(zone,now){
+ const bucket=Math.floor(now.getTime()/600000);
+ if(bucket!==_tzOffStamp){_tzOffStamp=bucket;for(const k in _tzOffCache)delete _tzOffCache[k];}
+ if(_tzOffCache[zone]!==undefined)return _tzOffCache[zone];
+ let out='';
+ try{
+  const p=new Intl.DateTimeFormat('en-GB',{timeZone:zone,timeZoneName:'longOffset'}).formatToParts(now);
+  const v=(p.find(x=>x.type==='timeZoneName')||{}).value||'';
+  out=v.replace('GMT','UTC')||'UTC+00:00';
+ }catch(e){out=''}
+ _tzOffCache[zone]=out;
+ return out;
+}
+function tzOffsetMinutes(zone,now){
+ const o=tzOffset(zone,now).replace('UTC','');
+ if(!o)return 0;
+ const m=o.match(/([+-])(\d{2}):?(\d{2})?/);
+ if(!m)return 0;
+ return (m[1]==='-'?-1:1)*(parseInt(m[2],10)*60+parseInt(m[3]||'0',10));
+}
+function tzDisplayLabel(row){
+ const city=row.n&&row.n!==row.c?row.n:row.c;
+ return tzFlag(row.cc)+' '+(row.n&&row.n!==row.c? row.c+' \u2014 '+row.n : row.c);
+}
+function renderTzList(filter){
+ const list=document.getElementById('tzList');
+ if(!list)return;
+ const now=new Date();
+ const q=(filter||'').trim().toLowerCase();
+ let rows=TZ_DIRECTORY.map(r=>Object.assign({},r,{off:tzOffset(r.z,now),min:tzOffsetMinutes(r.z,now)}));
+ if(q)rows=rows.filter(r=>(r.c+' '+r.n+' '+r.z+' '+r.off).toLowerCase().includes(q));
+ rows.sort((a,b)=>a.min-b.min||a.c.localeCompare(b.c)||a.n.localeCompare(b.n));
+ const empty=document.getElementById('tzEmpty');
+ if(empty)empty.classList.toggle('show',rows.length===0);
+ let html='',lastOff=null;
+ rows.forEach(r=>{
+  if(r.off!==lastOff){html+='<div class="tz-country">'+r.off+'</div>';lastOff=r.off}
+  const label=tzDisplayLabel(r);
+  html+='<div class="tz-item'+(r.z===activeTz?' active':'')+'" data-zone="'+r.z+'" data-label="'+label.replace(/"/g,'&quot;')+'">'+
+        '<span class="tz-name"><span><span class="tz-flag">'+tzFlag(r.cc)+'</span>'+esc(r.c)+'</span>'+
+        (r.n&&r.n!==r.c?'<small>'+esc(r.n)+' \u00b7 '+esc(r.z)+'</small>':'<small>'+esc(r.z)+'</small>')+'</span>'+
+        '<span class="tz-item-time" data-zone="'+r.z+'">--:--</span></div>';
+ });
+ list.innerHTML=html;
+ list.querySelectorAll('.tz-item').forEach(el=>el.addEventListener('click',()=>setTz(el.dataset.zone,el.dataset.label)));
+ updateTzListTimes();
+}
+function updateTzListTimes(){
+ const menu=document.getElementById('tzMenu');
+ if(!menu||!menu.classList.contains('show'))return;
+ const now=new Date();
+ menu.querySelectorAll('.tz-item-time').forEach(el=>{
+  const f=tzFmt(el.dataset.zone);
+  if(f){try{el.textContent=f.format(now)}catch(e){}}
+ });
+}
+
 function updateClocks(){
  const now=new Date();
  const lonTime=fmtZone(now,'Europe/London',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
@@ -4354,37 +4522,19 @@ function updateClocks(){
   dL.textContent=lonTime;
   const ddL=document.getElementById('dashDateLondon'); if(ddL)ddL.textContent=fmtZone(now,'Europe/London',{weekday:'short',day:'numeric',month:'short'});
   const cyc=document.getElementById('dashCycle');
-  if(cyc){const lonHour=parseInt(fmtZone(now,'Europe/London',{hour:'2-digit'}),10); cyc.textContent=(lonHour>=6&&lonHour<19)?'☀ Daytime in London':'🌙 Night in London'}
+  if(cyc){const lonHour=parseInt(fmtZone(now,'Europe/London',{hour:'2-digit'}),10); cyc.textContent=(lonHour>=6&&lonHour<19)?'\u2600 Daytime in London':'\uD83C\uDF19 Night in London'}
  }
 
  if(document.querySelector('.dyn-cmd')) updateDynamicNodes();
 
- document.querySelectorAll('.tz-item-time').forEach(el => {
-     let tzid = el.id.replace('tz_', '');
-     let tzStr = '';
-     if(tzid === 'AFT') tzStr = 'Asia/Kabul';
-     else if(tzid === 'PKT') tzStr = 'Asia/Karachi';
-     else if(tzid === 'IST') tzStr = 'Asia/Kolkata';
-     else if(tzid === 'NPT') tzStr = 'Asia/Kathmandu';
-     else if(tzid === 'BST') tzStr = 'Asia/Dhaka';
-     else if(tzid === 'MMT') tzStr = 'Asia/Yangon';
-     else if(tzid === 'ICT') tzStr = 'Asia/Bangkok';
-     else if(tzid === 'SGT') tzStr = 'Asia/Singapore';
-     else if(tzid === 'JST') tzStr = 'Asia/Tokyo';
-     else if(tzid === 'AEST') tzStr = 'Australia/Sydney';
-     else if(tzid === 'NZST') tzStr = 'Pacific/Auckland';
-
-     if(tzStr) {
-         try {
-             el.textContent = fmtZone(now, tzStr, {hour:'2-digit',minute:'2-digit'});
-         } catch(e) {}
-     }
- });
+ updateTzListTimes();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const lbl = document.getElementById('tzLabel');
     if(lbl) lbl.textContent = activeTzLabel + ' ▾';
+    const q = document.getElementById('tzSearch');
+    if(q) q.addEventListener('input', () => renderTzList(q.value));
     updateClocks();
 });
 setInterval(updateClocks,1000);
@@ -4523,7 +4673,7 @@ document.addEventListener('keydown',e=>{
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='j'){e.preventDefault();applyDark(document.documentElement.dataset.dark!=='1')}
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();toggleDuty()}
  if(!typing&&e.key==='?'){e.preventDefault();helpModal.classList.add('show')}
- if(e.key==='Escape'){modal.classList.remove('show');helpModal.classList.remove('show');document.getElementById('themeModal').classList.remove('show');document.getElementById('tzMenu').classList.remove('show');}
+ if(e.key==='Escape'){modal.classList.remove('show');helpModal.classList.remove('show');document.getElementById('themeModal').classList.remove('show');document.getElementById('tzMenu').classList.remove('show');const _mpm=document.getElementById('mpModal');if(_mpm)_mpm.classList.remove('show');}
 });
 modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show')});
 modalSearch.addEventListener('input',e=>doSearch(e.target.value));
@@ -4533,6 +4683,570 @@ updateFavCount();
 let startPage='dashboard';
 try{const lp=localStorage.getItem('grwiki_lastpage'); if(lp&&(pageFns[lp]||rules[lp]))startPage=lp}catch(e){}
 render(startPage);
+
+/* =========================================================
+   Universal Music Player  (local files / YouTube / Spotify /
+   SoundCloud / radio stream) with dashboard card + mini dock
+   ========================================================= */
+const MP = {
+  src: null,            // 'local' | 'youtube' | 'spotify' | 'soundcloud' | 'radio'
+  queue: [],            // [{id,title,url}]
+  idx: 0,
+  playing: false,
+  title: '',
+  sub: '',
+  pos: 0,
+  dur: 0,
+  vol: 0.8,
+  loading: false
+};
+const MP_KEY = 'grwiki_player_v1';
+const MP_ICONS = { local:'\uD83C\uDFB5', youtube:'\u25B6', spotify:'\uD83D\uDFE2', soundcloud:'\u2601', radio:'\uD83D\uDCFB' };
+const MP_NAMES = { local:'My Files', youtube:'YouTube', spotify:'Spotify', soundcloud:'SoundCloud', radio:'Radio Stream' };
+
+let mpAudio = null, mpYT = null, mpSC = null, mpSP = null, mpSPEl = null, mpTick = null;
+
+/* ---------- helpers ---------- */
+function mpFmt(s){
+  if(!isFinite(s)||s<0) return '--:--';
+  s=Math.floor(s);
+  const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60;
+  return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0');
+}
+function mpLoadScript(url){
+  return new Promise((res,rej)=>{
+    if([...document.scripts].some(s=>s.src===url)) return res();
+    const el=document.createElement('script');
+    el.src=url; el.async=true;
+    el.onload=()=>res(); el.onerror=()=>rej(new Error('Could not load '+url));
+    document.head.appendChild(el);
+  });
+}
+function mpSave(){
+  try{
+    const st={src:MP.src,vol:MP.vol,idx:MP.idx};
+    if(MP.src&&MP.src!=='local') st.queue=MP.queue;
+    localStorage.setItem(MP_KEY,JSON.stringify(st));
+  }catch(e){}
+}
+async function mpOEmbed(endpoint,url){
+  try{
+    const r=await fetch(endpoint+encodeURIComponent(url));
+    if(!r.ok) return null;
+    const j=await r.json();
+    return j&&j.title?j.title:null;
+  }catch(e){ return null; }
+}
+function mpYtId(u){
+  let m=u.match(/[?&]v=([\w-]{11})/)||u.match(/youtu\.be\/([\w-]{11})/)||u.match(/\/(?:embed|shorts|live)\/([\w-]{11})/);
+  if(m) return m[1];
+  if(/^[\w-]{11}$/.test(u.trim())) return u.trim();
+  return null;
+}
+function mpYtList(u){ const m=u.match(/[?&]list=([\w-]+)/); return m?m[1]:null; }
+function mpSpUri(u){
+  const m=u.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|artist|episode|show)\/([A-Za-z0-9]+)/);
+  if(m) return 'spotify:'+m[1]+':'+m[2];
+  if(/^spotify:[a-z]+:[A-Za-z0-9]+$/.test(u.trim())) return u.trim();
+  return null;
+}
+
+/* ---------- media session (OS / lockscreen controls) ---------- */
+function mpMediaSession(){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title: MP.title||'Grand RP Wiki',
+      artist: MP.sub||MP_NAMES[MP.src]||'',
+      album: 'Grand RP Wiki Player'
+    });
+    navigator.mediaSession.playbackState = MP.playing?'playing':'paused';
+    navigator.mediaSession.setActionHandler('play',()=>mpPlayPause());
+    navigator.mediaSession.setActionHandler('pause',()=>mpPlayPause());
+    navigator.mediaSession.setActionHandler('stop',()=>mpStop());
+    navigator.mediaSession.setActionHandler('previoustrack',()=>mpPrev());
+    navigator.mediaSession.setActionHandler('nexttrack',()=>mpNext());
+  }catch(e){}
+}
+
+/* ---------- dock / card markup ---------- */
+function mpBuildDock(){
+  if(document.getElementById('mpDock')) return;
+  const d=document.createElement('div');
+  d.className='mp-dock'; d.id='mpDock';
+  d.innerHTML=
+   '<div class="mp-dock-head"><b id="mpDockSrc">Now Playing</b>'+
+   '<button class="mp-mini" id="mpDockToggle" title="Collapse / expand">\u2013</button>'+
+   '<button class="mp-mini" id="mpDockClose" title="Close player">\u2715</button></div>'+
+   '<div class="mp-embed" id="mpEmbed" style="display:none"></div>'+
+   '<div class="mp-dock-body">'+
+     '<div class="mp-body">'+
+       '<div class="mp-art" id="mpDockArt">\uD83C\uDFB5</div>'+
+       '<div class="mp-meta"><div class="mp-title" id="mpDockTitle">\u2014</div><div class="mp-sub" id="mpDockSub"></div></div>'+
+     '</div>'+
+     '<div class="mp-progrow"><span class="mp-time" id="mpDockCur">--:--</span>'+
+       '<input type="range" class="mp-seek" id="mpDockSeek" min="0" max="1000" value="0">'+
+       '<span class="mp-time" id="mpDockDur">--:--</span></div>'+
+     '<div class="mp-ctrls" style="justify-content:center;margin-top:10px">'+
+       '<button class="mp-btn" id="mpDockPrev" title="Previous">\u23EE</button>'+
+       '<button class="mp-btn play" id="mpDockPlay" title="Play / pause">\u25B6</button>'+
+       '<button class="mp-btn" id="mpDockNext" title="Next">\u23ED</button>'+
+       '<button class="mp-btn stop" id="mpDockStop" title="Stop">\u25A0</button>'+
+     '</div>'+
+   '</div>';
+  document.body.appendChild(d);
+  d.querySelector('#mpDockToggle').addEventListener('click',()=>d.classList.toggle('collapsed'));
+  d.querySelector('#mpDockClose').addEventListener('click',()=>mpClose());
+  d.querySelector('#mpDockPrev').addEventListener('click',()=>mpPrev());
+  d.querySelector('#mpDockNext').addEventListener('click',()=>mpNext());
+  d.querySelector('#mpDockPlay').addEventListener('click',()=>mpPlayPause());
+  d.querySelector('#mpDockStop').addEventListener('click',()=>mpStop());
+  d.querySelector('#mpDockSeek').addEventListener('input',e=>mpSeek(e.target.value/1000));
+}
+
+function mpCardHTML(){
+  if(!MP.src){
+    return '<div class="mp-card"><div class="mp-head"><h4>\uD83C\uDFA7 Music</h4></div>'+
+      '<div class="mp-empty">'+
+      '<div class="mp-art">\uD83C\uDFB5</div>'+
+      '<p>Nothing is playing right now. Pick a source and the track name plus controls will show up here on every page.</p>'+
+      '<button class="mp-bigbtn" onclick="mpOpenPicker()">\u25B6 Play music</button>'+
+      '</div></div>';
+  }
+  const q=MP.queue.length>1?'<div class="mp-queue" id="mpQueue"></div>':'';
+  return '<div class="mp-card"><div class="mp-head"><h4>\uD83C\uDFA7 Now Playing</h4>'+
+    '<span class="mp-srcbadge" id="mpCardSrc">'+esc(MP_NAMES[MP.src]||'')+'</span></div>'+
+    '<div class="mp-body">'+
+      '<div class="mp-art" id="mpCardArt">'+(MP_ICONS[MP.src]||'\uD83C\uDFB5')+'</div>'+
+      '<div class="mp-meta"><div class="mp-title" id="mpCardTitle">\u2014</div><div class="mp-sub" id="mpCardSub"></div></div>'+
+      '<div class="mp-ctrls">'+
+        '<button class="mp-btn" id="mpCardPrev" onclick="mpPrev()" title="Previous">\u23EE</button>'+
+        '<button class="mp-btn play" id="mpCardPlay" onclick="mpPlayPause()" title="Play / pause">\u25B6</button>'+
+        '<button class="mp-btn" id="mpCardNext" onclick="mpNext()" title="Next">\u23ED</button>'+
+        '<button class="mp-btn stop" onclick="mpStop()" title="Stop">\u25A0</button>'+
+        '<button class="mp-btn" onclick="mpOpenPicker()" title="Change source / add music">\u002B</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="mp-progrow"><span class="mp-time" id="mpCardCur">--:--</span>'+
+      '<input type="range" class="mp-seek" id="mpCardSeek" min="0" max="1000" value="0" oninput="mpSeek(this.value/1000)">'+
+      '<span class="mp-time" id="mpCardDur">--:--</span>'+
+      '<span style="font-size:12px;color:var(--muted)">\uD83D\uDD0A</span>'+
+      '<input type="range" class="mp-vol" id="mpCardVol" min="0" max="100" value="'+Math.round(MP.vol*100)+'" oninput="mpVol(this.value/100)">'+
+    '</div>'+ q + '</div>';
+}
+
+/* ---------- UI sync ---------- */
+function mpSyncUI(){
+  mpBuildDock();
+  const slot=document.getElementById('mpSlot');
+  if(slot && slot.dataset.state!==(MP.src||'none')+':'+MP.queue.length){
+    slot.dataset.state=(MP.src||'none')+':'+MP.queue.length;
+    slot.innerHTML=mpCardHTML();
+  }
+  const dock=document.getElementById('mpDock');
+  if(dock) dock.classList.toggle('show', !!MP.src);
+
+  const playIcon = MP.loading?'\u22EF':(MP.playing?'\u23F8':'\u25B6');
+  const title = MP.loading?'Loading\u2026':(MP.title||'\u2014');
+  const sub = MP.sub||MP_NAMES[MP.src]||'';
+  const canSkip = MP.queue.length>1 || MP.src==='youtube' || MP.src==='soundcloud';
+  const pct = MP.dur>0 ? Math.min(1000,Math.round(MP.pos/MP.dur*1000)) : 0;
+
+  [['mpCard','mpCardSeek'],['mpDock','mpDockSeek']].forEach(([p,seekId])=>{
+    const t=document.getElementById(p+'Title'); if(t&&t.textContent!==title)t.textContent=title;
+    const s=document.getElementById(p+'Sub'); if(s&&s.textContent!==sub)s.textContent=sub;
+    const b=document.getElementById(p+'Play'); if(b&&b.textContent!==playIcon)b.textContent=playIcon;
+    const a=document.getElementById(p+'Art'); if(a){a.classList.toggle('spin',MP.playing); if(MP.src&&a.textContent!==MP_ICONS[MP.src])a.textContent=MP_ICONS[MP.src];}
+    const cu=document.getElementById(p+'Cur'); if(cu)cu.textContent=MP.dur?mpFmt(MP.pos):'--:--';
+    const du=document.getElementById(p+'Dur'); if(du)du.textContent=MP.dur?mpFmt(MP.dur):'--:--';
+    const pv=document.getElementById(p+'Prev'); if(pv)pv.disabled=!canSkip;
+    const nx=document.getElementById(p+'Next'); if(nx)nx.disabled=!canSkip;
+    const sk=document.getElementById(seekId);
+    if(sk&&document.activeElement!==sk){sk.value=pct;sk.disabled=!(MP.dur>0);}
+  });
+  const ds=document.getElementById('mpDockSrc');
+  if(ds)ds.textContent=MP.src?(MP_NAMES[MP.src]+' \u00b7 Now Playing'):'Now Playing';
+
+  const qc=document.getElementById('mpQueue');
+  if(qc){
+    const sig=MP.queue.length+':'+MP.idx;
+    if(qc.dataset.sig!==sig){
+      qc.dataset.sig=sig;
+      qc.innerHTML=MP.queue.map((t,i)=>'<div class="mp-qitem'+(i===MP.idx?' on':'')+'" onclick="mpGoTo('+i+')"><span class="n">'+(i+1)+'</span><span>'+esc(t.title)+'</span></div>').join('');
+    }
+  }
+  mpMediaSession();
+}
+function mpStartTick(){
+  if(mpTick) return;
+  mpTick=setInterval(()=>{
+    if(!MP.src) return;
+    if(MP.src==='youtube'&&mpYT&&mpYT.getCurrentTime){
+      try{MP.pos=mpYT.getCurrentTime()||0;MP.dur=mpYT.getDuration()||0;}catch(e){}
+    }
+    mpSyncUI();
+  },500);
+}
+
+/* ---------- source picker ---------- */
+function mpModal(inner){
+  let m=document.getElementById('mpModal');
+  if(!m){
+    m=document.createElement('div'); m.className='modal'; m.id='mpModal';
+    m.innerHTML='<div class="modalbox helpbox" id="mpModalBox"></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')});
+  }
+  document.getElementById('mpModalBox').innerHTML=inner;
+  m.classList.add('show');
+}
+function mpCloseModal(){ const m=document.getElementById('mpModal'); if(m)m.classList.remove('show'); }
+
+function mpOpenPicker(){
+  mpModal(
+   '<div class="helphead"><h3 style="margin:0;font-size:16px">Where do you want to play music from?</h3>'+
+   '<button class="iconbtn" onclick="mpCloseModal()">\u2715</button></div>'+
+   '<p style="font-size:12px;color:var(--muted);margin:0 0 4px;line-height:1.6">Pick a source. The track name and the play / pause / next / previous / stop controls will then show on the dashboard and in the mini player on every page.</p>'+
+   '<div class="mp-sources">'+
+     '<button class="mp-source" onclick="mpChoose(\'local\')"><span class="ic">\uD83C\uDFB5</span><b>My Files</b><small>MP3 / WAV / M4A from this device</small></button>'+
+     '<button class="mp-source" onclick="mpChoose(\'youtube\')"><span class="ic">\u25B6</span><b>YouTube</b><small>Video, Shorts or a full playlist link</small></button>'+
+     '<button class="mp-source" onclick="mpChoose(\'spotify\')"><span class="ic">\uD83D\uDFE2</span><b>Spotify</b><small>Track, album or playlist link</small></button>'+
+     '<button class="mp-source" onclick="mpChoose(\'soundcloud\')"><span class="ic">\u2601</span><b>SoundCloud</b><small>Track or set link</small></button>'+
+     '<button class="mp-source" onclick="mpChoose(\'radio\')"><span class="ic">\uD83D\uDCFB</span><b>Radio / URL</b><small>Any direct stream or audio link</small></button>'+
+   '</div>'+
+   '<p class="mp-hint">Note: a webpage can\u2019t read what the Spotify or YouTube <em>app</em> is playing \u2014 browsers block that for privacy. So the wiki plays the music itself through the official embedded players instead, and shows the name here.</p>'
+  );
+}
+
+function mpChoose(src){
+  if(src==='local'){
+    mpModal(
+     '<div class="helphead"><h3 style="margin:0;font-size:16px">\uD83C\uDFB5 Play your own files</h3><button class="iconbtn" onclick="mpCloseModal()">\u2715</button></div>'+
+     '<div class="mp-step"><label>Choose one or more audio files. They stay on your device \u2014 nothing is uploaded.</label>'+
+     '<input type="file" id="mpFiles" accept="audio/*" multiple style="width:100%;padding:11px;border:1px dashed var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:12px">'+
+     '<div class="row"><button class="btn" onclick="mpAddFiles()">Add &amp; play</button><button class="btn secondary" onclick="mpOpenPicker()">\u2190 Back</button></div>'+
+     '<p class="mp-hint">Full next / previous / stop control, plus lock-screen controls on phones. File picks can\u2019t be remembered after a refresh \u2014 browsers don\u2019t allow it.</p></div>');
+    return;
+  }
+  const cfg={
+    youtube:{t:'\u25B6 Play from YouTube',l:'Paste a YouTube video, Shorts or playlist link. You can paste several video links (one per line) to build a queue.',ph:'https://www.youtube.com/watch?v=...',multi:true},
+    spotify:{t:'\uD83D\uDFE2 Play from Spotify',l:'Paste a Spotify track, album or playlist link.',ph:'https://open.spotify.com/track/...',multi:false},
+    soundcloud:{t:'\u2601 Play from SoundCloud',l:'Paste a SoundCloud track or set (playlist) link.',ph:'https://soundcloud.com/artist/track',multi:false},
+    radio:{t:'\uD83D\uDCFB Play a radio stream',l:'Paste a direct stream or audio file URL (.mp3, .aac, .m3u8, Icecast/Shoutcast).',ph:'https://stream.example.com/live.mp3',multi:true}
+  }[src];
+  const extra = src==='spotify'
+    ? '<p class="mp-hint">Spotify\u2019s official embed plays 30-second previews unless you\u2019re signed in to Spotify Premium in this browser. Track skipping inside a playlist uses Spotify\u2019s own arrows in the mini player \u2014 Spotify doesn\u2019t allow outside apps to skip.</p>'
+    : src==='youtube'
+    ? '<p class="mp-hint">Plays through YouTube\u2019s official embedded player, so ads and availability follow YouTube\u2019s own rules.</p>'
+    : '';
+  mpModal(
+   '<div class="helphead"><h3 style="margin:0;font-size:16px">'+cfg.t+'</h3><button class="iconbtn" onclick="mpCloseModal()">\u2715</button></div>'+
+   '<div class="mp-step"><label>'+cfg.l+'</label>'+
+   (cfg.multi
+     ? '<textarea id="mpUrl" rows="3" placeholder="'+cfg.ph+'" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none;resize:vertical;font-family:inherit"></textarea>'
+     : '<input type="text" id="mpUrl" placeholder="'+cfg.ph+'">')+
+   '<div class="row"><button class="btn" onclick="mpSubmitUrl(\''+src+'\')">Play</button><button class="btn secondary" onclick="mpOpenPicker()">\u2190 Back</button></div>'+
+   extra+'</div>');
+  setTimeout(()=>{const i=document.getElementById('mpUrl');if(i)i.focus()},60);
+}
+
+/* ---------- loading each source ---------- */
+function mpResetEngines(keep){
+  if(keep!=='local'&&keep!=='radio'&&mpAudio){ mpAudio.pause(); mpAudio.removeAttribute('src'); mpAudio.load(); }
+  if(keep!=='youtube'&&mpYT){ try{mpYT.destroy()}catch(e){} mpYT=null; }
+  if(keep!=='soundcloud'&&mpSC){ try{mpSC.pause()}catch(e){} mpSC=null; }
+  if(keep!=='spotify'&&mpSP){ try{mpSP.destroy()}catch(e){} mpSP=null; mpSPEl=null; }
+  const emb=document.getElementById('mpEmbed');
+  if(emb&&keep!=='youtube'&&keep!=='soundcloud'&&keep!=='spotify'){ emb.innerHTML=''; emb.style.display='none'; }
+}
+function mpEnsureAudio(){
+  if(mpAudio) return mpAudio;
+  mpAudio=document.createElement('audio');
+  mpAudio.id='mpAudio'; mpAudio.preload='metadata'; mpAudio.volume=MP.vol;
+  mpAudio.style.display='none';
+  document.body.appendChild(mpAudio);
+  mpAudio.addEventListener('play',()=>{MP.playing=true;MP.loading=false;mpSyncUI()});
+  mpAudio.addEventListener('pause',()=>{MP.playing=false;mpSyncUI()});
+  mpAudio.addEventListener('waiting',()=>{MP.loading=true;mpSyncUI()});
+  mpAudio.addEventListener('playing',()=>{MP.loading=false;mpSyncUI()});
+  mpAudio.addEventListener('timeupdate',()=>{MP.pos=mpAudio.currentTime||0;MP.dur=isFinite(mpAudio.duration)?mpAudio.duration:0;});
+  mpAudio.addEventListener('ended',()=>mpNext());
+  mpAudio.addEventListener('error',()=>{MP.loading=false;MP.playing=false;toast('Could not play that audio source');mpSyncUI()});
+  return mpAudio;
+}
+
+function mpAddFiles(){
+  const inp=document.getElementById('mpFiles');
+  if(!inp||!inp.files.length){ toast('Pick at least one file'); return; }
+  const list=[...inp.files].map(f=>({
+    title:f.name.replace(/\.[^.]+$/,'').replace(/[_]+/g,' ').trim(),
+    url:URL.createObjectURL(f),
+    sub:'Local file'
+  }));
+  mpResetEngines('local');
+  MP.src='local'; MP.queue=list; MP.idx=0;
+  mpCloseModal(); mpSyncUI(); mpPlayIndex(0);
+}
+
+function mpSubmitUrl(src){
+  const el=document.getElementById('mpUrl');
+  const raw=(el&&el.value||'').trim();
+  if(!raw){ toast('Paste a link first'); return; }
+  if(src==='youtube') return mpLoadYouTube(raw);
+  if(src==='spotify') return mpLoadSpotify(raw);
+  if(src==='soundcloud') return mpLoadSoundCloud(raw);
+  if(src==='radio') return mpLoadRadio(raw);
+}
+
+/* --- radio / direct urls --- */
+function mpLoadRadio(raw){
+  const urls=raw.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
+  mpResetEngines('radio');
+  MP.src='radio';
+  MP.queue=urls.map(u=>{
+    let name=u;
+    try{ const p=new URL(u); name=decodeURIComponent(p.pathname.split('/').pop()||'')||p.hostname; }catch(e){}
+    return {title:name.replace(/\.[^.]+$/,'')||'Live stream',url:u,sub:'Stream'};
+  });
+  MP.idx=0; mpCloseModal(); mpSave(); mpSyncUI(); mpPlayIndex(0);
+}
+
+/* --- local / radio shared playback --- */
+function mpPlayIndex(i){
+  if(!MP.queue.length) return;
+  MP.idx=(i+MP.queue.length)%MP.queue.length;
+  const t=MP.queue[MP.idx];
+  MP.title=t.title; MP.sub=(t.sub||MP_NAMES[MP.src])+(MP.queue.length>1?' \u00b7 '+(MP.idx+1)+'/'+MP.queue.length:'');
+  MP.pos=0; MP.dur=0;
+  if(MP.src==='local'||MP.src==='radio'){
+    const a=mpEnsureAudio();
+    a.src=t.url; a.volume=MP.vol; MP.loading=true;
+    a.play().catch(()=>{MP.loading=false;MP.playing=false;mpSyncUI()});
+  } else if(MP.src==='youtube'&&mpYT&&mpYT.loadVideoById){
+    try{mpYT.loadVideoById(t.id)}catch(e){}
+  }
+  mpSave(); mpSyncUI();
+}
+function mpGoTo(i){ mpPlayIndex(i); }
+
+/* --- YouTube --- */
+async function mpLoadYouTube(raw){
+  const lines=raw.split(/[\n,\s]+/).map(s=>s.trim()).filter(Boolean);
+  const listId=mpYtList(raw);
+  const ids=lines.map(mpYtId).filter(Boolean);
+  if(!ids.length&&!listId){ toast('That does not look like a YouTube link'); return; }
+  mpCloseModal();
+  mpResetEngines('youtube');
+  MP.src='youtube'; MP.loading=true; MP.title='Loading\u2026'; MP.sub='YouTube';
+  MP.queue=ids.map(id=>({id,title:'YouTube video',url:'https://www.youtube.com/watch?v='+id,sub:'YouTube'}));
+  MP.idx=0; mpSyncUI();
+  const emb=document.getElementById('mpEmbed');
+  emb.style.display=''; emb.innerHTML='<div id="mpYTHost"></div>';
+  try{ await mpLoadScript('https://www.youtube.com/iframe_api'); }
+  catch(e){ toast('Could not reach YouTube'); MP.loading=false; mpSyncUI(); return; }
+  await new Promise(res=>{
+    if(window.YT&&window.YT.Player) return res();
+    const prev=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=()=>{ if(typeof prev==='function')prev(); res(); };
+    setTimeout(res,6000);
+  });
+  if(!(window.YT&&window.YT.Player)){ toast('YouTube player unavailable'); MP.loading=false; mpSyncUI(); return; }
+  const vars={autoplay:1,playsinline:1,rel:0,modestbranding:1};
+  if(listId){ vars.listType='playlist'; vars.list=listId; }
+  mpYT=new YT.Player('mpYTHost',{
+    height:'170', width:'100%',
+    videoId: ids[0]||undefined,
+    playerVars:vars,
+    events:{
+      onReady:e=>{ try{e.target.setVolume(Math.round(MP.vol*100)); e.target.playVideo();}catch(err){} mpYtMeta(); },
+      onStateChange:e=>{
+        MP.playing=(e.data===YT.PlayerState.PLAYING);
+        MP.loading=(e.data===YT.PlayerState.BUFFERING);
+        if(e.data===YT.PlayerState.ENDED&&MP.queue.length>1) mpNext();
+        mpYtMeta(); mpSyncUI();
+      },
+      onError:()=>{ toast('YouTube could not play that video'); MP.loading=false; mpSyncUI(); }
+    }
+  });
+  mpSave(); mpStartTick();
+}
+function mpYtMeta(){
+  if(!mpYT||!mpYT.getVideoData) return;
+  try{
+    const d=mpYT.getVideoData()||{};
+    if(d.title){
+      MP.title=d.title;
+      MP.sub='YouTube'+(d.author?' \u00b7 '+d.author:'');
+      const li=mpYT.getPlaylistIndex?mpYT.getPlaylistIndex():-1;
+      const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
+      if(pl.length>1&&li>=0) MP.sub+=' \u00b7 '+(li+1)+'/'+pl.length;
+      else if(MP.queue.length>1) MP.sub+=' \u00b7 '+(MP.idx+1)+'/'+MP.queue.length;
+      if(MP.queue[MP.idx]) MP.queue[MP.idx].title=d.title;
+      MP.loading=false;
+    }
+  }catch(e){}
+}
+
+/* --- SoundCloud --- */
+async function mpLoadSoundCloud(url){
+  if(!/soundcloud\.com/.test(url)){ toast('That does not look like a SoundCloud link'); return; }
+  mpCloseModal();
+  mpResetEngines('soundcloud');
+  MP.src='soundcloud'; MP.loading=true; MP.title='Loading\u2026'; MP.sub='SoundCloud'; MP.queue=[]; MP.idx=0;
+  mpSyncUI();
+  const emb=document.getElementById('mpEmbed');
+  emb.style.display='';
+  emb.innerHTML='<iframe id="mpSCFrame" height="140" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&auto_play=true&hide_related=true&show_comments=false&visual=false"></iframe>';
+  try{ await mpLoadScript('https://w.soundcloud.com/player/api.js'); }
+  catch(e){ toast('Could not reach SoundCloud'); MP.loading=false; mpSyncUI(); return; }
+  if(!window.SC){ MP.loading=false; mpSyncUI(); return; }
+  mpSC=SC.Widget(document.getElementById('mpSCFrame'));
+  mpSC.bind(SC.Widget.Events.READY,()=>{ mpSC.setVolume(MP.vol*100); mpScMeta(); });
+  mpSC.bind(SC.Widget.Events.PLAY,()=>{MP.playing=true;MP.loading=false;mpScMeta();mpSyncUI()});
+  mpSC.bind(SC.Widget.Events.PAUSE,()=>{MP.playing=false;mpSyncUI()});
+  mpSC.bind(SC.Widget.Events.FINISH,()=>{MP.playing=false;mpSyncUI()});
+  mpSC.bind(SC.Widget.Events.PLAY_PROGRESS,e=>{
+    MP.pos=(e.currentPosition||0)/1000;
+    mpSC.getDuration(d=>{MP.dur=(d||0)/1000});
+  });
+  MP.queue=[{title:'SoundCloud',url,sub:'SoundCloud'}];
+  mpSave(); mpStartTick();
+}
+function mpScMeta(){
+  if(!mpSC) return;
+  mpSC.getCurrentSound(s=>{
+    if(s&&s.title){
+      MP.title=s.title;
+      MP.sub='SoundCloud'+(s.user&&s.user.username?' \u00b7 '+s.user.username:'');
+      MP.loading=false; mpSyncUI();
+    }
+  });
+}
+
+/* --- Spotify --- */
+async function mpLoadSpotify(url){
+  const uri=mpSpUri(url);
+  if(!uri){ toast('That does not look like a Spotify link'); return; }
+  mpCloseModal();
+  mpResetEngines('spotify');
+  MP.src='spotify'; MP.loading=true; MP.title='Loading\u2026'; MP.sub='Spotify'; MP.idx=0;
+  MP.queue=[{title:'Spotify',url,sub:'Spotify'}];
+  mpSyncUI();
+  const emb=document.getElementById('mpEmbed');
+  const tall=/playlist|album|artist|show/.test(uri);
+  emb.style.display=''; emb.innerHTML='<div id="mpSPHost"></div>';
+  mpOEmbed('https://open.spotify.com/oembed?url=',url).then(t=>{
+    if(t){ MP.title=t; MP.queue[0].title=t; MP.loading=false; mpSyncUI(); }
+  });
+  try{ await mpLoadScript('https://open.spotify.com/embed/iframe-api/v1'); }
+  catch(e){ toast('Could not reach Spotify'); MP.loading=false; mpSyncUI(); return; }
+  const api=await new Promise(res=>{
+    if(window.__mpSpotifyAPI) return res(window.__mpSpotifyAPI);
+    const prev=window.onSpotifyIframeApiReady;
+    window.onSpotifyIframeApiReady=a=>{ window.__mpSpotifyAPI=a; if(typeof prev==='function')prev(a); res(a); };
+    setTimeout(()=>res(window.__mpSpotifyAPI||null),6000);
+  });
+  if(!api){ toast('Spotify player unavailable'); MP.loading=false; mpSyncUI(); return; }
+  mpSPEl=document.getElementById('mpSPHost');
+  api.createController(mpSPEl,{uri,width:'100%',height:tall?232:152},ctrl=>{
+    mpSP=ctrl;
+    ctrl.addListener('ready',()=>{ MP.loading=false; try{ctrl.play()}catch(e){} mpSyncUI(); });
+    ctrl.addListener('playback_update',e=>{
+      const d=e&&e.data||{};
+      MP.playing=!d.isPaused;
+      MP.pos=(d.position||0)/1000;
+      MP.dur=(d.duration||0)/1000;
+      MP.loading=false;
+      mpSyncUI();
+    });
+  });
+  mpSave(); mpStartTick();
+}
+
+/* ---------- transport ---------- */
+function mpPlayPause(){
+  if(!MP.src) return mpOpenPicker();
+  if(MP.src==='local'||MP.src==='radio'){
+    const a=mpEnsureAudio();
+    if(!a.src&&MP.queue.length) return mpPlayIndex(MP.idx);
+    a.paused?a.play().catch(()=>{}):a.pause();
+  } else if(MP.src==='youtube'&&mpYT){
+    try{ MP.playing?mpYT.pauseVideo():mpYT.playVideo(); }catch(e){}
+  } else if(MP.src==='soundcloud'&&mpSC){
+    mpSC.toggle();
+  } else if(MP.src==='spotify'&&mpSP){
+    try{ mpSP.togglePlay(); }catch(e){}
+  }
+  mpSyncUI();
+}
+function mpNext(){
+  if(!MP.src) return;
+  if(MP.src==='youtube'&&mpYT){
+    const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
+    if(pl.length>1){ try{mpYT.nextVideo()}catch(e){} return; }
+    if(MP.queue.length>1){ MP.idx=(MP.idx+1)%MP.queue.length; try{mpYT.loadVideoById(MP.queue[MP.idx].id)}catch(e){} mpSyncUI(); }
+    return;
+  }
+  if(MP.src==='soundcloud'&&mpSC){ mpSC.next(); return; }
+  if(MP.src==='spotify'){ toast('Use Spotify\u2019s own arrows in the player \u2014 Spotify blocks outside skipping'); return; }
+  if(MP.queue.length>1) mpPlayIndex(MP.idx+1);
+}
+function mpPrev(){
+  if(!MP.src) return;
+  if(MP.pos>4&&(MP.src==='local'||MP.src==='radio')&&mpAudio){ mpAudio.currentTime=0; return; }
+  if(MP.src==='youtube'&&mpYT){
+    const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
+    if(pl.length>1){ try{mpYT.previousVideo()}catch(e){} return; }
+    if(MP.queue.length>1){ MP.idx=(MP.idx-1+MP.queue.length)%MP.queue.length; try{mpYT.loadVideoById(MP.queue[MP.idx].id)}catch(e){} mpSyncUI(); }
+    return;
+  }
+  if(MP.src==='soundcloud'&&mpSC){ mpSC.prev(); return; }
+  if(MP.src==='spotify'){ toast('Use Spotify\u2019s own arrows in the player \u2014 Spotify blocks outside skipping'); return; }
+  if(MP.queue.length>1) mpPlayIndex(MP.idx-1);
+}
+function mpStop(){
+  if(!MP.src) return;
+  if((MP.src==='local'||MP.src==='radio')&&mpAudio){ mpAudio.pause(); try{mpAudio.currentTime=0}catch(e){} }
+  else if(MP.src==='youtube'&&mpYT){ try{mpYT.stopVideo()}catch(e){} }
+  else if(MP.src==='soundcloud'&&mpSC){ mpSC.pause(); mpSC.seekTo(0); }
+  else if(MP.src==='spotify'&&mpSP){ try{mpSP.pause(); mpSP.seek(0);}catch(e){} }
+  MP.playing=false; MP.pos=0; mpSyncUI();
+}
+function mpClose(){
+  mpStop(); mpResetEngines(null);
+  MP.src=null; MP.queue=[]; MP.idx=0; MP.title=''; MP.sub=''; MP.pos=0; MP.dur=0; MP.playing=false;
+  if(mpTick){clearInterval(mpTick);mpTick=null}
+  try{localStorage.removeItem(MP_KEY)}catch(e){}
+  const slot=document.getElementById('mpSlot'); if(slot)slot.dataset.state='';
+  mpSyncUI();
+}
+function mpSeek(frac){
+  if(!MP.dur) return;
+  const t=frac*MP.dur;
+  if((MP.src==='local'||MP.src==='radio')&&mpAudio){ try{mpAudio.currentTime=t}catch(e){} }
+  else if(MP.src==='youtube'&&mpYT){ try{mpYT.seekTo(t,true)}catch(e){} }
+  else if(MP.src==='soundcloud'&&mpSC){ mpSC.seekTo(t*1000); }
+  else if(MP.src==='spotify'&&mpSP){ try{mpSP.seek(t)}catch(e){} }
+  MP.pos=t;
+}
+function mpVol(v){
+  MP.vol=Math.max(0,Math.min(1,v));
+  if(mpAudio) mpAudio.volume=MP.vol;
+  if(mpYT&&mpYT.setVolume){ try{mpYT.setVolume(Math.round(MP.vol*100))}catch(e){} }
+  if(mpSC) mpSC.setVolume(MP.vol*100);
+  mpSave();
+}
+
+/* ---------- boot ---------- */
+(function mpInit(){
+  mpBuildDock();
+  try{
+    const st=JSON.parse(localStorage.getItem(MP_KEY)||'{}');
+    if(typeof st.vol==='number') MP.vol=st.vol;
+  }catch(e){}
+  mpSyncUI();
+})();
+
 </script>
 </body>
 </html>
