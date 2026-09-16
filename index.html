@@ -2058,10 +2058,10 @@ function renderArrestBlock(b, keyPrefix){
   </div>`;
  }
  if(b.type==='command'){
-  return `<div class="cmdline"><span class="cmdtxt">${esc(b.text)}</span><button class="copybtn" title="Copy" onclick="copyText('${esc(b.text).replace(/'/g,"\\'")}','Copied')">⧉</button></div>`;
+  return `<div class="cmdline"><span class="cmdtxt" style="cursor:pointer;" onclick="copyText(this.textContent, 'Copied')" title="Click to copy">${esc(b.text)}</span><button class="copybtn" title="Copy" onclick="copyText('${esc(b.text).replace(/'/g,"\\'")}','Copied')">⧉</button></div>`;
  }
  if(b.type==='commandlist'){
-  return b.items.map(t=>`<div class="cmdline"><span class="cmdtxt">${esc(t)}</span><button class="copybtn" title="Copy" onclick="copyText('${esc(t).replace(/'/g,"\\'")}','Copied')">⧉</button></div>`).join('');
+  return b.items.map(t=>`<div class="cmdline"><span class="cmdtxt" style="cursor:pointer;" onclick="copyText(this.textContent, 'Copied')" title="Click to copy">${esc(t)}</span><button class="copybtn" title="Copy" onclick="copyText('${esc(t).replace(/'/g,"\\'")}','Copied')">⧉</button></div>`).join('');
  }
  if(b.type==='note'){
   return `<p style="font-style:italic;color:var(--muted);margin-top:10px">${mdBold(b.text)}</p>`;
@@ -4452,12 +4452,12 @@ function bodycamPage(){
 
  ${customCmds.length?`<div class="notice"><b>Your Custom Commands</b> — added by officers on this browser, shown first below.</div>
  ${customCmds.map(g=>`<div class="cmdgroup"><div class="cmdgroup-head"><h3>${esc(g.title)}</h3><span class="rowflex"><span class="badge">${esc(g.tag)}</span><button class="copybtn" title="Delete this command" onclick="if(confirm('Delete this custom command?'))deleteCustomCmd('${g.id}')">✕</button></span></div>
-  ${g.lines.map(l=>`<div class="cmdline"><span class="cmdtxt dyn-cmd" data-tpl="${esc(l)}">${esc(l)}</span><button class="copybtn" title="Copy line" onclick="cmdCopyDynamic(this)">⧉</button></div>`).join("")}
+  ${g.lines.map(l=>`<div class="cmdline"><span class="cmdtxt dyn-cmd" data-tpl="${esc(l)}" style="cursor:pointer;" onclick="cmdCopyDynamic(this.nextElementSibling)" title="Click to copy">${esc(l)}</span><button class="copybtn" title="Copy line" onclick="cmdCopyDynamic(this)">⧉</button></div>`).join("")}
   <div class="cmdgroup-foot"><button class="btn secondary" onclick="cmdCopyDynamicGroup(this, '${esc(JSON.stringify(g.lines))}')">Copy full sequence (${g.lines.length} line${g.lines.length===1?'':'s'})</button></div>
  </div>`).join("")}`:''}
 
  ${bodycam.map((g,gi)=>`<div class="cmdgroup"><div class="cmdgroup-head"><h3>${esc(g.title)}</h3><span class="badge">${esc(g.tag)}</span></div>
-  ${g.lines.map(l=>`<div class="cmdline"><span class="cmdtxt dyn-cmd" data-tpl="${esc(l)}">${esc(l)}</span><button class="copybtn" title="Copy line" onclick="cmdCopyDynamic(this)">⧉</button></div>`).join("")}
+  ${g.lines.map(l=>`<div class="cmdline"><span class="cmdtxt dyn-cmd" data-tpl="${esc(l)}" style="cursor:pointer;" onclick="cmdCopyDynamic(this.nextElementSibling)" title="Click to copy">${esc(l)}</span><button class="copybtn" title="Copy line" onclick="cmdCopyDynamic(this)">⧉</button></div>`).join("")}
   <div class="cmdgroup-foot"><button class="btn secondary" onclick="cmdCopyDynamicGroup(this, '${esc(JSON.stringify(g.lines))}')">Copy full sequence (${g.lines.length} line${g.lines.length===1?'':'s'})</button></div>
  </div>`).join("")}`;
 
@@ -4625,7 +4625,7 @@ function deptRadioPage() {
     ${list.map(c => `
       <div class="cmdline radio-cmd-row" data-search="${esc((c.trigger+' '+c.tpl).toLowerCase())}" style="border-radius:0;border-left:0;border-right:0;border-top:0">
         <div style="width:250px;font-weight:700;color:var(--text)">${esc(c.trigger)}</div>
-        <span class="cmdtxt dyn-radio" data-tpl="${esc(c.tpl)}" style="color:var(--accent)">${esc(c.tpl)}</span>
+        <span class="cmdtxt dyn-radio" data-tpl="${esc(c.tpl)}" style="color:var(--accent); cursor:pointer;" onclick="copyRadioDynamic(this.nextElementSibling)" title="Click to copy">${esc(c.tpl)}</span>
         <button class="copybtn" title="Copy line" onclick="copyRadioDynamic(this)">⧉</button>
       </div>
     `).join('')}
