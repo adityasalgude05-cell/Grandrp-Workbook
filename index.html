@@ -356,7 +356,7 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
 
 .fabmain{position:fixed;right:24px;bottom:24px;width:52px;height:52px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);font-size:22px;cursor:pointer;box-shadow:0 10px 26px var(--glowStrong);z-index:42;transition:transform .2s}
 .fabmain.spin{transform:rotate(45deg)}
-.fabstack{position:fixed;right:26px;bottom:86px;display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:41}
+.fabstack{position:fixed;right:26px;bottom:86px;display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:41;pointer-events:none}
 .fabstack .fabitem{display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(8px) scale(.92);pointer-events:none;transition:.16s}
 .fabstack.open .fabitem{opacity:1;transform:none;pointer-events:auto}
 .fabstack .fabitem span{background:#0e1320;color:#fff;font-size:11px;padding:5px 10px;border-radius:8px;white-space:nowrap;box-shadow:var(--shadow);border:1px solid var(--line)}
