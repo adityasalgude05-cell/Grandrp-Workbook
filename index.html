@@ -452,78 +452,124 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 @media(max-width:650px){.hero h1{font-size:calc(24px * var(--textScale))}.appearance-pane{max-height:56vh}.theme-presets{grid-template-columns:repeat(2,1fr)}}
 
 /* ---------- Universal Music Player ---------- */
-.mp-card{background:linear-gradient(135deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden}
-.mp-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 92% 10%,var(--accentFaint),transparent 55%);pointer-events:none}
-.mp-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;position:relative}
-.mp-head h4{margin:0;font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);display:flex;align-items:center;gap:7px}
-.mp-srcbadge{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--accent)}
-.mp-body{display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative}
-.mp-art{width:58px;height:58px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,var(--logoA),var(--logoB));color:var(--onAccent);box-shadow:0 8px 22px var(--glow)}
-.mp-art.spin{animation:mpSpin 8s linear infinite;border-radius:50%}
+.mp-card{background:linear-gradient(150deg,var(--panel),var(--panel2) 65%);border:1px solid var(--line);border-radius:20px;padding:19px 21px;margin-bottom:20px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.mp-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 95% 6%,var(--accentFaint),transparent 55%);pointer-events:none}
+.mp-card::after{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .4s}
+.mp-card.mp-playing{border-color:var(--accentSoft);box-shadow:0 0 0 1px var(--accentSoft),0 18px 44px -12px var(--glowStrong)}
+.mp-card.mp-playing::after{opacity:.9;animation:mpScan 2.6s ease-in-out infinite}
+@keyframes mpScan{0%,100%{transform:translateX(-30%);opacity:.3}50%{transform:translateX(30%);opacity:1}}
+.mp-head{display:flex;align-items:center;gap:8px;margin-bottom:15px;position:relative}
+.mp-head h4{margin:0;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:flex;align-items:center;gap:7px}
+.mp-srcbadge{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--accent);display:inline-flex;align-items:center;gap:5px}
+.mp-srcbadge .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.mp-card.mp-playing .mp-srcbadge .dot{animation:mpDotPulse 1.4s ease-in-out infinite}
+@keyframes mpDotPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--accentSoft)}50%{opacity:.55;box-shadow:0 0 0 4px transparent}}
+
+/* Equalizer bars */
+.mp-eq{display:inline-flex;align-items:flex-end;gap:2.5px;height:11px;margin-left:1px}
+.mp-eq i{width:2.5px;border-radius:2px;background:var(--accent);height:30%;display:block;animation:mpEq 1s ease-in-out infinite;animation-play-state:paused;opacity:.45}
+.mp-eq i:nth-child(2){animation-delay:.18s}
+.mp-eq i:nth-child(3){animation-delay:.36s}
+.mp-eq.on i{animation-play-state:running;opacity:1}
+@keyframes mpEq{0%,100%{height:22%}50%{height:100%}}
+
+/* Album art / vinyl */
+.mp-art{width:60px;height:60px;border-radius:16px;flex-shrink:0;position:relative;display:grid;place-items:center;font-size:23px;background:linear-gradient(135deg,var(--logoA),var(--logoB));color:var(--onAccent);box-shadow:0 10px 26px var(--glow);transition:border-radius .35s ease,box-shadow .35s}
+.mp-art.spin{border-radius:50%;animation:mpSpin 7s linear infinite;box-shadow:0 10px 30px var(--glowStrong),inset 0 0 0 3px rgba(0,0,0,.18),inset 0 0 0 4px rgba(255,255,255,.06)}
+.mp-art.spin::before{content:'';position:absolute;inset:6px;border-radius:50%;border:1px dashed rgba(255,255,255,.22)}
+.mp-art.spin::after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:var(--panel);box-shadow:0 0 0 2px rgba(255,255,255,.25)}
 @keyframes mpSpin{to{transform:rotate(360deg)}}
 .mp-meta{flex:1;min-width:0}
-.mp-title{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.mp-title{font-size:15px;font-weight:800;color:var(--text);overflow:hidden;margin-bottom:3px;position:relative;white-space:nowrap}
+.mp-title .mp-title-track{display:inline-flex;white-space:nowrap}
+.mp-title .mp-title-track span{display:inline-block}
+.mp-title.marquee{mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%)}
+.mp-title.marquee .mp-title-track{animation:mpMarquee var(--mpDur,11s) linear infinite}
+.mp-title:not(.marquee) .mp-title-track{text-overflow:ellipsis;overflow:hidden;max-width:100%}
+@keyframes mpMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .mp-sub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mp-ctrls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.mp-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:13px;transition:border-color .15s,color .15s,background .15s,transform .12s}
-.mp-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accentSoft)}
-.mp-btn:active:not(:disabled){transform:scale(.92)}
-.mp-btn:disabled{opacity:.34;cursor:not-allowed}
-.mp-btn.play{width:46px;height:46px;font-size:16px;border:0;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);box-shadow:0 8px 20px var(--glow)}
+.mp-ctrls{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.mp-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:13px;transition:border-color .18s,color .18s,background .18s,transform .15s,box-shadow .18s}
+.mp-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accentSoft);transform:translateY(-2px)}
+.mp-btn:active:not(:disabled){transform:scale(.9) translateY(0)}
+.mp-btn:disabled{opacity:.3;cursor:not-allowed}
+.mp-btn.play{width:48px;height:48px;font-size:16px;border:0;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);box-shadow:0 10px 24px var(--glow);position:relative}
+.mp-btn.play::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid var(--accentSoft);opacity:0;transition:opacity .3s,transform .3s;transform:scale(.85)}
+.mp-card.mp-playing .mp-btn.play::before,.mp-dock.mp-playing .mp-btn.play::before{opacity:1;transform:scale(1);animation:mpRing 1.8s ease-out infinite}
+@keyframes mpRing{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.mp-btn.play:hover{transform:translateY(-2px) scale(1.04)}
 .mp-btn.stop:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.12)}
-.mp-progrow{display:flex;align-items:center;gap:10px;margin-top:14px;position:relative}
-.mp-time{font-size:10px;font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--muted);min-width:38px;text-align:center}
-.mp-seek{flex:1;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
-.mp-seek::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 3px var(--accentSoft)}
-.mp-seek::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:var(--accent);cursor:pointer}
-.mp-vol{width:82px;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
-.mp-vol::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--accent);cursor:pointer}
+.mp-progrow{display:flex;align-items:center;gap:10px;margin-top:15px;position:relative}
+.mp-time{font-size:10px;font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--muted);min-width:36px;text-align:center;flex-shrink:0}
+.mp-seek{flex:1;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line);outline:none;cursor:pointer;transition:height .15s}
+.mp-seek:hover{height:7px}
+.mp-seek::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px var(--accentSoft);margin-top:0;transition:box-shadow .15s}
+.mp-seek::-moz-range-thumb{width:13px;height:13px;border:0;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px var(--accentSoft)}
+.mp-seek::-moz-range-progress{background:var(--accent);border-radius:99px;height:5px}
+.mp-vol-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.mp-vol-ic{font-size:12px;color:var(--muted);width:14px;text-align:center}
+.mp-vol{width:78px;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line);outline:none;cursor:pointer}
+.mp-vol::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 3px var(--accentSoft)}
 .mp-vol::-moz-range-thumb{width:11px;height:11px;border:0;border-radius:50%;background:var(--accent);cursor:pointer}
-.mp-empty{display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative}
-.mp-empty p{margin:0;font-size:12px;color:var(--muted);flex:1;min-width:190px;line-height:1.6}
-.mp-bigbtn{border:0;border-radius:999px;padding:12px 22px;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);box-shadow:0 10px 24px var(--glow);display:inline-flex;align-items:center;gap:9px;transition:transform .15s}
-.mp-bigbtn:hover{transform:translateY(-2px)}
-.mp-queue{margin-top:14px;max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:11px;position:relative}
-.mp-qitem{display:flex;gap:10px;align-items:center;padding:8px 12px;font-size:11.5px;color:var(--textSoft);cursor:pointer;border-bottom:1px solid var(--line)}
+.mp-vol::-moz-range-progress{background:var(--accent);border-radius:99px;height:5px}
+
+/* Empty state */
+.mp-empty{display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative}
+.mp-empty-art{width:60px;height:60px;border-radius:16px;flex-shrink:0;display:grid;place-items:center;font-size:24px;background:var(--panel2);border:1px dashed var(--line);color:var(--muted);position:relative;overflow:hidden}
+.mp-empty-art span{position:relative;z-index:1;animation:mpFloat 2.8s ease-in-out infinite}
+@keyframes mpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.mp-empty p{margin:0;font-size:12px;color:var(--muted);flex:1;min-width:190px;line-height:1.65}
+.mp-empty-row{display:flex;flex-direction:column;gap:10px;flex:1;min-width:190px}
+.mp-empty-icons{display:flex;gap:6px;font-size:13px;opacity:.6}
+.mp-bigbtn{border:0;border-radius:999px;padding:12px 22px;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--logoA),var(--accent2));color:var(--onAccent);box-shadow:0 10px 26px var(--glow);display:inline-flex;align-items:center;gap:9px;transition:transform .18s,box-shadow .18s;flex-shrink:0}
+.mp-bigbtn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 14px 32px var(--glowStrong)}
+.mp-bigbtn:active{transform:translateY(0) scale(.98)}
+
+.mp-queue{margin-top:15px;max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:12px;position:relative}
+.mp-qitem{display:flex;gap:10px;align-items:center;padding:9px 12px;font-size:11.5px;color:var(--textSoft);cursor:pointer;border-bottom:1px solid var(--line);transition:background .12s,color .12s}
 .mp-qitem:last-child{border-bottom:0}
 .mp-qitem:hover{background:var(--hoverBg);color:var(--accent)}
 .mp-qitem.on{background:var(--accentSoft);color:var(--accent);font-weight:700}
 .mp-qitem .n{width:18px;text-align:right;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10px;flex-shrink:0}
+.mp-qitem.on .n{color:var(--accent)}
 .mp-qitem span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-qitem .qeq{margin-left:auto}
 
 /* Source picker */
 .mp-sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:4px}
-.mp-source{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;color:var(--text);transition:border-color .15s,background .15s,transform .15s}
-.mp-source:hover{border-color:var(--accent);background:var(--accentSoft);transform:translateY(-2px)}
-.mp-source .ic{font-size:26px;display:block;margin-bottom:8px}
-.mp-source b{display:block;font-size:12.5px;margin-bottom:3px}
-.mp-source small{display:block;font-size:10px;color:var(--muted);line-height:1.5}
+.mp-source{border:1px solid var(--line);background:var(--panel2);border-radius:15px;padding:17px 12px;cursor:pointer;text-align:center;color:var(--text);transition:border-color .18s,background .18s,transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+.mp-source::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,var(--accentFaint),transparent 70%);opacity:0;transition:opacity .2s}
+.mp-source:hover{border-color:var(--accent);background:var(--accentSoft);transform:translateY(-3px);box-shadow:0 12px 26px -8px var(--glow)}
+.mp-source:hover::before{opacity:1}
+.mp-source .ic{font-size:27px;display:block;margin-bottom:9px;position:relative}
+.mp-source b{display:block;font-size:12.5px;margin-bottom:3px;position:relative}
+.mp-source small{display:block;font-size:10px;color:var(--muted);line-height:1.5;position:relative}
 .mp-step{margin-top:6px}
 .mp-step label{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}
-.mp-step input[type=text]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none}
-.mp-step input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+.mp-step input[type=text]{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s}
+.mp-step input[type=text]:focus,.mp-step textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
 .mp-step .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.mp-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.6}
+.mp-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.7}
 
 /* Fixed mini dock */
-.mp-dock{position:fixed;left:18px;bottom:18px;z-index:44;width:330px;max-width:calc(100vw - 36px);background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 48px rgba(0,0,0,.55);overflow:hidden;transform:translateY(160%);transition:transform .28s cubic-bezier(.3,1.2,.5,1);backdrop-filter:blur(14px)}
+.mp-dock{position:fixed;left:18px;bottom:18px;z-index:44;width:330px;max-width:calc(100vw - 36px);background:linear-gradient(160deg,var(--panel),var(--panel2) 70%);border:1px solid var(--line);border-radius:18px;box-shadow:0 22px 52px rgba(0,0,0,.55);overflow:hidden;transform:translateY(160%) scale(.96);transition:transform .32s cubic-bezier(.25,1.3,.4,1),border-color .3s,box-shadow .3s;backdrop-filter:blur(16px)}
 .mp-dock.show{transform:none}
-.mp-dock-head{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
-.mp-dock-head b{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);flex:1}
-.mp-mini{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:6px}
+.mp-dock.mp-playing{border-color:var(--accentSoft);box-shadow:0 22px 56px -10px var(--glowStrong)}
+.mp-dock-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.mp-dock-head b{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex:1;display:flex;align-items:center;gap:6px}
+.mp-mini{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;padding:3px 6px;border-radius:7px;transition:background .15s,color .15s}
 .mp-mini:hover{color:var(--accent);background:var(--hoverBg)}
-.mp-dock-body{padding:12px}
-.mp-embed{border-radius:12px;overflow:hidden;margin-bottom:11px;background:#000;line-height:0}
+.mp-dock-body{padding:13px}
+.mp-embed{border-radius:12px;overflow:hidden;margin-bottom:12px;background:#000;line-height:0;box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .mp-embed iframe{border:0;display:block;width:100%}
 .mp-dock.collapsed .mp-dock-body,.mp-dock.collapsed .mp-embed{display:none}
 .mp-dock .mp-title{font-size:12.5px}
 .mp-dock .mp-sub{font-size:10px}
 .mp-dock .mp-btn{width:32px;height:32px;font-size:11px}
-.mp-dock .mp-btn.play{width:38px;height:38px;font-size:13px}
-.mp-dock .mp-art{width:40px;height:40px;font-size:18px;border-radius:11px}
-.mp-dock .mp-progrow{margin-top:10px}
+.mp-dock .mp-btn.play{width:40px;height:40px;font-size:13px}
+.mp-dock .mp-art{width:42px;height:42px;font-size:18px;border-radius:12px}
+.mp-dock .mp-progrow{margin-top:11px}
 @media(max-width:650px){.mp-dock{left:10px;right:10px;width:auto;bottom:84px}.mp-ctrls{width:100%;justify-content:center;margin-top:6px}}
-
 </style>
 </head>
 <body>
@@ -4698,7 +4744,8 @@ const MP = {
   pos: 0,
   dur: 0,
   vol: 0.8,
-  loading: false
+  loading: false,
+  ytPlaylistLen: 0
 };
 const MP_KEY = 'grwiki_player_v1';
 const MP_ICONS = { local:'\uD83C\uDFB5', youtube:'\u25B6', spotify:'\uD83D\uDFE2', soundcloud:'\u2601', radio:'\uD83D\uDCFB' };
@@ -4775,23 +4822,24 @@ function mpBuildDock(){
   const d=document.createElement('div');
   d.className='mp-dock'; d.id='mpDock';
   d.innerHTML=
-   '<div class="mp-dock-head"><b id="mpDockSrc">Now Playing</b>'+
+   '<div class="mp-dock-head"><b id="mpDockSrc"><span class="mp-eq" id="mpDockEq"><i></i><i></i><i></i></span><span id="mpDockSrcText">Now Playing</span></b>'+
    '<button class="mp-mini" id="mpDockToggle" title="Collapse / expand">\u2013</button>'+
    '<button class="mp-mini" id="mpDockClose" title="Close player">\u2715</button></div>'+
    '<div class="mp-embed" id="mpEmbed" style="display:none"></div>'+
    '<div class="mp-dock-body">'+
      '<div class="mp-body">'+
-       '<div class="mp-art" id="mpDockArt">\uD83C\uDFB5</div>'+
-       '<div class="mp-meta"><div class="mp-title" id="mpDockTitle">\u2014</div><div class="mp-sub" id="mpDockSub"></div></div>'+
+       mpArtHTML('mpDockArt')+
+       '<div class="mp-meta"><div class="mp-title" id="mpDockTitle"><div class="mp-title-track"><span>\u2014</span></div></div><div class="mp-sub" id="mpDockSub"></div></div>'+
      '</div>'+
      '<div class="mp-progrow"><span class="mp-time" id="mpDockCur">--:--</span>'+
        '<input type="range" class="mp-seek" id="mpDockSeek" min="0" max="1000" value="0">'+
        '<span class="mp-time" id="mpDockDur">--:--</span></div>'+
-     '<div class="mp-ctrls" style="justify-content:center;margin-top:10px">'+
+     '<div class="mp-ctrls" style="justify-content:center;margin-top:11px">'+
        '<button class="mp-btn" id="mpDockPrev" title="Previous">\u23EE</button>'+
        '<button class="mp-btn play" id="mpDockPlay" title="Play / pause">\u25B6</button>'+
        '<button class="mp-btn" id="mpDockNext" title="Next">\u23ED</button>'+
        '<button class="mp-btn stop" id="mpDockStop" title="Stop">\u25A0</button>'+
+       '<a class="mp-btn" id="mpDockOpen" href="#" target="_blank" rel="noopener" title="Open full track in Spotify" style="display:none;text-decoration:none;font-size:14px">\u2197</a>'+
      '</div>'+
    '</div>';
   document.body.appendChild(d);
@@ -4801,47 +4849,94 @@ function mpBuildDock(){
   d.querySelector('#mpDockNext').addEventListener('click',()=>mpNext());
   d.querySelector('#mpDockPlay').addEventListener('click',()=>mpPlayPause());
   d.querySelector('#mpDockStop').addEventListener('click',()=>mpStop());
-  d.querySelector('#mpDockSeek').addEventListener('input',e=>mpSeek(e.target.value/1000));
+  d.querySelector('#mpDockSeek').addEventListener('input',e=>{mpSeek(e.target.value/1000);mpPaintSeek(e.target)});
+}
+
+function mpArtHTML(id){
+  return '<div class="mp-art" id="'+id+'">\uD83C\uDFB5</div>';
 }
 
 function mpCardHTML(){
   if(!MP.src){
     return '<div class="mp-card"><div class="mp-head"><h4>\uD83C\uDFA7 Music</h4></div>'+
       '<div class="mp-empty">'+
-      '<div class="mp-art">\uD83C\uDFB5</div>'+
-      '<p>Nothing is playing right now. Pick a source and the track name plus controls will show up here on every page.</p>'+
+      '<div class="mp-empty-art"><span>\uD83C\uDFB5</span></div>'+
+      '<div class="mp-empty-row">'+
+        '<p>Nothing is playing right now. Pick a source and the track name plus controls will show up here on every page.</p>'+
+        '<div class="mp-empty-icons">\uD83C\uDFB5 \u2022 \u25B6 \u2022 \uD83D\uDFE2 \u2022 \u2601 \u2022 \uD83D\uDCFB</div>'+
+      '</div>'+
       '<button class="mp-bigbtn" onclick="mpOpenPicker()">\u25B6 Play music</button>'+
       '</div></div>';
   }
   const q=MP.queue.length>1?'<div class="mp-queue" id="mpQueue"></div>':'';
-  return '<div class="mp-card"><div class="mp-head"><h4>\uD83C\uDFA7 Now Playing</h4>'+
-    '<span class="mp-srcbadge" id="mpCardSrc">'+esc(MP_NAMES[MP.src]||'')+'</span></div>'+
+  const openLink = (MP.src==='spotify'&&MP.queue[0]&&MP.queue[0].url)
+    ? '<a class="mp-btn" href="'+esc(MP.queue[0].url)+'" target="_blank" rel="noopener" title="Open full track in Spotify" style="text-decoration:none;font-size:15px">\u2197</a>'
+    : '';
+  const spotifyNote = MP.src==='spotify'
+    ? '<div class="mp-hint" style="margin-top:12px">\uD83D\uDD12 Free Spotify accounts only get a 30-second preview here \u2014 that\u2019s a Spotify rule for every app, not a bug. Tap \u2197 to open and hear the full track in Spotify.</div>'
+    : '';
+  return '<div class="mp-card"><div class="mp-head"><h4><span class="mp-eq" id="mpCardEq"><i></i><i></i><i></i></span> Now Playing</h4>'+
+    '<span class="mp-srcbadge" id="mpCardSrc"><span class="dot"></span>'+esc(MP_NAMES[MP.src]||'')+'</span></div>'+
     '<div class="mp-body">'+
-      '<div class="mp-art" id="mpCardArt">'+(MP_ICONS[MP.src]||'\uD83C\uDFB5')+'</div>'+
-      '<div class="mp-meta"><div class="mp-title" id="mpCardTitle">\u2014</div><div class="mp-sub" id="mpCardSub"></div></div>'+
+      mpArtHTML('mpCardArt')+
+      '<div class="mp-meta"><div class="mp-title" id="mpCardTitle"><div class="mp-title-track"><span>\u2014</span></div></div><div class="mp-sub" id="mpCardSub"></div></div>'+
       '<div class="mp-ctrls">'+
         '<button class="mp-btn" id="mpCardPrev" onclick="mpPrev()" title="Previous">\u23EE</button>'+
         '<button class="mp-btn play" id="mpCardPlay" onclick="mpPlayPause()" title="Play / pause">\u25B6</button>'+
         '<button class="mp-btn" id="mpCardNext" onclick="mpNext()" title="Next">\u23ED</button>'+
         '<button class="mp-btn stop" onclick="mpStop()" title="Stop">\u25A0</button>'+
+        openLink+
         '<button class="mp-btn" onclick="mpOpenPicker()" title="Change source / add music">\u002B</button>'+
       '</div>'+
     '</div>'+
     '<div class="mp-progrow"><span class="mp-time" id="mpCardCur">--:--</span>'+
-      '<input type="range" class="mp-seek" id="mpCardSeek" min="0" max="1000" value="0" oninput="mpSeek(this.value/1000)">'+
+      '<input type="range" class="mp-seek" id="mpCardSeek" min="0" max="1000" value="0" oninput="mpSeek(this.value/1000);mpPaintSeek(this)">'+
       '<span class="mp-time" id="mpCardDur">--:--</span>'+
-      '<span style="font-size:12px;color:var(--muted)">\uD83D\uDD0A</span>'+
-      '<input type="range" class="mp-vol" id="mpCardVol" min="0" max="100" value="'+Math.round(MP.vol*100)+'" oninput="mpVol(this.value/100)">'+
-    '</div>'+ q + '</div>';
+      '<div class="mp-vol-wrap"><span class="mp-vol-ic">\uD83D\uDD0A</span>'+
+      '<input type="range" class="mp-vol" id="mpCardVol" min="0" max="100" value="'+Math.round(MP.vol*100)+'" oninput="mpVol(this.value/100);mpPaintSeek(this)"></div>'+
+    '</div>'+ q + spotifyNote + '</div>';
+}
+
+function mpPaintSeek(el){
+  if(!el) return;
+  const max=parseFloat(el.max)||100;
+  const pct=max?(el.value/max*100):0;
+  el.style.background='linear-gradient(to right,var(--accent) '+pct+'%,var(--line) '+pct+'%)';
+}
+
+function mpSetMarqueeTitle(el,text){
+  if(!el) return;
+  if(el.dataset.raw===text) return;
+  el.dataset.raw=text;
+  el.classList.remove('marquee');
+  el.innerHTML='<div class="mp-title-track"><span></span></div>';
+  el.querySelector('span').textContent=text;
+  requestAnimationFrame(()=>{
+    if(!el.isConnected) return;
+    if(el.scrollWidth>el.clientWidth+3){
+      const track=el.querySelector('.mp-title-track');
+      const s2=document.createElement('span');
+      s2.setAttribute('aria-hidden','true');
+      s2.style.paddingLeft='46px';
+      s2.textContent=text;
+      track.appendChild(s2);
+      const dur=Math.max(7,Math.min(22,text.length*0.28));
+      el.style.setProperty('--mpDur',dur+'s');
+      el.classList.add('marquee');
+    }
+  });
 }
 
 /* ---------- UI sync ---------- */
 function mpSyncUI(){
+
   mpBuildDock();
   const slot=document.getElementById('mpSlot');
   if(slot && slot.dataset.state!==(MP.src||'none')+':'+MP.queue.length){
     slot.dataset.state=(MP.src||'none')+':'+MP.queue.length;
     slot.innerHTML=mpCardHTML();
+    const sc=slot.querySelector('#mpCardSeek'); if(sc)mpPaintSeek(sc);
+    const vc=slot.querySelector('#mpCardVol'); if(vc)mpPaintSeek(vc);
   }
   const dock=document.getElementById('mpDock');
   if(dock) dock.classList.toggle('show', !!MP.src);
@@ -4849,30 +4944,41 @@ function mpSyncUI(){
   const playIcon = MP.loading?'\u22EF':(MP.playing?'\u23F8':'\u25B6');
   const title = MP.loading?'Loading\u2026':(MP.title||'\u2014');
   const sub = MP.sub||MP_NAMES[MP.src]||'';
-  const canSkip = MP.queue.length>1 || MP.src==='youtube' || MP.src==='soundcloud';
+  const canSkip = MP.queue.length>1 || (MP.src==='youtube' && MP.ytPlaylistLen>1) || MP.src==='soundcloud';
   const pct = MP.dur>0 ? Math.min(1000,Math.round(MP.pos/MP.dur*1000)) : 0;
 
   [['mpCard','mpCardSeek'],['mpDock','mpDockSeek']].forEach(([p,seekId])=>{
-    const t=document.getElementById(p+'Title'); if(t&&t.textContent!==title)t.textContent=title;
+    const cardEl=document.getElementById(p) || (p==='mpCard'?document.querySelector('.mp-card'):document.getElementById('mpDock'));
+    if(cardEl) cardEl.classList.toggle('mp-playing', MP.playing);
+    const t=document.getElementById(p+'Title'); if(t)mpSetMarqueeTitle(t,title);
     const s=document.getElementById(p+'Sub'); if(s&&s.textContent!==sub)s.textContent=sub;
     const b=document.getElementById(p+'Play'); if(b&&b.textContent!==playIcon)b.textContent=playIcon;
     const a=document.getElementById(p+'Art'); if(a){a.classList.toggle('spin',MP.playing); if(MP.src&&a.textContent!==MP_ICONS[MP.src])a.textContent=MP_ICONS[MP.src];}
+    const eq=document.getElementById(p+'Eq'); if(eq)eq.classList.toggle('on',MP.playing);
     const cu=document.getElementById(p+'Cur'); if(cu)cu.textContent=MP.dur?mpFmt(MP.pos):'--:--';
     const du=document.getElementById(p+'Dur'); if(du)du.textContent=MP.dur?mpFmt(MP.dur):'--:--';
     const pv=document.getElementById(p+'Prev'); if(pv)pv.disabled=!canSkip;
     const nx=document.getElementById(p+'Next'); if(nx)nx.disabled=!canSkip;
     const sk=document.getElementById(seekId);
-    if(sk&&document.activeElement!==sk){sk.value=pct;sk.disabled=!(MP.dur>0);}
+    if(sk&&document.activeElement!==sk){sk.value=pct;sk.disabled=!(MP.dur>0);mpPaintSeek(sk);}
   });
-  const ds=document.getElementById('mpDockSrc');
-  if(ds)ds.textContent=MP.src?(MP_NAMES[MP.src]+' \u00b7 Now Playing'):'Now Playing';
+  const slotCard=document.querySelector('#mpSlot .mp-card');
+  if(slotCard) slotCard.classList.toggle('mp-playing', MP.playing);
+
+  const dst=document.getElementById('mpDockSrcText');
+  if(dst){const lbl=MP.src?(MP_NAMES[MP.src]+' \u00b7 Now Playing'):'Now Playing'; if(dst.textContent!==lbl)dst.textContent=lbl;}
+  const dOpen=document.getElementById('mpDockOpen');
+  if(dOpen){
+    if(MP.src==='spotify'&&MP.queue[0]&&MP.queue[0].url){ dOpen.style.display=''; dOpen.href=MP.queue[0].url; }
+    else{ dOpen.style.display='none'; dOpen.removeAttribute('href'); }
+  }
 
   const qc=document.getElementById('mpQueue');
   if(qc){
-    const sig=MP.queue.length+':'+MP.idx;
+    const sig=MP.queue.length+':'+MP.idx+':'+(MP.playing?1:0);
     if(qc.dataset.sig!==sig){
       qc.dataset.sig=sig;
-      qc.innerHTML=MP.queue.map((t,i)=>'<div class="mp-qitem'+(i===MP.idx?' on':'')+'" onclick="mpGoTo('+i+')"><span class="n">'+(i+1)+'</span><span>'+esc(t.title)+'</span></div>').join('');
+      qc.innerHTML=MP.queue.map((t,i)=>'<div class="mp-qitem'+(i===MP.idx?' on':'')+'" onclick="mpGoTo('+i+')"><span class="n">'+(i+1)+'</span><span>'+esc(t.title)+'</span>'+(i===MP.idx?'<span class="qeq mp-eq'+(MP.playing?' on':'')+'"><i></i><i></i><i></i></span>':'')+'</div>').join('');
     }
   }
   mpMediaSession();
@@ -4935,7 +5041,7 @@ function mpChoose(src){
     radio:{t:'\uD83D\uDCFB Play a radio stream',l:'Paste a direct stream or audio file URL (.mp3, .aac, .m3u8, Icecast/Shoutcast).',ph:'https://stream.example.com/live.mp3',multi:true}
   }[src];
   const extra = src==='spotify'
-    ? '<p class="mp-hint">Spotify\u2019s official embed plays 30-second previews unless you\u2019re signed in to Spotify Premium in this browser. Track skipping inside a playlist uses Spotify\u2019s own arrows in the mini player \u2014 Spotify doesn\u2019t allow outside apps to skip.</p>'
+    ? '<p class="mp-hint">\uD83D\uDD12 Spotify only unlocks full-length playback in outside apps for Premium accounts \u2014 with a free account you\u2019ll always get a 30-second preview here, no matter what. A \u2197 button will let you jump to Spotify for the full song. Track skipping inside a playlist also uses Spotify\u2019s own arrows in the mini player.</p>'
     : src==='youtube'
     ? '<p class="mp-hint">Plays through YouTube\u2019s official embedded player, so ads and availability follow YouTube\u2019s own rules.</p>'
     : '';
@@ -4953,7 +5059,7 @@ function mpChoose(src){
 /* ---------- loading each source ---------- */
 function mpResetEngines(keep){
   if(keep!=='local'&&keep!=='radio'&&mpAudio){ mpAudio.pause(); mpAudio.removeAttribute('src'); mpAudio.load(); }
-  if(keep!=='youtube'&&mpYT){ try{mpYT.destroy()}catch(e){} mpYT=null; }
+  if(keep!=='youtube'&&mpYT){ try{mpYT.destroy()}catch(e){} mpYT=null; MP.ytPlaylistLen=0; }
   if(keep!=='soundcloud'&&mpSC){ try{mpSC.pause()}catch(e){} mpSC=null; }
   if(keep!=='spotify'&&mpSP){ try{mpSP.destroy()}catch(e){} mpSP=null; mpSPEl=null; }
   const emb=document.getElementById('mpEmbed');
@@ -5037,7 +5143,7 @@ async function mpLoadYouTube(raw){
   if(!ids.length&&!listId){ toast('That does not look like a YouTube link'); return; }
   mpCloseModal();
   mpResetEngines('youtube');
-  MP.src='youtube'; MP.loading=true; MP.title='Loading\u2026'; MP.sub='YouTube';
+  MP.src='youtube'; MP.loading=true; MP.title='Loading\u2026'; MP.sub='YouTube'; MP.ytPlaylistLen=0;
   MP.queue=ids.map(id=>({id,title:'YouTube video',url:'https://www.youtube.com/watch?v='+id,sub:'YouTube'}));
   MP.idx=0; mpSyncUI();
   const emb=document.getElementById('mpEmbed');
@@ -5074,11 +5180,12 @@ function mpYtMeta(){
   if(!mpYT||!mpYT.getVideoData) return;
   try{
     const d=mpYT.getVideoData()||{};
+    const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
+    MP.ytPlaylistLen=pl.length||0;
     if(d.title){
       MP.title=d.title;
       MP.sub='YouTube'+(d.author?' \u00b7 '+d.author:'');
       const li=mpYT.getPlaylistIndex?mpYT.getPlaylistIndex():-1;
-      const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
       if(pl.length>1&&li>=0) MP.sub+=' \u00b7 '+(li+1)+'/'+pl.length;
       else if(MP.queue.length>1) MP.sub+=' \u00b7 '+(MP.idx+1)+'/'+MP.queue.length;
       if(MP.queue[MP.idx]) MP.queue[MP.idx].title=d.title;
@@ -5184,7 +5291,8 @@ function mpNext(){
   if(MP.src==='youtube'&&mpYT){
     const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
     if(pl.length>1){ try{mpYT.nextVideo()}catch(e){} return; }
-    if(MP.queue.length>1){ MP.idx=(MP.idx+1)%MP.queue.length; try{mpYT.loadVideoById(MP.queue[MP.idx].id)}catch(e){} mpSyncUI(); }
+    if(MP.queue.length>1){ MP.idx=(MP.idx+1)%MP.queue.length; try{mpYT.loadVideoById(MP.queue[MP.idx].id)}catch(e){} mpSyncUI(); return; }
+    toast('Ye ek single video hai \u2014 next ke liye playlist link ya aur links add karo');
     return;
   }
   if(MP.src==='soundcloud'&&mpSC){ mpSC.next(); return; }
@@ -5197,7 +5305,8 @@ function mpPrev(){
   if(MP.src==='youtube'&&mpYT){
     const pl=mpYT.getPlaylist?(mpYT.getPlaylist()||[]):[];
     if(pl.length>1){ try{mpYT.previousVideo()}catch(e){} return; }
-    if(MP.queue.length>1){ MP.idx=(MP.idx-1+MP.queue.length)%MP.queue.length; try{mpYT.loadVideoById(MP.queue[MP.idx].id)}catch(e){} mpSyncUI(); }
+    if(MP.queue.length>1){ MP.idx=(MP.idx-1+MP.queue.length)%MP.queue.length; try{mpYT.loadVideoById(MP.queue[MP.idx].id)}catch(e){} mpSyncUI(); return; }
+    toast('Ye ek single video hai \u2014 previous ke liye playlist link ya aur links add karo');
     return;
   }
   if(MP.src==='soundcloud'&&mpSC){ mpSC.prev(); return; }
