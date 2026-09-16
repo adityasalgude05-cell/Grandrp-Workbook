@@ -551,98 +551,130 @@ body,button,input,textarea,select,.themebox,.modalbox{font-family:var(--uiFont)}
 .mp-step .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
 .mp-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.7}
 
-/* ---------- RGB Play Effects ---------- */
-@keyframes rgbHue{to{filter:hue-rotate(360deg)}}
-@keyframes rgbSweep{0%{background-position:0% 50%}100%{background-position:300% 50%}}
-@keyframes rgbGlow{
- 0%{box-shadow:0 0 0 1px rgba(255,0,92,.55),0 16px 46px -14px rgba(255,0,92,.6)}
- 20%{box-shadow:0 0 0 1px rgba(255,196,0,.55),0 16px 46px -14px rgba(255,196,0,.6)}
- 40%{box-shadow:0 0 0 1px rgba(0,255,133,.55),0 16px 46px -14px rgba(0,255,133,.6)}
- 60%{box-shadow:0 0 0 1px rgba(0,196,255,.55),0 16px 46px -14px rgba(0,196,255,.6)}
- 80%{box-shadow:0 0 0 1px rgba(176,0,255,.55),0 16px 46px -14px rgba(176,0,255,.6)}
- 100%{box-shadow:0 0 0 1px rgba(255,0,92,.55),0 16px 46px -14px rgba(255,0,92,.6)}
+/* ---------- Ambient play effects (soft, faded palette) ---------- */
+:root{--fxA:#7b83f0;--fxB:#46b8ac;--fxC:#dd8aa4;--fxD:#d9ac66}
+@keyframes fxDrift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes fxGlow{
+ 0%,100%{box-shadow:0 0 0 1px rgba(123,131,240,.20),0 22px 54px -30px rgba(123,131,240,.55)}
+ 25%{box-shadow:0 0 0 1px rgba(70,184,172,.20),0 22px 54px -30px rgba(70,184,172,.55)}
+ 50%{box-shadow:0 0 0 1px rgba(221,138,164,.20),0 22px 54px -30px rgba(221,138,164,.55)}
+ 75%{box-shadow:0 0 0 1px rgba(217,172,102,.20),0 22px 54px -30px rgba(217,172,102,.55)}
 }
-@keyframes rgbBorder{
- 0%{border-color:rgba(255,0,92,.75)}20%{border-color:rgba(255,196,0,.75)}40%{border-color:rgba(0,255,133,.75)}
- 60%{border-color:rgba(0,196,255,.75)}80%{border-color:rgba(176,0,255,.75)}100%{border-color:rgba(255,0,92,.75)}
+@keyframes fxBorder{
+ 0%,100%{border-color:rgba(123,131,240,.38)}25%{border-color:rgba(70,184,172,.38)}
+ 50%{border-color:rgba(221,138,164,.38)}75%{border-color:rgba(217,172,102,.38)}
 }
-html[data-rgb="1"] .mp-card.mp-playing,html[data-rgb="1"] .mp-dock.mp-playing{animation:rgbGlow 5s linear infinite,rgbBorder 5s linear infinite}
-html[data-rgb="1"] .mp-card.mp-playing::after,html[data-rgb="1"] .mp-dock.mp-playing .mp-dock-head{
-  background:linear-gradient(90deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff,#ff005c);background-size:300% 100%;animation:rgbSweep 3.4s linear infinite}
-html[data-rgb="1"] .mp-card.mp-playing::after{height:3px;opacity:1}
-html[data-rgb="1"] .mp-dock.mp-playing .mp-dock-head b,html[data-rgb="1"] .mp-dock.mp-playing .mp-dock-head .mp-mini{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
-html[data-rgb="1"] .mp-eq.on i{background:linear-gradient(180deg,#00c4ff,#b000ff,#ff005c);animation:mpEq 1s ease-in-out infinite,rgbHue 3s linear infinite}
-html[data-rgb="1"] .mp-art.spin{animation:mpSpin 7s linear infinite,rgbHue 4s linear infinite}
-html[data-rgb="1"] .mp-playing .mp-seek,html[data-rgb="1"] .mp-card.mp-playing .mp-btn.play{animation:rgbHue 4s linear infinite}
-html[data-rgb="1"] .mp-card.mp-playing .mp-srcbadge{animation:rgbHue 4s linear infinite}
+@keyframes fxTint{0%,100%{color:var(--fxA)}25%{color:var(--fxB)}50%{color:var(--fxC)}75%{color:var(--fxD)}}
+.fx-grad{background:linear-gradient(90deg,var(--fxA),var(--fxB),var(--fxC),var(--fxD),var(--fxA));background-size:200% 100%;animation:fxDrift 18s linear infinite}
+html[data-rgb="1"] .mp-card.mp-playing,html[data-rgb="1"] .mp-dock.mp-playing{animation:fxGlow 16s ease-in-out infinite,fxBorder 16s ease-in-out infinite}
+html[data-rgb="1"] .mp-card.mp-playing::after{height:2px;opacity:.7;background:linear-gradient(90deg,transparent,var(--fxA),var(--fxB),var(--fxC),var(--fxD),transparent);background-size:200% 100%;animation:fxDrift 18s linear infinite}
+html[data-rgb="1"] .mp-eq.on i{background:linear-gradient(180deg,var(--fxB),var(--fxA))}
+html[data-rgb="1"] .mp-card.mp-playing .mp-srcbadge{animation:fxTint 16s ease-in-out infinite}
+html[data-rgb="1"] .mp-card.mp-playing .mp-art.spin{box-shadow:0 10px 30px -12px rgba(123,131,240,.55),inset 0 0 0 3px rgba(0,0,0,.18),inset 0 0 0 4px rgba(255,255,255,.06)}
 
-/* fake spectrum bars, only while playing */
-.mp-viz{display:none;align-items:flex-end;gap:3px;height:34px;margin-top:14px;padding:0 2px;overflow:hidden}
+/* slim spectrum, music page only */
+.mp-viz{display:none;align-items:flex-end;gap:3px;height:22px;margin-top:14px;opacity:.55}
 .mp-card.mp-playing .mp-viz{display:flex}
-.mp-viz i{flex:1;min-width:2px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--accent),var(--accent2));height:18%;transform-origin:bottom;animation:mpVizBar .9s ease-in-out infinite alternate;opacity:.85}
-html[data-rgb="1"] .mp-viz i{background:linear-gradient(180deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff);background-size:100% 300%;animation:mpVizBar .9s ease-in-out infinite alternate,rgbSweepV 3s linear infinite}
-@keyframes rgbSweepV{0%{background-position:50% 0%}100%{background-position:50% 300%}}
-@keyframes mpVizBar{from{height:12%}to{height:100%}}
+.mp-viz i{flex:1;min-width:2px;border-radius:2px;background:var(--accent);height:20%;animation:mpVizBar 1s ease-in-out infinite alternate}
+html[data-rgb="1"] .mp-viz i{background:linear-gradient(180deg,var(--fxA),var(--fxB))}
+@keyframes mpVizBar{from{height:14%}to{height:92%}}
 
-/* ---------- Music Center page ---------- */
-.mh-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-.mh-bar input[type=text],.mh-bar input{flex:1;min-width:180px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:13px;outline:none}
-.mh-bar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
-.mh-bar select{padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:12px;outline:none;cursor:pointer}
-.mh-count{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.mh-list{display:flex;flex-direction:column;gap:8px}
-.mh-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line);border-radius:13px;background:var(--panel2);transition:border-color .16s,transform .16s,box-shadow .16s}
-.mh-item:hover{border-color:var(--accent);transform:translateX(3px);box-shadow:0 10px 24px -14px var(--glowStrong)}
-.mh-item.on{border-color:var(--accent);background:var(--accentSoft)}
-html[data-rgb="1"] .mh-item.on{animation:rgbBorder 5s linear infinite}
-.mh-ic{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;font-size:17px;background:linear-gradient(135deg,var(--logoA),var(--logoB));color:var(--onAccent)}
+/* ---------- Compact dashboard widget ---------- */
+#mpSlot[data-compact="1"] .mp-card{padding:13px 15px;border-radius:15px;margin-bottom:16px}
+#mpSlot[data-compact="1"] .mp-head{margin-bottom:11px}
+#mpSlot[data-compact="1"] .mp-art{width:42px;height:42px;font-size:17px;border-radius:12px}
+#mpSlot[data-compact="1"] .mp-title{font-size:12.5px}
+#mpSlot[data-compact="1"] .mp-sub{font-size:10px}
+#mpSlot[data-compact="1"] .mp-btn{width:30px;height:30px;font-size:11px}
+#mpSlot[data-compact="1"] .mp-btn.play{width:36px;height:36px;font-size:12px}
+#mpSlot[data-compact="1"] .mp-ctrls{gap:6px}
+#mpSlot[data-compact="1"] .mp-progrow{margin-top:11px}
+#mpSlot[data-compact="1"] .mp-viz{display:none!important}
+#mpSlot[data-compact="1"] .mp-queue{max-height:104px}
+#mpSlot[data-compact="1"] .mp-empty{gap:13px}
+#mpSlot[data-compact="1"] .mp-empty-art{width:42px;height:42px;font-size:18px;border-radius:12px}
+#mpSlot[data-compact="1"] .mp-empty p{font-size:11.5px}
+#mpSlot[data-compact="1"] .mp-bigbtn{padding:9px 16px;font-size:12px}
+#mpSlot[data-compact="1"] .mp-hint,#mpSlot[data-compact="1"] .mp-empty-icons{display:none}
+
+/* ---------- Music Center ---------- */
+.music-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.music-head .mh-eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+.music-head h1{margin:0;font-size:25px;font-weight:800;letter-spacing:-.01em}
+.music-head p{margin:7px 0 0;font-size:12.5px;color:var(--muted);line-height:1.6;max-width:560px}
+.music-head .spacer{flex:1}
+.mh-bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.mh-bar input[type=text]{flex:1;min-width:170px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);font-size:12.5px;outline:none;transition:border-color .15s,box-shadow .15s}
+.mh-bar input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)}
+.mh-bar select{padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--textSoft);font-size:12px;outline:none;cursor:pointer}
+.mh-bar .ghost{border:1px solid var(--line);background:transparent;color:var(--textSoft);border-radius:9px;padding:9px 13px;font-size:12px;cursor:pointer;transition:color .15s,border-color .15s}
+.mh-bar .ghost:hover{color:var(--accent);border-color:var(--accent)}
+.mh-count{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.mh-list{margin-top:4px;border-top:1px solid var(--line)}
+.mh-item{display:flex;align-items:center;gap:13px;padding:11px 6px;border-bottom:1px solid var(--line);transition:background .14s}
+.mh-item:hover{background:var(--hoverBg)}
+.mh-item.on{background:var(--accentSoft)}
+.mh-ic{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;font-size:14px;background:var(--panel2);border:1px solid var(--line);color:var(--textSoft)}
+.mh-item.on .mh-ic{border-color:var(--accent);color:var(--accent)}
 .mh-main{flex:1;min-width:0}
-.mh-main b{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mh-main small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.mh-tag{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid var(--line);color:var(--accent);background:var(--panel);flex-shrink:0}
-.mh-acts{display:flex;gap:6px;flex-shrink:0}
-.mh-acts button{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:12px;transition:border-color .15s,color .15s,background .15s,transform .15s}
-.mh-acts button:hover{border-color:var(--accent);color:var(--accent);background:var(--accentSoft);transform:translateY(-2px)}
-.mh-acts button.fav.on{color:var(--warn);border-color:var(--warn)}
-.mh-acts button.del:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.12)}
-.mh-chips{display:flex;gap:9px;flex-wrap:wrap}
-.mh-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--textSoft);font-size:12px;cursor:pointer;max-width:270px;transition:border-color .15s,color .15s,transform .15s}
+.mh-main b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-main small{display:block;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.mh-when{font-size:10.5px;color:var(--muted);flex-shrink:0;min-width:86px;text-align:right}
+.mh-acts{display:flex;gap:4px;flex-shrink:0;opacity:.55;transition:opacity .15s}
+.mh-item:hover .mh-acts,.mh-item.on .mh-acts{opacity:1}
+.mh-acts button{width:29px;height:29px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--textSoft);cursor:pointer;display:grid;place-items:center;font-size:11.5px;transition:border-color .15s,color .15s,background .15s}
+.mh-acts button:hover{border-color:var(--line);color:var(--accent);background:var(--panel2)}
+.mh-acts button.fav.on{color:var(--warn);opacity:1}
+.mh-acts button.del:hover{color:var(--danger)}
+.mh-chips{display:flex;gap:8px;flex-wrap:wrap}
+.mh-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--textSoft);font-size:12px;cursor:pointer;max-width:250px;transition:border-color .15s,color .15s,background .15s}
 .mh-chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mh-chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
-html[data-rgb="1"] .mh-chip:hover{animation:rgbBorder 4s linear infinite}
-.mh-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
-.mh-stat{border:1px solid var(--line);border-radius:13px;padding:14px;background:var(--panel2);text-align:center}
-.mh-stat b{display:block;font-size:20px;font-weight:900;color:var(--accent)}
-.mh-stat span{display:block;font-size:10.5px;color:var(--muted);margin-top:4px}
-.mh-src{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.mh-srcrow{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--textSoft)}
-.mh-srcrow .bar{flex:1;height:7px;border-radius:99px;background:var(--line);overflow:hidden}
-.mh-srcrow .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--logoA),var(--accent2))}
-html[data-rgb="1"] .mh-srcrow .bar i{background:linear-gradient(90deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff);background-size:300% 100%;animation:rgbSweep 3.4s linear infinite}
-.mh-srcrow .n{min-width:26px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
-.fx-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mh-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accentSoft)}
+.mh-empty{padding:30px 10px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.7}
+.mh-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.mh-stat{padding:15px 12px;background:var(--panel);text-align:center}
+.mh-stat b{display:block;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.mh-stat span{display:block;font-size:10.5px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-src{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.mh-srcrow{display:flex;align-items:center;gap:11px;font-size:11.5px;color:var(--textSoft)}
+.mh-srcrow .bar{flex:1;height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+.mh-srcrow .bar i{display:block;height:100%;border-radius:99px;background:var(--accent);opacity:.8}
+html[data-rgb="1"] .mh-srcrow .bar i{background:linear-gradient(90deg,var(--fxA),var(--fxB),var(--fxC));background-size:200% 100%;animation:fxDrift 18s linear infinite}
+.mh-srcrow .n{min-width:24px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+
+/* ---------- Settings rows + sound picker ---------- */
+.fx-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .fx-row:last-child{border-bottom:0}
-.fx-row .lbl{flex:1;min-width:180px}
-.fx-row .lbl b{display:block;font-size:12.5px}
-.fx-row .lbl small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.55}
-.fx-tog{width:46px;height:26px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);position:relative;cursor:pointer;flex-shrink:0;transition:background .18s,border-color .18s}
-.fx-tog i{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--muted);transition:left .2s,background .2s}
+.fx-row .lbl{flex:1;min-width:190px}
+.fx-row .lbl b{display:block;font-size:12.5px;font-weight:600}
+.fx-row .lbl small{display:block;font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.6}
+.fx-tog{width:42px;height:24px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);position:relative;cursor:pointer;flex-shrink:0;transition:background .18s,border-color .18s}
+.fx-tog i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--muted);transition:left .2s,background .2s}
 .fx-tog.on{background:var(--accentSoft);border-color:var(--accent)}
-.fx-tog.on i{left:22px;background:var(--accent)}
-html[data-rgb="1"] .fx-tog.on i{background:linear-gradient(135deg,#ff005c,#00c4ff)}
-.rgbhero h1{background:linear-gradient(90deg,#ff005c,#ffc400,#00ff85,#00c4ff,#b000ff,#ff005c);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rgbSweep 5s linear infinite}
-html[data-rgb="0"] .rgbhero h1{background:none;color:var(--text);animation:none;-webkit-text-fill-color:currentColor}
+.fx-tog.on i{left:20px;background:var(--accent)}
+.sfx-block{padding:15px 0;border-bottom:1px solid var(--line)}
+.sfx-block:last-child{border-bottom:0}
+.sfx-block .hd{display:flex;align-items:baseline;gap:9px;margin-bottom:11px}
+.sfx-block .hd b{font-size:12.5px;font-weight:600}
+.sfx-block .hd small{font-size:10.5px;color:var(--muted)}
+.sfx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.sfx-opt{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:10px 8px;cursor:pointer;color:var(--textSoft);font-size:11.5px;text-align:center;transition:border-color .15s,color .15s,background .15s,transform .15s;display:flex;flex-direction:column;align-items:center;gap:5px}
+.sfx-opt .ic{font-size:14px;opacity:.85}
+.sfx-opt:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.sfx-opt.on{border-color:var(--accent);background:var(--accentSoft);color:var(--accent);font-weight:600}
+.sfx-opt.on .ic{opacity:1}
+@media(max-width:600px){.sfx-grid{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}.mh-when{display:none}}
 
 /* ---------- Sidebar customize ---------- */
-.navtools{display:flex;gap:6px;margin:10px 0 2px}
-.navtools button{flex:1;border:1px dashed var(--line);background:transparent;color:var(--sidebarMuted);font-size:10.5px;font-weight:700;padding:7px 8px;border-radius:9px;cursor:pointer;transition:color .15s,border-color .15s}
+.navtools{display:flex;gap:6px;margin:12px 0 2px}
+.navtools button{flex:1;border:1px solid var(--line);background:transparent;color:var(--sidebarMuted);font-size:10.5px;font-weight:600;padding:7px 8px;border-radius:8px;cursor:pointer;transition:color .15s,border-color .15s}
 .navtools button:hover{color:var(--accent);border-color:var(--accent)}
 .nav.editing button[data-page],.nav.editing .nav-title{cursor:grab;border:1px dashed var(--line);border-radius:9px;margin:3px 0}
 .nav.editing button[data-page]:active{cursor:grabbing}
 .nav.editing .nav-title{display:flex;align-items:center;padding:8px 10px}
 .nav .navctl{margin-left:auto;display:none;gap:3px;align-items:center}
 .nav.editing .navctl{display:inline-flex}
-.nav .navctl b{font-size:10px;line-height:1;padding:4px 5px;border-radius:6px;background:var(--panel2);color:var(--sidebarText);cursor:pointer}
+.nav .navctl b{font-size:9.5px;line-height:1;padding:4px 5px;border-radius:6px;background:var(--panel2);color:var(--sidebarText);cursor:pointer}
 .nav .navctl b:hover{background:var(--accent);color:var(--onAccent)}
 .nav .navdrag{opacity:.45;outline:1px solid var(--accent)}
 .nav-off{display:none!important}
@@ -920,64 +952,100 @@ function playStatic(dur = 0.5, vol = 0.05) {
     noise.start();
 }
 
-/* ---------- FX settings (RGB + gunshot) ---------- */
-const FX_KEY='grwiki_fx_v1';
-const FX={rgb:true,gun:true,vol:0.25};
-try{const _f=JSON.parse(localStorage.getItem(FX_KEY)||'{}');if(typeof _f.rgb==='boolean')FX.rgb=_f.rgb;if(typeof _f.gun==='boolean')FX.gun=_f.gun;if(typeof _f.vol==='number')FX.vol=_f.vol;}catch(e){}
+/* ---------- Interface sound engine + effect settings ---------- */
+const FX_KEY='grwiki_fx_v2';
+const FX={rgb:true,sfx:true,vol:0.3,tap:'tick',copy:'pop'};
+try{
+  const _f=JSON.parse(localStorage.getItem(FX_KEY)||localStorage.getItem('grwiki_fx_v1')||'{}');
+  if(typeof _f.rgb==='boolean')FX.rgb=_f.rgb;
+  if(typeof _f.sfx==='boolean')FX.sfx=_f.sfx; else if(typeof _f.gun==='boolean')FX.sfx=_f.gun;
+  if(typeof _f.vol==='number')FX.vol=_f.vol;
+  if(typeof _f.tap==='string')FX.tap=_f.tap;
+  if(typeof _f.copy==='string')FX.copy=_f.copy;
+}catch(e){}
 document.documentElement.dataset.rgb=FX.rgb?'1':'0';
+function fxSaveLocal(){ try{ localStorage.setItem(FX_KEY,JSON.stringify(FX)); }catch(e){} }
 
-/* Gunshot click SFX — noise crack + low thump + tail */
-let _gunLast=0;
-function playGunshot(vol){
-    if(vol==null){ if(!FX.gun) return; vol=FX.vol; }
-    if(vol<=0) return;
-    const now0=performance.now();
-    if(now0-_gunLast<45) return;           /* rapid clicks se bachao */
-    _gunLast=now0;
-    try{
-        if(audioCtx.state==='suspended') audioCtx.resume();
-        const t=audioCtx.currentTime, dur=0.26;
-        /* white-noise crack through a falling low-pass */
-        const len=Math.floor(audioCtx.sampleRate*dur);
-        const buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate);
-        const d=buf.getChannelData(0);
-        for(let i=0;i<len;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.2); }
-        const noise=audioCtx.createBufferSource(); noise.buffer=buf;
-        const lp=audioCtx.createBiquadFilter(); lp.type='lowpass';
-        lp.frequency.setValueAtTime(7000+Math.random()*1500,t);
-        lp.frequency.exponentialRampToValueAtTime(320,t+0.20);
-        lp.Q.value=0.8;
-        const ng=audioCtx.createGain();
-        ng.gain.setValueAtTime(vol,t);
-        ng.gain.exponentialRampToValueAtTime(0.0008,t+dur);
-        noise.connect(lp); lp.connect(ng); ng.connect(audioCtx.destination);
-        noise.start(t); noise.stop(t+dur);
-        /* barrel thump */
-        const osc=audioCtx.createOscillator(); osc.type='sine';
-        osc.frequency.setValueAtTime(175+Math.random()*25,t);
-        osc.frequency.exponentialRampToValueAtTime(42,t+0.13);
-        const og=audioCtx.createGain();
-        og.gain.setValueAtTime(vol*1.15,t);
-        og.gain.exponentialRampToValueAtTime(0.0008,t+0.17);
-        osc.connect(og); og.connect(audioCtx.destination);
-        osc.start(t); osc.stop(t+0.18);
-        /* metallic click transient */
-        const cl=audioCtx.createOscillator(); cl.type='square';
-        cl.frequency.setValueAtTime(2100,t);
-        const cg=audioCtx.createGain();
-        cg.gain.setValueAtTime(vol*0.22,t);
-        cg.gain.exponentialRampToValueAtTime(0.0008,t+0.035);
-        cl.connect(cg); cg.connect(audioCtx.destination);
-        cl.start(t); cl.stop(t+0.04);
-    }catch(e){}
+/* --- small synth helpers --- */
+function _fxCtx(){ try{ if(audioCtx.state==='suspended') audioCtx.resume(); }catch(e){} return audioCtx; }
+function _fxTone(o){
+  const c=_fxCtx(), t=c.currentTime+(o.delay||0);
+  const osc=c.createOscillator(), g=c.createGain();
+  osc.type=o.type||'sine';
+  osc.frequency.setValueAtTime(o.f,t);
+  if(o.f2) osc.frequency.exponentialRampToValueAtTime(Math.max(20,o.f2),t+(o.dur||.08));
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(Math.max(.0002,o.vol),t+(o.atk||.004));
+  g.gain.exponentialRampToValueAtTime(.0001,t+(o.dur||.08));
+  osc.connect(g); g.connect(c.destination);
+  osc.start(t); osc.stop(t+(o.dur||.08)+.02);
+}
+function _fxNoise(o){
+  const c=_fxCtx(), t=c.currentTime+(o.delay||0), dur=o.dur||.08;
+  const len=Math.max(64,Math.floor(c.sampleRate*dur));
+  const buf=c.createBuffer(1,len,c.sampleRate), d=buf.getChannelData(0);
+  const shape=o.shape||2;
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,shape);
+  const src=c.createBufferSource(); src.buffer=buf;
+  const flt=c.createBiquadFilter();
+  flt.type=o.filter||'lowpass';
+  flt.frequency.setValueAtTime(o.f||2000,t);
+  if(o.f2) flt.frequency.exponentialRampToValueAtTime(Math.max(60,o.f2),t+dur);
+  flt.Q.value=o.q||1;
+  const g=c.createGain();
+  g.gain.setValueAtTime(o.vol,t);
+  g.gain.exponentialRampToValueAtTime(.0004,t+dur);
+  src.connect(flt); flt.connect(g); g.connect(c.destination);
+  src.start(t); src.stop(t+dur+.02);
 }
 
-/* Global Click Sound */
+/* --- the library. v = master volume 0..1 --- */
+const SFX_LIB={
+  none:  {label:'Silent',    ic:'\u2205', fn:()=>{}},
+  tick:  {label:'Tick',      ic:'\u00b7', fn:v=>{_fxNoise({dur:.028,vol:v*.5,f:5200,f2:1600,filter:'bandpass',q:1.3});}},
+  tap:   {label:'Soft Tap',  ic:'\u25cf', fn:v=>{_fxTone({f:420,f2:190,type:'sine',dur:.06,vol:v*.5});}},
+  pop:   {label:'Pop',       ic:'\u25cb', fn:v=>{_fxTone({f:300,f2:900,type:'sine',dur:.07,vol:v*.55,atk:.002});}},
+  bubble:{label:'Bubble',    ic:'\u25d4', fn:v=>{_fxTone({f:650,f2:1450,type:'sine',dur:.09,vol:v*.5});_fxTone({f:1100,type:'sine',dur:.04,vol:v*.18,delay:.05});}},
+  key:   {label:'Mech Key',  ic:'\u2328', fn:v=>{_fxNoise({dur:.035,vol:v*.55,f:3200,f2:900,q:.9});_fxTone({f:180,f2:90,type:'triangle',dur:.045,vol:v*.35});}},
+  type:  {label:'Typewriter',ic:'\u2338', fn:v=>{_fxNoise({dur:.02,vol:v*.6,f:6000,filter:'highpass'});_fxTone({f:900,f2:300,type:'square',dur:.03,vol:v*.16,delay:.012});}},
+  wood:  {label:'Woodblock', ic:'\u25ad', fn:v=>{_fxTone({f:1050,f2:520,type:'triangle',dur:.07,vol:v*.5});_fxNoise({dur:.02,vol:v*.25,f:2600});}},
+  blip:  {label:'Blip',      ic:'\u25b8', fn:v=>{_fxTone({f:1400,type:'square',dur:.045,vol:v*.28});}},
+  beep:  {label:'Beep',      ic:'\u266a', fn:v=>{_fxTone({f:880,type:'sine',dur:.07,vol:v*.4});}},
+  chime: {label:'Chime',     ic:'\u2726', fn:v=>{_fxTone({f:1318,type:'sine',dur:.28,vol:v*.3});_fxTone({f:1976,type:'sine',dur:.22,vol:v*.14,delay:.03});}},
+  ding:  {label:'Ding',      ic:'\u25c8', fn:v=>{_fxTone({f:2100,type:'sine',dur:.2,vol:v*.28});}},
+  glass: {label:'Glass',     ic:'\u25c7', fn:v=>{_fxTone({f:2400,f2:2100,type:'sine',dur:.16,vol:v*.25});_fxNoise({dur:.05,vol:v*.16,f:7000,filter:'highpass'});}},
+  drop:  {label:'Water Drop',ic:'\u25bd', fn:v=>{_fxTone({f:900,f2:260,type:'sine',dur:.13,vol:v*.45});}},
+  swoosh:{label:'Swoosh',    ic:'\u2933', fn:v=>{_fxNoise({dur:.16,vol:v*.4,f:400,f2:3000,filter:'bandpass',q:.8,shape:.6});}},
+  radio: {label:'Radio Click',ic:'\uD83D\uDCFB',fn:v=>{_fxNoise({dur:.05,vol:v*.4,f:1800,f2:600,q:2});_fxTone({f:520,type:'square',dur:.02,vol:v*.12});}},
+  laser: {label:'Laser',     ic:'\u27f6', fn:v=>{_fxTone({f:1800,f2:280,type:'sawtooth',dur:.11,vol:v*.28});}},
+  coin:  {label:'Coin',      ic:'\u25ce', fn:v=>{_fxTone({f:1050,type:'square',dur:.05,vol:v*.22});_fxTone({f:1560,type:'square',dur:.12,vol:v*.2,delay:.05});}},
+  cock:  {label:'Slide Rack',ic:'\u25a3', fn:v=>{_fxNoise({dur:.06,vol:v*.45,f:3400,f2:1200,q:1.4});_fxNoise({dur:.05,vol:v*.4,f:2200,f2:700,q:1.6,delay:.085});}},
+  gun:   {label:'Gunshot',   ic:'\u2736', fn:v=>{
+            _fxNoise({dur:.26,vol:v*.75,f:7000,f2:320,q:.8,shape:2.2});
+            _fxTone({f:175,f2:42,type:'sine',dur:.17,vol:v*.8,atk:.002});
+            _fxTone({f:2100,type:'square',dur:.035,vol:v*.16});}}
+};
+const SFX_ORDER=['none','tick','tap','pop','bubble','key','type','wood','blip','beep','chime','ding','glass','drop','swoosh','radio','laser','coin','cock','gun'];
+
+let _sfxLast=0, _sfxSkipUntil=0;
+function playSfx(name,vol,force){
+  if(!force&&!FX.sfx) return;
+  const s=SFX_LIB[name]; if(!s||name==='none') return;
+  const v=(typeof vol==='number'?vol:FX.vol);
+  if(v<=0) return;
+  const now=performance.now();
+  if(!force&&now-_sfxLast<40) return;
+  _sfxLast=now;
+  try{ s.fn(v); }catch(e){}
+}
+function playCopySfx(){ _sfxSkipUntil=performance.now()+400; playSfx(FX.copy); }
+function playGunshot(){ playSfx('gun',null,true); }   /* back-compat */
+
+/* Global tap sound */
 document.addEventListener('click', (e) => {
+    if(performance.now()<_sfxSkipUntil) return;
     const clickable = e.target.closest('button, a, summary, .calc-item, .chip, .tz-item, .result, select, input[type="checkbox"], label');
-    if (clickable) {
-        playGunshot();
-    }
+    if (clickable) playSfx(FX.tap);
 });
 
 
@@ -1551,6 +1619,7 @@ function toast(msg){
 /* ---------- Clipboard ---------- */
 function copyText(text,label){
  const done=()=>toast((label||'Copied')+' ✓');
+ try{ playCopySfx(); }catch(e){}
  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done))}
  else fallbackCopy(text,done);
 }
@@ -1637,7 +1706,7 @@ function dashboard(){
   <div class="cc-divider"></div>
   <div class="cc-item"><h4>Server Cycle</h4><b id="dashCycle">—</b><small>Grand RP runs on real-world London (UK) time</small></div>
  </div>
- <div id="mpSlot"></div>
+ <div id="mpSlot" data-compact="1"></div>
  <div class="grid"><div class="stat"><b>${penal.length}</b><span>Penal Code entries</span></div><div class="stat"><b>${todayDutyMinutes()}</b><span>Minutes on duty today</span></div><div class="stat"><b>100%</b><span>Ready</span></div></div>
  ${recentPages.length?`<div class="card"><div class="card-head"><h2>Recently Viewed</h2></div><div class="card-body"><div class="chips">${recentPages.map(p=>`<button class="chip" onclick="go('${p}')">${esc(pageLabels[p]||p)}</button>`).join("")}</div></div></div>`:''}
  <div class="card"><div class="card-head"><h2>Quick Access</h2></div><div class="card-body"><div class="eventgrid">
@@ -4051,7 +4120,7 @@ function notepadPage(){
       </select>
       <span class="voice-hint" id="npVoiceHint">Tap the mic and speak — your words are typed in automatically.</span>
      </div>
-     <textarea id="npText" style="width:100%;height:400px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;color:var(--text);font-family:ui-monospace,monospace;font-size:13px;resize:vertical" placeholder="Start typing notes here..." oninput="saveNotepad(); playBeep(1500, 0.03, 0.02, 'square')">${esc(notepadContent)}</textarea>
+     <textarea id="npText" style="width:100%;height:400px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;color:var(--text);font-family:ui-monospace,monospace;font-size:13px;resize:vertical" placeholder="Start typing notes here..." oninput="saveNotepad(); playSfx(FX.tap, FX.vol*0.35)">${esc(notepadContent)}</textarea>
     </div></div>`;
 }
 function saveNotepad(){
@@ -5877,20 +5946,20 @@ function mhFiltered(){
 function mhListHTML(){
   const list=mhFiltered();
   if(!list.length){
-    return '<div class="empty" style="padding:26px;text-align:center;color:var(--muted);font-size:12.5px">'+
-      (MH.length?'Is filter me kuch nahi mila.':'Abhi tak kuch play nahi hua. Upar se koi source choose karo \u2014 uske baad har track apne aap yahan save hota rahega.')+'</div>';
+    return '<div class="mh-empty">'+
+      (MH.length?'Is filter me kuch nahi mila.':'Abhi tak kuch play nahi hua.<br>Upar player se koi source choose karo \u2014 uske baad har track apne aap yahan record hota rahega.')+'</div>';
   }
   const curKey=(function(){ const r=mhCurrentRef(); return r?r.src+'|'+(r.url||r.title):''; })();
   return '<div class="mh-list">'+list.map(it=>{
     const on=it.k===curKey;
     return '<div class="mh-item'+(on?' on':'')+'">'+
       '<div class="mh-ic">'+(MP_ICONS[it.src]||'\uD83C\uDFB5')+'</div>'+
-      '<div class="mh-main"><b>'+esc(it.title)+'</b><small>'+esc(it.sub||MP_NAMES[it.src]||'')+' \u00b7 '+mhAgo(it.last)+' \u00b7 '+(it.count||1)+'x play</small></div>'+
-      '<span class="mh-tag">'+esc(MP_NAMES[it.src]||it.src)+'</span>'+
+      '<div class="mh-main"><b>'+esc(it.title)+'</b><small>'+esc(it.sub||MP_NAMES[it.src]||'')+' \u00b7 '+(it.count||1)+' play'+((it.count||1)>1?'s':'')+'</small></div>'+
+      '<div class="mh-when">'+mhAgo(it.last)+'</div>'+
       '<div class="mh-acts">'+
-        '<button onclick="mhPlay(\''+it.id+'\')" title="Dobara play karo">\u25B6</button>'+
+        '<button onclick="mhPlay(\''+it.id+'\')" title="Dobara play">\u25B6</button>'+
         '<button class="fav'+(it.fav?' on':'')+'" onclick="mhFav(\''+it.id+'\')" title="Favourite">'+(it.fav?'\u2605':'\u2606')+'</button>'+
-        (it.url?'<button onclick="mhCopy(\''+it.id+'\')" title="Link copy">\u29C9</button>':'')+
+        (it.url?'<button onclick="mhCopy(\''+it.id+'\')" title="Copy link">\u29C9</button>':'')+
         '<button class="del" onclick="mhDel(\''+it.id+'\')" title="Remove">\u2715</button>'+
       '</div></div>';
   }).join('')+'</div>';
@@ -5899,64 +5968,94 @@ function mhListHTML(){
 function mhQuickHTML(){
   const recent=MH.filter(x=>x.url&&x.src!=='local').slice(0,8);
   if(!recent.length) return '';
-  return '<div class="card"><div class="card-head"><h2>\u26A1 Quick Replay</h2></div><div class="card-body"><div class="mh-chips">'+
+  return '<div class="card"><div class="card-head"><h2>Quick replay</h2></div><div class="card-body">'+
+    '<div class="mh-chips">'+
     recent.map(it=>'<button class="mh-chip" onclick="mhPlay(\''+it.id+'\')">'+(MP_ICONS[it.src]||'\uD83C\uDFB5')+'<span>'+esc(it.title)+'</span></button>').join('')+
-    '</div><p class="mp-hint">Link dobara paste karne ki zarurat nahi \u2014 bas tap karo aur wahi track fir se chalu.</p></div></div>';
+    '</div><p class="mp-hint">Link dobara paste karne ki zarurat nahi \u2014 tap karo, wahi track fir se chalu.</p></div></div>';
 }
 
 function mhStatsHTML(){
+  if(!MH.length) return '';
   const plays=MH.reduce((a,b)=>a+(b.count||1),0);
   const top=MH.slice().sort((a,b)=>(b.count||0)-(a.count||0))[0];
   const bySrc={};
   MH.forEach(x=>{ bySrc[x.src]=(bySrc[x.src]||0)+(x.count||1); });
   const max=Math.max(1,...Object.values(bySrc));
   const rows=Object.keys(bySrc).sort((a,b)=>bySrc[b]-bySrc[a]).map(s=>
-    '<div class="mh-srcrow"><span style="min-width:96px">'+(MP_ICONS[s]||'')+' '+esc(MP_NAMES[s]||s)+'</span>'+
+    '<div class="mh-srcrow"><span style="min-width:92px">'+esc(MP_NAMES[s]||s)+'</span>'+
     '<span class="bar"><i style="width:'+Math.round(bySrc[s]/max*100)+'%"></i></span><span class="n">'+bySrc[s]+'</span></div>').join('');
-  return '<div class="card"><div class="card-head"><h2>\uD83D\uDCCA Listening Stats</h2></div><div class="card-body">'+
+  return '<div class="card"><div class="card-head"><h2>Overview</h2></div><div class="card-body">'+
    '<div class="mh-stats">'+
-    '<div class="mh-stat"><b>'+MH.length+'</b><span>Tracks saved</span></div>'+
+    '<div class="mh-stat"><b>'+MH.length+'</b><span>Tracks</span></div>'+
     '<div class="mh-stat"><b>'+plays+'</b><span>Total plays</span></div>'+
     '<div class="mh-stat"><b>'+MH.filter(x=>x.fav).length+'</b><span>Favourites</span></div>'+
-    '<div class="mh-stat"><b>'+(top?(top.count||1)+'x':'\u2014')+'</b><span>'+(top?esc(top.title.slice(0,26)):'Most played')+'</span></div>'+
+    '<div class="mh-stat"><b>'+(top?(top.count||1)+'\u00d7':'\u2014')+'</b><span>'+(top?esc(top.title.slice(0,24)):'Most played')+'</span></div>'+
    '</div>'+(rows?'<div class="mh-src">'+rows+'</div>':'')+'</div></div>';
 }
 
 function mhRefresh(){
   const l=document.getElementById('mhList'); if(l) l.innerHTML=mhListHTML();
-  const c=document.getElementById('mhCount'); if(c) c.textContent=MH.length+' tracks';
+  const c=document.getElementById('mhCount'); if(c) c.textContent=MH.length+' saved';
   const q=document.getElementById('mhQuickWrap'); if(q) q.innerHTML=mhQuickHTML();
   const s=document.getElementById('mhStatsWrap'); if(s) s.innerHTML=mhStatsHTML();
 }
 
 /* ---------- the Music page ---------- */
+function sfxGridHTML(kind){
+  return '<div class="sfx-grid" id="sfxGrid_'+kind+'">'+SFX_ORDER.map(k=>{
+    const s=SFX_LIB[k];
+    return '<button class="sfx-opt'+(FX[kind]===k?' on':'')+'" data-k="'+k+'" onclick="fxSetSound(\''+kind+'\',\''+k+'\')">'+
+      '<span class="ic">'+s.ic+'</span>'+esc(s.label)+'</button>';
+  }).join('')+'</div>';
+}
+function fxSetSound(kind,key){
+  FX[kind]=key; fxSaveLocal();
+  const grid=document.getElementById('sfxGrid_'+kind);
+  if(grid) grid.querySelectorAll('.sfx-opt').forEach(b=>b.classList.toggle('on',b.dataset.k===key));
+  _sfxSkipUntil=performance.now()+400;
+  playSfx(key,null,true);
+}
+function fxSet(k,v){
+  FX[k]=v; fxSaveLocal(); fxApply();
+  const b=document.getElementById('fx_'+k);
+  if(b) b.classList.toggle('on',!!v);
+  if(k==='sfx'&&v){ _sfxSkipUntil=performance.now()+400; playSfx(FX.tap,null,true); }
+}
+function fxApply(){ document.documentElement.dataset.rgb=FX.rgb?'1':'0'; }
+fxApply();
+
 function musicPage(){
   const opt=(v,t)=>'<option value="'+v+'"'+(mhFilter===v?' selected':'')+'>'+t+'</option>';
   const sopt=(v,t)=>'<option value="'+v+'"'+(mhSort===v?' selected':'')+'>'+t+'</option>';
-  return '<div class="hero rgbhero"><h1>\uD83C\uDFA7 Music Center</h1>'+
-   '<p>Sab kuch ek jagah \u2014 kya baj raha hai, kya baj chuka hai, aur ek click me dobara play. Link baar baar paste karne ki zarurat khatam.</p></div>'+
+  return '<div class="music-head"><div>'+
+     '<span class="mh-eyebrow">Media</span>'+
+     '<h1>Music Center</h1>'+
+     '<p>Player, play history aur favourites \u2014 ek jagah. Jo track pehle baj chuka hai use dobara chalane ke liye link paste karne ki zarurat nahi.</p>'+
+   '</div><div class="spacer"></div></div>'+
    '<div id="mpSlot"></div>'+
    '<div id="mhQuickWrap">'+mhQuickHTML()+'</div>'+
-   '<div class="card"><div class="card-head"><h2>\uD83D\uDD52 Play History</h2><span class="mh-count" id="mhCount"></span></div><div class="card-body">'+
+   '<div class="card"><div class="card-head"><h2>Play history</h2><span class="mh-count" id="mhCount"></span></div><div class="card-body">'+
      '<div class="mh-bar">'+
-       '<input id="mhSearch" type="text" placeholder="Search title ya artist..." value="'+esc(mhQuery)+'" oninput="mhQuery=this.value;mhRefresh()">'+
-       '<select onchange="mhFilter=this.value;mhRefresh()">'+opt('all','All sources')+opt('fav','\u2605 Favourites')+opt('youtube','YouTube')+opt('spotify','Spotify')+opt('soundcloud','SoundCloud')+opt('radio','Radio / URL')+opt('local','My Files')+'</select>'+
+       '<input id="mhSearch" type="text" placeholder="Search title or artist\u2026" value="'+esc(mhQuery)+'" oninput="mhQuery=this.value;mhRefresh()">'+
+       '<select onchange="mhFilter=this.value;mhRefresh()">'+opt('all','All sources')+opt('fav','Favourites')+opt('youtube','YouTube')+opt('spotify','Spotify')+opt('soundcloud','SoundCloud')+opt('radio','Radio / URL')+opt('local','My Files')+'</select>'+
        '<select onchange="mhSort=this.value;mhRefresh()">'+sopt('recent','Recent first')+sopt('most','Most played')+sopt('az','A \u2192 Z')+'</select>'+
-       '<button class="btn secondary" onclick="mhPlayFavs()">\u2605 Play favourites</button>'+
-       '<button class="btn secondary" onclick="mhClear()">Clear all</button>'+
+       '<button class="ghost" onclick="mhPlayFavs()">Play favourites</button>'+
+       '<button class="ghost" onclick="mhClear()">Clear</button>'+
      '</div>'+
      '<div id="mhList"></div>'+
    '</div></div>'+
    '<div id="mhStatsWrap">'+mhStatsHTML()+'</div>'+
-   '<div class="card"><div class="card-head"><h2>\u2699 Effects &amp; Sound</h2></div><div class="card-body">'+
-     '<div class="fx-row"><div class="lbl"><b>RGB play effects</b><small>Play ke waqt card, bars aur glow rainbow me cycle karte hain.</small></div>'+
-       '<button class="fx-tog'+(FX.rgb?' on':'')+'" id="fxRgb" onclick="fxSet(\'rgb\',!FX.rgb)"><i></i></button></div>'+
-     '<div class="fx-row"><div class="lbl"><b>Gunfire click sound</b><small>Har button click par halka gunshot SFX.</small></div>'+
-       '<button class="fx-tog'+(FX.gun?' on':'')+'" id="fxGun" onclick="fxSet(\'gun\',!FX.gun)"><i></i></button></div>'+
-     '<div class="fx-row"><div class="lbl"><b>Click sound volume</b><small>Gunshot kitna loud ho.</small></div>'+
-       '<input type="range" class="mp-vol" min="0" max="100" value="'+Math.round(FX.vol*100)+'" oninput="fxSet(\'vol\',this.value/100);mpPaintSeek(this)" onchange="playGunshot()"></div>'+
-     '<div class="fx-row"><div class="lbl"><b>Mini player</b><small>Ab widget sirf Dashboard aur is page par dikhta hai \u2014 baaki pages saaf rehte hain, gaana chalta rehta hai.</small></div>'+
-       '<button class="btn secondary" onclick="go(\'dashboard\')">Dashboard kholo</button></div>'+
+   '<div class="card"><div class="card-head"><h2>Sound &amp; effects</h2></div><div class="card-body">'+
+     '<div class="fx-row"><div class="lbl"><b>Interface sounds</b><small>Buttons, tabs aur copy actions par short feedback sound.</small></div>'+
+       '<button class="fx-tog'+(FX.sfx?' on':'')+'" id="fx_sfx" onclick="fxSet(\'sfx\',!FX.sfx)"><i></i></button></div>'+
+     '<div class="fx-row"><div class="lbl"><b>Sound volume</b><small>Slider chhodte hi preview bajega.</small></div>'+
+       '<input type="range" class="mp-vol" min="0" max="100" value="'+Math.round(FX.vol*100)+'" oninput="FX.vol=this.value/100;mpPaintSeek(this)" onchange="fxSaveLocal();playSfx(FX.tap,null,true)"></div>'+
+     '<div class="sfx-block"><div class="hd"><b>Tap sound</b><small>har button / link click par</small></div>'+sfxGridHTML('tap')+'</div>'+
+     '<div class="sfx-block"><div class="hd"><b>Copy sound</b><small>jab koi code, command ya link copy hota hai</small></div>'+sfxGridHTML('copy')+'</div>'+
+     '<div class="fx-row"><div class="lbl"><b>Ambient play effects</b><small>Play ke waqt card par halka rang badalta glow aur spectrum. Off karoge to plain theme colours rahenge.</small></div>'+
+       '<button class="fx-tog'+(FX.rgb?' on':'')+'" id="fx_rgb" onclick="fxSet(\'rgb\',!FX.rgb)"><i></i></button></div>'+
+     '<div class="fx-row"><div class="lbl"><b>Mini player</b><small>Widget sirf Dashboard aur is page par dikhta hai; baaki pages saaf rehte hain aur music chalta rehta hai.</small></div>'+
+       '<button class="ghost" onclick="go(\'dashboard\')" style="border:1px solid var(--line);background:transparent;color:var(--textSoft);border-radius:9px;padding:9px 13px;font-size:12px;cursor:pointer">Open dashboard</button></div>'+
    '</div></div>';
 }
 function initMusicPage(){
@@ -5964,20 +6063,6 @@ function initMusicPage(){
   mhRefresh();
   document.querySelectorAll('#content .mp-vol').forEach(mpPaintSeek);
 }
-
-/* =========================================================
-   FX settings (RGB + gunshot click)
-   ========================================================= */
-function fxSet(k,v){
-  FX[k]=v;
-  try{ localStorage.setItem(FX_KEY,JSON.stringify(FX)); }catch(e){}
-  fxApply();
-  const b=document.getElementById(k==='rgb'?'fxRgb':'fxGun');
-  if(b) b.classList.toggle('on',!!v);
-  if(k==='gun'&&v) playGunshot();
-}
-function fxApply(){ document.documentElement.dataset.rgb=FX.rgb?'1':'0'; }
-fxApply();
 
 /* =========================================================
    Sidebar customize — drag / reorder / hide
