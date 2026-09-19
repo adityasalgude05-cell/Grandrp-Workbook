@@ -383,6 +383,7 @@ button,input,textarea,select{font:inherit}.app{display:flex;min-height:100vh}
 .imgbb-uploadbtn:hover{border-color:var(--accent);color:var(--accent)}
 .imgbb-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
 .imgbb-status b{color:var(--text)}
+mark.search-hl{background:var(--accentSoft);color:var(--accent);border-radius:3px;padding:0 2px;font-weight:700}
 
 /* --- Voice dictation --- */
 .voice-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
@@ -1691,6 +1692,22 @@ const trafficStop = [
 ];
 
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+/* Highlights every occurrence of q inside text (case-insensitive, matches anywhere —
+   not just the start), escaping safely piece by piece so raw text is never re-escaped. */
+function highlightMatch(text, q){
+ text = String(text==null?'':text);
+ if(!q) return esc(text);
+ const lower = text.toLowerCase(), ql = q.toLowerCase();
+ if(!ql) return esc(text);
+ let out='', pos=0, idx;
+ while((idx = lower.indexOf(ql, pos)) !== -1){
+  out += esc(text.slice(pos, idx));
+  out += '<mark class="search-hl">' + esc(text.slice(idx, idx+q.length)) + '</mark>';
+  pos = idx + q.length;
+ }
+ out += esc(text.slice(pos));
+ return out;
+}
 /* Escapes text so it's safe to embed inside a single-quoted JS string that itself sits inside a double-quoted onclick="" attribute. Stops copy buttons from silently breaking if the text ever contains a ' " or \ */
 function jsAttr(s){return esc(String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'"))}
 
@@ -2314,7 +2331,8 @@ function clearCalc(){
 function filterCalc(q){
  q=q.trim().toLowerCase();
  const groupFilter = document.getElementById('calcGroupFilter').value;
- 
+ const allItems = calcAllItems();
+
  document.querySelectorAll('#calcList .calc-item').forEach(el => {
   const matchesText = !q || el.dataset.search.includes(q);
   const stars = el.dataset.stars;
@@ -2324,6 +2342,16 @@ function filterCalc(q){
       else matchesStars = (stars === currentStarFilter);
   }
   el.style.display = (matchesText && matchesStars) ? '' : 'none';
+
+  const titleEl = el.querySelector('.ci-title');
+  if(titleEl){
+   const it = allItems.find(x => 'row-'+x.id === el.id);
+   if(it){
+    const codeHtml = q ? highlightMatch(it.code,q) : esc(it.code);
+    const nameHtml = q ? highlightMatch(it.name,q) : esc(it.name);
+    titleEl.innerHTML = `<span class="code">${codeHtml}</span>${nameHtml}<div class="charge-tags">${it.tags.map(t=>`<span class="charge-tag"><i class="tag-dot ${t.color}"></i>${t.label}</span>`).join('')}</div>`;
+   }
+  }
  });
  
  document.querySelectorAll('#calcList .calc-group-card').forEach(card => {
@@ -3790,6 +3818,8 @@ function filterChargeCalc(kind, q){
  q=(q||'').trim().toLowerCase();
  const groupFilter=document.getElementById(kind+'GroupFilter').value;
  const starFilter=chargeStarFilter[kind];
+ const allItems=calcAllItems();
+ const prefix=kind+'row-';
  document.querySelectorAll('#'+kind+'CalcList .calc-item').forEach(el=>{
   const matchesText = !q || el.dataset.search.includes(q);
   const stars=el.dataset.stars;
@@ -3799,6 +3829,17 @@ function filterChargeCalc(kind, q){
    else matchesStars=(stars===starFilter);
   }
   el.style.display=(matchesText&&matchesStars)?'':'none';
+
+  const titleEl=el.querySelector('.ci-title');
+  if(titleEl && el.id.startsWith(prefix)){
+   const itemId=el.id.slice(prefix.length);
+   const it=allItems.find(x=>x.id===itemId);
+   if(it){
+    const codeHtml = q ? highlightMatch(it.code,q) : esc(it.code);
+    const nameHtml = q ? highlightMatch(it.name,q) : esc(it.name);
+    titleEl.innerHTML = `<span class="code">${codeHtml}</span>${nameHtml}<div class="charge-tags">${it.tags.map(t=>`<span class="charge-tag"><i class="tag-dot ${t.color}"></i>${t.label}</span>`).join('')}</div>`;
+   }
+  }
  });
  document.querySelectorAll('#'+kind+'CalcList .calc-group-card').forEach(card=>{
   const matchesGroup=(groupFilter==='All'||card.dataset.group===groupFilter);
@@ -5299,7 +5340,7 @@ function doSearch(q){
   return;
  }
  const hits=searchIndex.filter(x=>(x.title+' '+x.text).toLowerCase().includes(q)).slice(0,60);
- results.innerHTML=hits.length?hits.map(x=>`<div class="result" data-page="${x.page}"><b>${esc(x.title)}</b><span>${esc(x.text.slice(0,150))}${x.text.length>150?'…':''}</span></div>`).join(""):'<div class="empty">No results found.</div>';
+ results.innerHTML=hits.length?hits.map(x=>`<div class="result" data-page="${x.page}"><b>${highlightMatch(x.title,q)}</b><span>${highlightMatch(x.text.slice(0,150),q)}${x.text.length>150?'…':''}</span></div>`).join(""):'<div class="empty">No results found.</div>';
  results.querySelectorAll('.result').forEach(el=>el.onclick=()=>{pushHistory(q);modal.classList.remove('show');go(el.dataset.page)});
 }
 document.getElementById('searchInput').addEventListener('focus',()=>{modal.classList.add('show');modalSearch.focus();doSearch(modalSearch.value);});
