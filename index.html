@@ -757,6 +757,27 @@ html[data-rgb="1"] .mh-srcrow .bar i{background:linear-gradient(90deg,var(--fxA)
 .nav-off{display:none!important}
 .nav.editing .nav-off{display:flex!important;opacity:.38}
 
+
+/* ---------- Encrypted Network / Covert Actions ---------- */
+.encnet{max-width:900px;margin:0 auto}
+.encnet-hero{text-align:center;padding:36px 20px 26px;border-bottom:1px solid rgba(239,68,68,.18);margin-bottom:26px}
+.encnet-hero h1{margin:0;font-size:30px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:var(--text);text-shadow:0 0 22px rgba(34,224,138,.25)}
+.encnet-hero p{margin:12px auto 0;max-width:620px;font-size:12.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.7}
+.encnet-card{position:relative;border:1px solid rgba(239,68,68,.35);border-top:2px solid #ef4444;border-radius:16px;background:linear-gradient(180deg,rgba(239,68,68,.05),transparent 40%),var(--panel);padding:22px 22px 20px;box-shadow:0 30px 70px -40px rgba(239,68,68,.35)}
+.encnet-card-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.encnet-card-head .ic{font-size:16px;color:#ef4444}
+.encnet-card-head h2{margin:0;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text);flex:1}
+.encnet-badge{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:rgba(239,68,68,.14);color:#ef4444;border:1px solid rgba(239,68,68,.4)}
+.encnet-row{display:flex;align-items:center;gap:12px;padding:13px 16px;margin-bottom:10px;border:1px solid rgba(239,68,68,.22);border-left:3px solid #ef4444;border-radius:10px;background:var(--panel2);transition:border-color .15s,background .15s,transform .15s}
+.encnet-row:hover{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.06);transform:translateX(2px)}
+.encnet-row .cmdtxt{flex:1;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--textSoft);line-height:1.5}
+.encnet-row .copybtn{flex-shrink:0;width:30px;height:30px;border-radius:8px;border:1px solid rgba(239,68,68,.3);background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center;font-size:13px;transition:border-color .15s,color .15s,background .15s}
+.encnet-row .copybtn:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1)}
+.encnet-caution{margin-top:16px;padding:13px 16px;border:1px solid rgba(239,68,68,.3);border-radius:10px;background:rgba(239,68,68,.07);font-family:'JetBrains Mono',monospace;font-size:11px;color:#ef8888;line-height:1.7}
+.encnet-caution b{color:#ef4444}
+.encnet-add{margin-top:22px}
+.encnet-add .card-head h2{font-size:12px}
+
 /* ---------- Personal Vault ---------- */
 .vault-note-banner{display:flex;gap:12px;align-items:flex-start;background:var(--accentSoft);border:1px solid var(--heroBorder);border-radius:14px;padding:14px 16px;margin-bottom:18px;font-size:12px;color:var(--textSoft);line-height:1.6}
 .vault-note-banner .ic{font-size:20px;flex-shrink:0}
@@ -877,6 +898,9 @@ html[data-rgb="1"] .mh-srcrow .bar i{background:linear-gradient(90deg,var(--fxA)
 
     <div class="nav-title">Media</div>
     <button data-page="music"><span class="ico">🎧</span>Music Center</button>
+
+    <div class="nav-title">Encrypted Network</div>
+    <button data-page="covert"><span class="ico">🛡</span>Covert Actions</button>
 
     <div class="nav-title">Reference</div>
     <button data-page="terms"><span class="ico">?</span>Roleplay Terms</button>
@@ -4554,6 +4578,64 @@ function todayDutyMinutes(){
  return mins;
 }
 
+
+/* ---------- Encrypted Network / Covert Actions ---------- */
+const covertCmds = [
+ "/try searching for the footage and breaks the bodycam with my leg.",
+ "/try injecting truth serum into the back of the person in front of me.",
+ "/try grabs the bodycam from the chest and breaks it",
+ "/try slipping the evidence bag into my pocket before anyone notices.",
+ "/try wiping the dashcam footage before backup arrives.",
+ "/try quietly disabling the MDT terminal in the back seat."
+];
+
+function loadCustomCovertCmds(){try{return JSON.parse(localStorage.getItem('grwiki_covertcmds')||'[]')}catch(e){return []}}
+function saveCustomCovertCmds(){localStorage.setItem('grwiki_covertcmds',JSON.stringify(customCovertCmds))}
+let customCovertCmds = loadCustomCovertCmds();
+
+function addCustomCovertCmd(){
+ const raw=document.getElementById('ccvLine').value.trim();
+ if(!raw){toast('Type a command line first'); return}
+ customCovertCmds.unshift({id:'ccv'+Date.now(), line:raw});
+ saveCustomCovertCmds();
+ document.getElementById('ccvLine').value='';
+ toast('Command added');
+ render('covert');
+}
+function deleteCustomCovertCmd(id){
+ customCovertCmds=customCovertCmds.filter(c=>c.id!==id);
+ saveCustomCovertCmds();
+ render('covert');
+}
+
+function covertRowHTML(text){
+ return `<div class="encnet-row"><span class="cmdtxt dyn-cmd" data-tpl="${esc(text)}">${esc(text)}</span><button class="copybtn" title="Copy" onclick="cmdCopyDynamic(this)">⧉</button></div>`;
+}
+
+function covertPage(){
+ return `<div class="encnet">
+  <div class="encnet-hero">
+   <h1>Encrypted Network</h1>
+   <p>Underground database modules are active. No logs generated. Direct execution prompts for covert and unmonitored actions.</p>
+  </div>
+
+  <div class="encnet-card">
+   <div class="encnet-card-head"><span class="ic">🛡</span><h2>Covert Actions</h2><span class="encnet-badge">Restricted</span></div>
+   ${covertCmds.map(covertRowHTML).join('')}
+   ${customCovertCmds.map(c=>`<div class="encnet-row"><span class="cmdtxt dyn-cmd" data-tpl="${esc(c.line)}">${esc(c.line)}</span><button class="copybtn" title="Copy" onclick="cmdCopyDynamic(this)">⧉</button><button class="copybtn" title="Remove" onclick="deleteCustomCovertCmd('${c.id}')" style="border-color:rgba(239,68,68,.3)">✕</button></div>`).join('')}
+   <div class="encnet-caution">&gt; Caution: Transmissions through this node bypass standard departmental mobile data terminals (MDT) and DOC bodycam synchronizations.</div>
+  </div>
+
+  <div class="card encnet-add"><div class="card-head"><h2>Add Your Own</h2><span class="badge">Custom</span></div><div class="card-body">
+   <div class="veh-grid">
+    <input id="ccvLine" placeholder="/try ..." onkeydown="if(event.key==='Enter')addCustomCovertCmd()">
+   </div>
+   <div class="calc-actions"><button class="btn" onclick="addCustomCovertCmd()">＋ Add Command</button></div>
+  </div></div>
+ </div>`;
+}
+function initCovertPage(){ try{ updateDynamicNodes(); }catch(e){} }
+
 function bodycamPage(){
  const on=!!(dutyState&&dutyState.on);
  const orgs = ["LSPD", "SAHP", "FIB", "GOV", "NG", "EMS", "Lifeinvader"];
@@ -4848,7 +4930,7 @@ function bookmarksPage(){
  }).join("")}</div></div>`;
 }
 
-const pageFns={dashboard,penal:penalPage,traffic:trafficPage,arrest:procedurePage,'traffic-stop':trafficStopPage,events:eventsPage,map:mapPage,terms:termsPage,calculator:calculatorPage,codes:codesPage,bookmarks:bookmarksPage,bodycam:bodycamPage,deptradio:deptRadioPage,vehicle:vehiclePage,notepad:notepadPage,arrestlog:arrestLogPage,ucevidence:ucEvidencePage,imguploader:imguploaderPage,hostage:hostageNegotiationPage,profile:profilePage,vault:vaultPage,music:musicPage};
+const pageFns={dashboard,penal:penalPage,traffic:trafficPage,arrest:procedurePage,'traffic-stop':trafficStopPage,events:eventsPage,map:mapPage,terms:termsPage,calculator:calculatorPage,codes:codesPage,bookmarks:bookmarksPage,bodycam:bodycamPage,deptradio:deptRadioPage,vehicle:vehiclePage,notepad:notepadPage,arrestlog:arrestLogPage,ucevidence:ucEvidencePage,imguploader:imguploaderPage,hostage:hostageNegotiationPage,profile:profilePage,vault:vaultPage,music:musicPage,covert:covertPage};
 let currentPageName=null;
 function render(page){
  clearDutyInterval();
@@ -4878,6 +4960,7 @@ function render(page){
  if(page==='imguploader')initImguploaderPage();
  if(page==='vault')initVaultPage();
  if(page==='music'){ try{initMusicPage()}catch(e){} }
+ if(page==='covert'){ try{initCovertPage()}catch(e){} }
  if(page==='dashboard'){updateClocks();startTicker()}
  try{mpSyncUI()}catch(e){}
  if(page==='bodycam'&&dutyState&&dutyState.on)startDutyInterval();
