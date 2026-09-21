@@ -868,6 +868,12 @@ html[data-rgb="1"] .mh-srcrow .bar i{background:linear-gradient(90deg,var(--fxA)
 .callui .hangup{background:var(--danger);color:#fff}
 .callui .mute{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
 .callui .mute.active{background:var(--warn);color:#1a1200}
+
+@keyframes navBlink{0%,49%{opacity:1}50%,100%{opacity:.25}}
+button[data-page].blink-alert{animation:navBlinkBg 1s steps(1) infinite}
+@keyframes navBlinkBg{0%,49%{background:var(--accentSoft)}50%,100%{background:transparent}}
+#unreadMsgCount.blink{animation:navBlink .8s steps(1) infinite}
+.chat-msg-notif-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);display:inline-block;margin-right:6px;animation:navBlink .8s steps(1) infinite}
 </style>
 <script type="module">
 // ---------- Firebase: presence, chat & voice calling backend ----------
@@ -1019,7 +1025,7 @@ window.dispatchEvent(new Event('fb-bridge-ready'));
     <button data-page="music"><span class="ico">🎧</span>Music Center</button>
 
     <div class="nav-title">Community</div>
-    <button data-page="online"><span class="ico">👥</span>Online Officers<span class="navcount" id="onlineCount"></span></button>
+    <button data-page="online"><span class="ico">👥</span>Online Officers<span class="navcount" id="onlineCount"></span><span class="navcount" id="unreadMsgCount" style="background:var(--danger);display:none"></span></button>
 
     <div class="nav-title">Encrypted Network</div>
     <button data-page="covert"><span class="ico">🛡</span>Covert Actions</button>
@@ -7005,6 +7011,10 @@ async function fbStartPresence(){
 
  fbListenPresence();
  fbListenIncomingCalls();
+ fbListenInbox();
+ if('Notification' in window && Notification.permission==='default'){
+  setTimeout(()=>{ try{ Notification.requestPermission(); }catch(e){} }, 3000);
+ }
 }
 
 async function fbStopPresence(){
@@ -7085,7 +7095,7 @@ function renderOfficersList(){
     <span>${online?('Online now — active for '+dur):('Last seen '+fbFmtAgo(o.lastSeen))} · State ID ${esc(o.id||'—')} · Total time: ${fbFmtDuration(totalMs)}</span>
    </div>
    ${isMe?'':`<div class="officer-actions">
-    <button title="Chat" onclick="openChat('${esc(o.key)}','${esc((o.name||'Officer').replace(/'/g,"\\'"))}')">💬</button>
+    <button title="Chat" onclick="openChat('${esc(o.key)}','${esc((o.name||'Officer').replace(/'/g,"\\'"))}')" style="position:relative">💬${unreadMsgs[o.key]?'<span class="chat-msg-notif-dot" style="position:absolute;top:2px;right:2px;margin:0"></span>':''}</button>
     <button class="callbtn" title="Voice call" onclick="fbCallUser('${esc(o.key)}','${esc((o.name||'Officer').replace(/'/g,"\\'"))}')" ${online?'':'disabled style="opacity:.35;cursor:not-allowed"'}>📞</button>
    </div>`}
   </div>`;
@@ -7095,10 +7105,13 @@ setInterval(()=>{ if(document.getElementById('officersList')) renderOfficersList
 
 /* ---------- 1:1 Chat ---------- */
 let _chatUnsub=null, _chatWithKey=null;
+let unreadMsgs={}, _origTitle=document.title, _titleBlinkInt=null;
 function fbChatId(a,b){ return [a,b].sort().join('__'); }
+
 async function openChat(otherKey, otherName){
  const FB=await fbWaitReady(); if(!FB){ toast('Chat unavailable right now'); return; }
  _chatWithKey=otherKey;
+ clearUnread(otherKey);
  document.getElementById('chatWithName').textContent='💬 '+otherName;
  document.getElementById('chatBody').innerHTML='<p style="color:var(--muted);font-size:12px">Loading messages…</p>';
  document.getElementById('chatModal').classList.add('show');
@@ -7129,8 +7142,66 @@ async function sendChatMsg(){
  input.value='';
  try{
   await FB.push(msgsRef,{from:myOfficerKey(), fromName:myOfficerName(), text, ts:Date.now()});
+  // drop a small "ping" in the recipient's inbox so they get notified even if the chat isn't open on their side
+  await FB.push(FB.ref(FB.db,'inbox/'+_chatWithKey), {from:myOfficerKey(), fromName:myOfficerName(), text, chatId, ts:Date.now()});
  }catch(e){ toast('Message failed to send'); }
 }
+
+/* ---------- New-message notifications: toast + sound + blinking badge/tab ---------- */
+async function fbListenInbox(){
+ const FB=await fbWaitReady(); if(!FB) return;
+ const inboxRef=FB.ref(FB.db,'inbox/'+myOfficerKey());
+ FB.onChildAdded(inboxRef, snap=>{
+  const note=snap.val();
+  FB.remove(FB.ref(FB.db,'inbox/'+myOfficerKey()+'/'+snap.key)); // consume — it's just a one-time ping
+  if(note) handleIncomingMessageNotification(note);
+ });
+}
+function handleIncomingMessageNotification(note){
+ const chatOpenWithSender = _chatWithKey===note.from && document.getElementById('chatModal').classList.contains('show') && !document.hidden;
+ try{ playBeep(760,0.18,0.12); }catch(e){}
+ if(chatOpenWithSender) return; // they're already looking at this exact conversation, live update is enough
+
+ unreadMsgs[note.from]=(unreadMsgs[note.from]||0)+1;
+ refreshUnreadBadge();
+ toast('💬 '+(note.fromName||'Officer')+': '+ (note.text.length>60? note.text.slice(0,60)+'…' : note.text));
+ startTitleBlink();
+
+ if('Notification' in window){
+  if(Notification.permission==='granted' && document.hidden){
+   try{ new Notification(note.fromName||'New message', {body:note.text, icon:'', tag:'grwiki-chat'}); }catch(e){}
+  } else if(Notification.permission==='default'){
+   Notification.requestPermission();
+  }
+ }
+}
+function refreshUnreadBadge(){
+ const total=Object.values(unreadMsgs).reduce((a,b)=>a+b,0);
+ const badge=document.getElementById('unreadMsgCount');
+ if(!badge) return;
+ if(total>0){ badge.textContent=total>9?'9+':total; badge.style.display='inline-flex'; badge.classList.add('blink'); }
+ else{ badge.style.display='none'; badge.classList.remove('blink'); stopTitleBlink(); }
+}
+function clearUnread(key){
+ if(unreadMsgs[key]){ delete unreadMsgs[key]; refreshUnreadBadge(); }
+}
+function startTitleBlink(){
+ if(_titleBlinkInt) return;
+ let on=false;
+ _titleBlinkInt=setInterval(()=>{
+  on=!on;
+  document.title=on?'💬 New message!':_origTitle;
+ },1000);
+}
+function stopTitleBlink(){
+ if(_titleBlinkInt){ clearInterval(_titleBlinkInt); _titleBlinkInt=null; }
+ document.title=_origTitle;
+}
+window.addEventListener('focus', ()=>{
+ // clear the tab-title blink once they come back; per-conversation unread still clears when they open that chat
+ if(document.getElementById('chatModal').classList.contains('show')) stopTitleBlink();
+});
+
 
 /* ---------- Voice calling (WebRTC signaled over Firebase RTDB) ---------- */
 async function fbListenIncomingCalls(){
