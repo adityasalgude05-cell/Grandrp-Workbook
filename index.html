@@ -910,7 +910,8 @@ window.FB = {
   ready: readyPromise,
   ref, set, update, get, push, remove, onValue, off, onDisconnect,
   serverTimestamp, query, orderByChild, equalTo, onChildAdded,
-  db
+  db, auth,
+  uid: ()=> auth.currentUser ? auth.currentUser.uid : null
 };
 window.dispatchEvent(new Event('fb-bridge-ready'));
 </script>
@@ -929,11 +930,12 @@ window.dispatchEvent(new Event('fb-bridge-ready'));
     <div class="auth-logo"><svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="currentColor" opacity=".16"/><path d="M16 2.2 3.6 6.6v9.1c0 7.4 5.1 12.4 12.4 14.1 7.3-1.7 12.4-6.7 12.4-14.1V6.6L16 2.2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 9.4 L17.35 12.74 L20.95 12.99 L18.19 15.31 L19.06 18.81 L16 16.9 L12.94 18.81 L13.81 15.31 L11.05 12.99 L14.65 12.74 Z" fill="currentColor"/><path d="M10.6 21.6h10.8M12.3 24.1h7.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".85"/></svg></div>
     <h2 id="authTitle">Officer Login</h2>
     <p id="authSub">Access the Grand RP Police Wiki</p>
+    <p id="authError" style="color:var(--danger);font-size:12.5px;min-height:16px;margin:-4px 0 6px"></p>
 
     <div class="auth-form" id="loginForm">
       <input type="text" id="loginId" class="auth-input" placeholder="IC ID Number (e.g. 12345)">
       <input type="password" id="loginPass" class="auth-input" placeholder="Password">
-      <button class="auth-btn" onclick="doLogin()">Log In</button>
+      <button class="auth-btn" onclick="doLogin(event)">Log In</button>
       <div class="auth-switch">No account? <span onclick="switchAuth('signup')">Sign Up</span></div>
     </div>
 
@@ -941,7 +943,7 @@ window.dispatchEvent(new Event('fb-bridge-ready'));
       <input type="text" id="signupName" class="auth-input" placeholder="IC Name (e.g. John Doe)">
       <input type="text" id="signupId" class="auth-input" placeholder="IC ID Number">
       <input type="password" id="signupPass" class="auth-input" placeholder="Create Password">
-      <button class="auth-btn" onclick="doSignup()">Sign Up & Access</button>
+      <button class="auth-btn" onclick="doSignup(event)">Sign Up & Access</button>
       <div class="auth-switch">Already registered? <span onclick="switchAuth('login')">Log In</span></div>
     </div>
   </div>
@@ -1273,19 +1275,57 @@ document.addEventListener('click', (e) => {
 
 
 /* ---------- Auth System ---------- */
-let dbUsers = JSON.parse(localStorage.getItem('grwiki_users') || '[]');
+/* ================================================================
+   Officer Accounts — real, shared accounts stored in Firebase
+   (replaces the old per-browser-only localStorage account list).
+   - One account per IC ID, password checked against a stored hash.
+   - One signup per browser/device (tied to Firebase's anonymous
+     device ID) — since we don't collect email, this is the closest
+     thing to "one account per person" we can enforce.
+   - Must log in again once every calendar day.
+   - Ctrl+Shift+L instantly force-logs-out every officer everywhere
+     (useful right after this kind of update).
+   ================================================================ */
 let activeUser = localStorage.getItem('grwiki_active_user');
+
+async function sha256Hex(str){
+ const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+ return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+function myDeviceUid(){ return (window.FB && window.FB.uid()) || null; }
 
 function initAuth() {
   const overlay = document.getElementById('authOverlay');
-  if (activeUser) {
-    overlay.style.display = 'none';
-  } else {
-    overlay.style.display = 'flex';
-  }
+  checkSessionStillValid().then(valid=>{
+    if (activeUser && valid) {
+      overlay.style.display = 'none';
+    } else {
+      if(activeUser && !valid){ activeUser=null; localStorage.removeItem('grwiki_active_user'); }
+      overlay.style.display = 'flex';
+    }
+  });
+}
+
+async function checkSessionStillValid(){
+ if(!activeUser) return false;
+ // must log in again every calendar day
+ if(localStorage.getItem('grwiki_last_login_date')!==todayStr()) return false;
+ // remote "log everyone out now" kill switch
+ const FB=await fbWaitReady();
+ if(FB){
+  try{
+   const snap=await FB.get(FB.ref(FB.db,'config/forceLogoutBefore'));
+   const cutoff=snap.exists()?snap.val():0;
+   const mine=Number(localStorage.getItem('grwiki_last_login_time')||0);
+   if(cutoff && mine < cutoff) return false;
+  }catch(e){ /* if we can't reach Firebase, don't lock the officer out */ }
+ }
+ return true;
 }
 
 function switchAuth(type) {
+  document.getElementById('authError').textContent='';
   if(type === 'signup') {
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('signupForm').style.display = 'flex';
@@ -1298,37 +1338,72 @@ function switchAuth(type) {
     document.getElementById('authSub').textContent = 'Access the Grand RP Police Wiki';
   }
 }
+function authErr(msg){ const el=document.getElementById('authError'); if(el) el.textContent=msg; }
 
-function doSignup() {
+async function doSignup(evt) {
   const name = document.getElementById('signupName').value.trim();
   const id = document.getElementById('signupId').value.trim();
   const pass = document.getElementById('signupPass').value.trim();
+  authErr('');
+  if(!name || !id || !pass) { authErr('Please fill all fields.'); return; }
 
-  if(!name || !id || !pass) { alert("Please fill all fields"); return; }
-  
-  if(dbUsers.find(u => u.id === id)) { alert("ID already registered locally. Please login."); return; }
-  dbUsers.push({ name, id, pass, date: new Date().toLocaleString() });
-  localStorage.setItem('grwiki_users', JSON.stringify(dbUsers));
-  completeLoginProcess(id, name);
+  const FB=await fbWaitReady();
+  if(!FB){ authErr('Cannot reach the server right now — check your internet connection and try again.'); return; }
+  const btn=evt && evt.target; if(btn) btn.disabled=true;
+
+  try{
+   const uid=myDeviceUid();
+   if(uid){
+    const lockSnap=await FB.get(FB.ref(FB.db,'deviceLocks/'+uid));
+    if(lockSnap.exists() && lockSnap.val()!==id){
+     authErr('This browser is already registered as State ID '+lockSnap.val()+'. Please log in with that ID instead.');
+     return;
+    }
+   }
+   const accSnap=await FB.get(FB.ref(FB.db,'accounts/'+id));
+   if(accSnap.exists()){ authErr('This State ID is already registered — please log in instead.'); return; }
+
+   const passHash=await sha256Hex(pass);
+   await FB.set(FB.ref(FB.db,'accounts/'+id), {name, id, passHash, deviceUid:uid, createdAt:Date.now(), lastLoginAt:Date.now()});
+   if(uid) await FB.set(FB.ref(FB.db,'deviceLocks/'+uid), id);
+   completeLoginProcess(id, name);
+  }catch(e){
+   authErr('Sign up failed: '+(e.message||'unknown error'));
+  }finally{
+   if(btn) btn.disabled=false;
+  }
 }
 
-function doLogin() {
+async function doLogin(evt) {
   const id = document.getElementById('loginId').value.trim();
   const pass = document.getElementById('loginPass').value.trim();
+  authErr('');
+  if(!id || !pass) { authErr('Please enter ID and Password.'); return; }
 
-  if(!id || !pass) { alert("Please enter ID and Password"); return; }
+  const FB=await fbWaitReady();
+  if(!FB){ authErr('Cannot reach the server right now — check your internet connection and try again.'); return; }
+  const btn=evt && evt.target; if(btn) btn.disabled=true;
 
-  const user = dbUsers.find(u => u.id === id && u.pass === pass);
-  if(user) {
-    completeLoginProcess(id, user.name);
-  } else {
-    alert("Invalid ID or Password locally");
+  try{
+   const snap=await FB.get(FB.ref(FB.db,'accounts/'+id));
+   if(!snap.exists()){ authErr('No officer registered with that State ID.'); return; }
+   const acc=snap.val();
+   const passHash=await sha256Hex(pass);
+   if(acc.passHash!==passHash){ authErr('Incorrect password.'); return; }
+   await FB.update(FB.ref(FB.db,'accounts/'+id),{lastLoginAt:Date.now()});
+   completeLoginProcess(id, acc.name);
+  }catch(e){
+   authErr('Login failed: '+(e.message||'unknown error'));
+  }finally{
+   if(btn) btn.disabled=false;
   }
 }
 
 function completeLoginProcess(id, name) {
     activeUser = id;
     localStorage.setItem('grwiki_active_user', activeUser);
+    localStorage.setItem('grwiki_last_login_date', todayStr());
+    localStorage.setItem('grwiki_last_login_time', String(Date.now()));
     document.getElementById('authOverlay').style.display = 'none';
 
     let profile = loadProfile();
@@ -1349,17 +1424,32 @@ function doLogout() {
   document.getElementById('authOverlay').style.display = 'flex';
 }
 
-function showAdminUsers() {
-  const adminUsers = JSON.parse(localStorage.getItem('grwiki_users') || '[]');
-  if(adminUsers.length === 0) {
-    alert("No registered users locally yet.");
-    return;
-  }
-  let txt = "Registered Officers (Local Admin View):\n\n";
-  adminUsers.forEach(u => {
-    txt += `• Name: ${u.name} | ID: ${u.id} | Date: ${u.date}\n`;
-  });
-  alert(txt);
+async function forceLogoutEveryone(){
+ if(!confirm('This will log out every officer on every device, right now. Continue?')) return;
+ const FB=await fbWaitReady();
+ if(!FB){ alert('Cannot reach the server right now.'); return; }
+ try{
+  await FB.set(FB.ref(FB.db,'config/forceLogoutBefore'), Date.now()+2000);
+  alert('Done — every officer will be logged out (they will see the login screen next time the page checks, usually within a few seconds to a minute).');
+ }catch(e){ alert('Failed: '+e.message); }
+}
+
+
+async function showAdminUsers() {
+  const FB=await fbWaitReady();
+  if(!FB){ alert('Cannot reach the server right now.'); return; }
+  try{
+   const snap=await FB.get(FB.ref(FB.db,'accounts'));
+   const accounts=snap.val()||{};
+   const list=Object.values(accounts);
+   if(!list.length){ alert('No officers registered yet.'); return; }
+   list.sort((a,b)=>(b.lastLoginAt||0)-(a.lastLoginAt||0));
+   let txt = "Registered Officers ("+list.length+") — most recent login first:\n\n";
+   list.forEach(u => {
+    txt += `• ${u.name}  |  State ID ${u.id}  |  Signed up: ${new Date(u.createdAt).toLocaleString()}  |  Last login: ${u.lastLoginAt?new Date(u.lastLoginAt).toLocaleString():'never'}\n`;
+   });
+   alert(txt);
+  }catch(e){ alert('Failed to load: '+e.message); }
 }
 
 
@@ -1975,7 +2065,7 @@ function table(rows,cols,opts){
 
 function dashboard(){
  const pageLabels={general:'General Rules',state:'State Rules',green:'Green Zone',ghetto:'Ghetto Rules','traffic-stop':'10-51 Traffic Stop',arrest:'10-15 Arrest',penal:'Penal Code',traffic:'Traffic Code',events:'Event Rules',map:'Territory Map',terms:'RP Terms',calculator:'Fine Calculator',codes:'Radio Codes',bookmarks:'Bookmarks',bodycam:'Bodycam Commands',vehicle:'Vehicle Ticket Log',notepad:'Dispatch Notepad', deptradio:'Department Radio', arrestlog:'Arrest Logs', ucevidence:'UC Evidence Logs', imguploader:'Image Uploader', hostage:'Hostage Negotiation', profile:'Personnel Record', vault:'Personal Vault', music:'Music Center', online:'Online Officers'};
- return `<div class="hero"><h1>Welcome back, Officer ${activeUser ? dbUsers.find(u=>u.id===activeUser)?.name || '' : ''}</h1><p>Badge #${activeUser||''} — Quick-access handbook for state rules, penal code, traffic code, traffic stops, arrests, events, bodycam procedure and roleplay terminology.</p><div class="tip-ticker" id="tipTicker"></div></div>
+ return `<div class="hero"><h1>Welcome back, Officer ${activeUser ? esc(loadProfile().name||'') : ''}</h1><p>Badge #${activeUser||''} — Quick-access handbook for state rules, penal code, traffic code, traffic stops, arrests, events, bodycam procedure and roleplay terminology.</p><div class="tip-ticker" id="tipTicker"></div></div>
  <div class="clockcard">
   <div class="cc-item"><h4>🇬🇧 In-Game Time — London</h4><b id="dashClockLondon">--:--:--</b><small id="dashDateLondon">—</small></div>
   <div class="cc-divider"></div>
@@ -5609,6 +5699,7 @@ const paletteActions=[
  {icon:'★',label:'Go to Bookmarks',run:()=>go('bookmarks')},
  {icon:'⌂',label:'Go to Dashboard',run:()=>go('dashboard')},
  {icon:'🔒',label:'Admin: View Registered Users',run:()=>{showAdminUsers()}},
+ {icon:'🚪',label:'Admin: Force Logout Everyone',run:()=>{forceLogoutEveryone()}},
  {icon:'🗑',label:'Clear all bookmarks',run:()=>{if(confirm('Remove all bookmarks?')){favs=[];saveFav();toast('Bookmarks cleared')}}}
 ];
 
@@ -5658,6 +5749,7 @@ document.addEventListener('keydown',e=>{
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();modal.classList.add('show');modalSearch.focus()}
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='j'){e.preventDefault();applyDark(document.documentElement.dataset.dark!=='1')}
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();toggleDuty()}
+ if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='l'){e.preventDefault();forceLogoutEveryone()}
  if(!typing&&e.key==='?'){e.preventDefault();helpModal.classList.add('show')}
  if(e.key==='Escape'){modal.classList.remove('show');helpModal.classList.remove('show');document.getElementById('themeModal').classList.remove('show');document.getElementById('tzMenu').classList.remove('show');const _mpm=document.getElementById('mpModal');if(_mpm)_mpm.classList.remove('show');}
 });
