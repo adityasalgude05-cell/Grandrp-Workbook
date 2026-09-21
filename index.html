@@ -6874,6 +6874,14 @@ function myOfficerKey(){ return fbSanitizeKey(activeUser); }
 function myOfficerName(){ const p=loadProfile(); return (p&&p.name) || activeUser || 'Officer'; }
 
 async function fbWaitReady(){
+ if(!window.FB){
+  await new Promise(resolve=>{
+   if(window.FB){ resolve(); return; }
+   const handler=()=>{ window.removeEventListener('fb-bridge-ready',handler); resolve(); };
+   window.addEventListener('fb-bridge-ready',handler);
+   setTimeout(resolve,10000); // safety net in case the event already fired or Firebase failed to load
+  });
+ }
  if(!window.FB) return null;
  try{ await window.FB.ready; return window.FB; }catch(e){ return null; }
 }
